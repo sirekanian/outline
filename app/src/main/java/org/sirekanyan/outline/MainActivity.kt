@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.AccessKey
 import org.sirekanyan.outline.ui.theme.OutlineTheme
@@ -17,6 +18,7 @@ import org.sirekanyan.outline.ui.theme.OutlineTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val api = remember { OutlineApi() }
             val state = remember { MainState() }
