@@ -5,20 +5,34 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.sirekanyan.outline.api.OutlineApi
+import org.sirekanyan.outline.api.model.AccessKey
 import org.sirekanyan.outline.ui.theme.OutlineTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val api = remember { OutlineApi() }
+            val accessKeys by produceState(listOf<AccessKey>()) { value = api.getAccessKeys() }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Text("Hello, World!", Modifier.padding(16.dp))
+                    LazyColumn {
+                        accessKeys.forEach { key ->
+                            item {
+                                Text(key.name.ifEmpty { "Key ${key.id}" }, Modifier.padding(16.dp))
+                            }
+                        }
+                    }
                 }
             }
         }

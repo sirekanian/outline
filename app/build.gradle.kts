@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    kotlin("android")
+    kotlin("plugin.serialization")
     id("org.sirekanyan.version-checker")
 }
 
@@ -47,6 +48,15 @@ android {
 }
 
 dependencies {
+
+    // compose
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.material3:material3:1.1.1")
+
+    // ktor
+    implementation("io.ktor:ktor-client-cio:2.3.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.3")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
+
 }
