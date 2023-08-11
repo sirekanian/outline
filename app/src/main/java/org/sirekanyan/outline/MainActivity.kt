@@ -19,10 +19,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val api = remember { OutlineApi() }
-            val accessKeys by produceState(listOf<AccessKey>()) { value = api.getAccessKeys() }
+            val state = remember { MainState() }
+            val accessKeys by produceState(listOf<AccessKey>(), state.selected) {
+                value = state.selected?.let { api.getAccessKeys(it) } ?: listOf()
+            }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainContent(accessKeys)
+                    MainContent(state, accessKeys)
                 }
             }
         }
