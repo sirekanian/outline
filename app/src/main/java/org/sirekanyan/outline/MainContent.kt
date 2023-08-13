@@ -15,7 +15,7 @@ import org.sirekanyan.outline.ui.KeyContent
 
 @Composable
 fun MainContent(api: OutlineApi, state: MainState, keys: List<AccessKey>) {
-    ModalNavigationDrawer(drawerContent = { DrawerContent(state) }, drawerState = state.drawer) {
+    ModalNavigationDrawer({ DrawerContent(api, state) }, drawerState = state.drawer) {
         LazyColumn(contentPadding = WindowInsets.systemBars.asPaddingValues()) {
             keys.forEach { key ->
                 item {

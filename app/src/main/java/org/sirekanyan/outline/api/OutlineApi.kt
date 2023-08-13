@@ -10,8 +10,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.sirekanyan.outline.api.model.AccessKey
 import org.sirekanyan.outline.api.model.AccessKeysResponse
+import org.sirekanyan.outline.api.model.ServerNameResponse
 
-val API_URLS: List<Pair<String, String>> = listOf(
+val API_URLS: List<String> = listOf(
     // TODO: add api urls
 )
 
@@ -24,13 +25,16 @@ class OutlineApi {
         engine { https.trustManager = InsecureTrustManager } // TODO: remove insecure http
     }
 
+    suspend fun getServerName(apiUrl: String): String =
+        httpClient.get("$apiUrl/server").body<ServerNameResponse>().name
+
     suspend fun getAccessKeys(index: Int): List<AccessKey> {
-        val (_, apiUrl) = API_URLS.getOrNull(index) ?: return listOf()
+        val apiUrl = API_URLS.getOrNull(index) ?: return listOf()
         return httpClient.get("$apiUrl/access-keys").body<AccessKeysResponse>().accessKeys
     }
 
     suspend fun createAccessKey(index: Int) {
-        val (_, apiUrl) = API_URLS.getOrNull(index) ?: return
+        val apiUrl = API_URLS.getOrNull(index) ?: return
         httpClient.post("$apiUrl/access-keys")
     }
 
