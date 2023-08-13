@@ -21,13 +21,13 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val api = remember { OutlineApi() }
-            val state = remember { MainState() }
+            val state = rememberMainState()
             val accessKeys by produceState(listOf<AccessKey>(), state.selected) {
                 value = state.selected?.let { api.getAccessKeys(it) } ?: listOf()
             }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainContent(state, accessKeys)
+                    MainContent(api, state, accessKeys)
                 }
             }
         }

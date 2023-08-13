@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.sirekanyan.outline.api.model.AccessKey
@@ -26,6 +27,11 @@ class OutlineApi {
     suspend fun getAccessKeys(index: Int): List<AccessKey> {
         val (_, apiUrl) = API_URLS.getOrNull(index) ?: return listOf()
         return httpClient.get("$apiUrl/access-keys").body<AccessKeysResponse>().accessKeys
+    }
+
+    suspend fun createAccessKey(index: Int) {
+        val (_, apiUrl) = API_URLS.getOrNull(index) ?: return
+        httpClient.post("$apiUrl/access-keys")
     }
 
 }

@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.runtime.Composable
+import kotlinx.coroutines.launch
+import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.AccessKey
+import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyContent
 
 @Composable
-fun MainContent(state: MainState, keys: List<AccessKey>) {
+fun MainContent(api: OutlineApi, state: MainState, keys: List<AccessKey>) {
     ModalNavigationDrawer(drawerContent = { DrawerContent(state) }, drawerState = state.drawer) {
         LazyColumn(contentPadding = WindowInsets.systemBars.asPaddingValues()) {
             keys.forEach { key ->
@@ -20,5 +23,15 @@ fun MainContent(state: MainState, keys: List<AccessKey>) {
                 }
             }
         }
+        AddKeyButton(
+            visible = state.selected != null,
+            onClick = {
+                state.selected?.let {
+                    state.scope.launch {
+                        api.createAccessKey(it)
+                    }
+                }
+            },
+        )
     }
 }
