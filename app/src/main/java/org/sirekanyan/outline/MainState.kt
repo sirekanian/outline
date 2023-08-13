@@ -3,6 +3,7 @@ package org.sirekanyan.outline
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,10 +21,25 @@ fun rememberMainState(): MainState {
 class MainState(val scope: CoroutineScope) {
 
     val drawer = DrawerState(DrawerValue.Closed)
-    var selected by mutableStateOf<String?>(null)
+    var page by mutableStateOf<Page>(HelloPage)
+    val selected by derivedStateOf { (page as? SelectedPage)?.selected }
 
-    fun closeDrawer() {
-        scope.launch { drawer.close() }
+    fun closeDrawer(animated: Boolean = true) {
+        scope.launch {
+            if (animated) {
+                drawer.close()
+            } else {
+                drawer.snapTo(DrawerValue.Closed)
+            }
+        }
     }
 
 }
+
+sealed class Page
+
+data object HelloPage : Page()
+
+data object DraftPage : Page()
+
+data class SelectedPage(val selected: String) : Page()

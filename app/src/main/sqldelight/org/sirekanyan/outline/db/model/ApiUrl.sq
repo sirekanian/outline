@@ -2,11 +2,11 @@ CREATE TABLE IF NOT EXISTS ApiUrl (
   id TEXT NOT NULL PRIMARY KEY
 );
 
-selectUrl:
+selectUrls:
 SELECT * FROM ApiUrl;
 
 insertUrl:
-INSERT INTO ApiUrl (id) VALUES (?);
+INSERT OR IGNORE INTO ApiUrl (id) VALUES (?);
 
 deleteUrl:
 DELETE FROM ApiUrl WHERE id = ?;

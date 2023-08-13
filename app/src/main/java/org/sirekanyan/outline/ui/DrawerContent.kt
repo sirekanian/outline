@@ -18,14 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.sirekanyan.outline.DraftPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
+import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.db.rememberApiUrlDao
+import org.sirekanyan.outline.db.ApiUrlDao
 
 @Composable
-fun DrawerContent(api: OutlineApi, state: MainState) {
-    val dao = rememberApiUrlDao()
+fun DrawerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
     ModalDrawerSheet {
         Text(
             text = stringResource(R.string.app_name),
@@ -44,7 +45,7 @@ fun DrawerContent(api: OutlineApi, state: MainState) {
                 modifier = Modifier.padding(horizontal = 12.dp),
                 selected = selected,
                 onClick = {
-                    state.selected = apiUrl
+                    state.page = SelectedPage(apiUrl)
                     state.closeDrawer()
                 },
             )
@@ -55,9 +56,7 @@ fun DrawerContent(api: OutlineApi, state: MainState) {
             modifier = Modifier.padding(horizontal = 12.dp),
             selected = false,
             onClick = {
-                // TODO: do something useful
-                state.selected = null
-                state.closeDrawer()
+                state.page = DraftPage
             },
         )
     }

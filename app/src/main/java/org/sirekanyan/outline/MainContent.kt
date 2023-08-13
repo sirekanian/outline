@@ -9,13 +9,14 @@ import androidx.compose.runtime.Composable
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyContent
 
 @Composable
-fun MainContent(api: OutlineApi, state: MainState, keys: List<Key>) {
-    ModalNavigationDrawer({ DrawerContent(api, state) }, drawerState = state.drawer) {
+fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Key>) {
+    ModalNavigationDrawer({ DrawerContent(api, dao, state) }, drawerState = state.drawer) {
         LazyColumn(contentPadding = WindowInsets.systemBars.asPaddingValues()) {
             keys.sortedByDescending(Key::traffic).forEach { key ->
                 item {

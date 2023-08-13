@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.db.rememberApiUrlDao
+import org.sirekanyan.outline.ui.DraftContent
 import org.sirekanyan.outline.ui.theme.OutlineTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,13 +23,18 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val api = remember { OutlineApi() }
+            val dao = rememberApiUrlDao()
             val state = rememberMainState()
             val keys by produceState(listOf<Key>(), state.selected) {
                 value = state.selected?.let { api.getKeys(it) } ?: listOf()
             }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainContent(api, state, keys)
+                    if (state.page is DraftPage) {
+                        DraftContent(api, dao, state)
+                    } else {
+                        MainContent(api, dao, state, keys)
+                    }
                 }
             }
         }

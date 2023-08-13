@@ -21,7 +21,7 @@ class ApiUrlDao(app: Application) {
     private val queries = OutlineDatabase(driver).apiUrlQueries
 
     fun observeUrls(): Flow<List<String>> =
-        queries.selectUrl().asFlow().mapToList()
+        queries.selectUrls().asFlow().mapToList()
 
     fun insertUrl(id: String) {
         queries.insertUrl(id)
