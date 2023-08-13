@@ -13,10 +13,6 @@ import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
 
-val API_URLS: List<String> = listOf(
-    // TODO: add api urls
-)
-
 class OutlineApi {
 
     private val httpClient = HttpClient(CIO) {
@@ -29,8 +25,7 @@ class OutlineApi {
     suspend fun getServerName(apiUrl: String): String =
         httpClient.get("$apiUrl/server").body<ServerNameResponse>().name
 
-    suspend fun getKeys(index: Int): List<Key> {
-        val apiUrl = API_URLS.getOrNull(index) ?: return listOf()
+    suspend fun getKeys(apiUrl: String): List<Key> {
         val accessKeys = getAccessKeys(apiUrl).accessKeys
         val transferMetrics = getTransferMetrics(apiUrl).bytesTransferredByUserId
         return accessKeys.map { accessKey -> Key(accessKey, transferMetrics[accessKey.id]) }
@@ -42,8 +37,7 @@ class OutlineApi {
     private suspend fun getTransferMetrics(apiUrl: String): TransferMetricsResponse =
         httpClient.get("$apiUrl/metrics/transfer").body()
 
-    suspend fun createAccessKey(index: Int) {
-        val apiUrl = API_URLS.getOrNull(index) ?: return
+    suspend fun createAccessKey(apiUrl: String) {
         httpClient.post("$apiUrl/access-keys")
     }
 

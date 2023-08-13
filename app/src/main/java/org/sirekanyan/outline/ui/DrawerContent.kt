@@ -11,26 +11,30 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
-import org.sirekanyan.outline.api.API_URLS
 import org.sirekanyan.outline.api.OutlineApi
+import org.sirekanyan.outline.db.rememberApiUrlDao
 
 @Composable
 fun DrawerContent(api: OutlineApi, state: MainState) {
+    val dao = rememberApiUrlDao()
     ModalDrawerSheet {
         Text(
             text = stringResource(R.string.app_name),
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
             style = MaterialTheme.typography.titleSmall,
         )
-        API_URLS.forEachIndexed { index, apiUrl ->
-            val selected = state.selected == index
+        val apiUrls by remember { dao.observeUrls() }.collectAsState(listOf())
+        apiUrls.forEach { apiUrl ->
+            val selected = state.selected == apiUrl
             val serverName by produceState(Uri.parse(apiUrl).host.orEmpty()) {
                 value = api.getServerName(apiUrl)
             }
@@ -40,7 +44,7 @@ fun DrawerContent(api: OutlineApi, state: MainState) {
                 modifier = Modifier.padding(horizontal = 12.dp),
                 selected = selected,
                 onClick = {
-                    state.selected = index
+                    state.selected = apiUrl
                     state.closeDrawer()
                 },
             )

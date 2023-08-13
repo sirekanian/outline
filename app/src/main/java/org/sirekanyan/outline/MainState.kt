@@ -20,7 +20,7 @@ fun rememberMainState(): MainState {
 class MainState(val scope: CoroutineScope) {
 
     val drawer = DrawerState(DrawerValue.Closed)
-    var selected by mutableStateOf<Int?>(null)
+    var selected by mutableStateOf<String?>(null)
 
     fun closeDrawer() {
         scope.launch { drawer.close() }
