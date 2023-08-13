@@ -8,9 +8,10 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.sirekanyan.outline.api.model.AccessKey
 import org.sirekanyan.outline.api.model.AccessKeysResponse
+import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.ServerNameResponse
+import org.sirekanyan.outline.api.model.TransferMetricsResponse
 
 val API_URLS: List<String> = listOf(
     // TODO: add api urls
@@ -28,10 +29,18 @@ class OutlineApi {
     suspend fun getServerName(apiUrl: String): String =
         httpClient.get("$apiUrl/server").body<ServerNameResponse>().name
 
-    suspend fun getAccessKeys(index: Int): List<AccessKey> {
+    suspend fun getKeys(index: Int): List<Key> {
         val apiUrl = API_URLS.getOrNull(index) ?: return listOf()
-        return httpClient.get("$apiUrl/access-keys").body<AccessKeysResponse>().accessKeys
+        val accessKeys = getAccessKeys(apiUrl).accessKeys
+        val transferMetrics = getTransferMetrics(apiUrl).bytesTransferredByUserId
+        return accessKeys.map { accessKey -> Key(accessKey, transferMetrics[accessKey.id]) }
     }
+
+    private suspend fun getAccessKeys(apiUrl: String): AccessKeysResponse =
+        httpClient.get("$apiUrl/access-keys").body()
+
+    private suspend fun getTransferMetrics(apiUrl: String): TransferMetricsResponse =
+        httpClient.get("$apiUrl/metrics/transfer").body()
 
     suspend fun createAccessKey(index: Int) {
         val apiUrl = API_URLS.getOrNull(index) ?: return

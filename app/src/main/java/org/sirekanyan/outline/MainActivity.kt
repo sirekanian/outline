@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.api.model.AccessKey
+import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.ui.theme.OutlineTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,12 +22,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val api = remember { OutlineApi() }
             val state = rememberMainState()
-            val accessKeys by produceState(listOf<AccessKey>(), state.selected) {
-                value = state.selected?.let { api.getAccessKeys(it) } ?: listOf()
+            val keys by produceState(listOf<Key>(), state.selected) {
+                value = state.selected?.let { api.getKeys(it) } ?: listOf()
             }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainContent(api, state, accessKeys)
+                    MainContent(api, state, keys)
                 }
             }
         }
