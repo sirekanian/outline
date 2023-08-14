@@ -24,6 +24,12 @@ class MainState(val scope: CoroutineScope) {
     var page by mutableStateOf<Page>(HelloPage)
     val selected by derivedStateOf { (page as? SelectedPage)?.selected }
 
+    fun openDrawer() {
+        scope.launch {
+            drawer.open()
+        }
+    }
+
     fun closeDrawer(animated: Boolean = true) {
         scope.launch {
             if (animated) {
