@@ -2,6 +2,7 @@ package org.sirekanyan.outline
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,12 @@ class MainActivity : ComponentActivity() {
             val state = rememberMainState()
             val keys by produceState(listOf<Key>(), state.selected) {
                 value = state.selected?.let { api.getKeys(it) } ?: listOf()
+            }
+            BackHandler {
+                when {
+                    state.page is DraftPage -> state.page = HelloPage
+                    state.drawer.isOpen -> state.closeDrawer()
+                }
             }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
