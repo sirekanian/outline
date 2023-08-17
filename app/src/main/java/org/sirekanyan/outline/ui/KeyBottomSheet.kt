@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -28,7 +30,7 @@ import org.sirekanyan.outline.ui.icons.IconCopy
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun KeyBottomSheet(key: Key, onDismissRequest: () -> Unit) {
+fun KeyBottomSheet(key: Key, onDismissRequest: () -> Unit, onDeleteClick: () -> Unit) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val localClipboard = LocalClipboardManager.current
     val localContext = LocalContext.current
@@ -52,6 +54,18 @@ fun KeyBottomSheet(key: Key, onDismissRequest: () -> Unit) {
                 modifier = Modifier.clickable {
                     localClipboard.setText(AnnotatedString(key.accessKey.accessUrl))
                     Toast.makeText(localContext, "Copied", LENGTH_SHORT).show()
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        onDismissRequest()
+                    }
+                },
+            )
+            ListItem(
+                headlineContent = { Text("Delete") },
+                leadingContent = { Icon(Icons.Default.Delete, null) },
+                modifier = Modifier.clickable {
+                    onDeleteClick()
                     coroutineScope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {

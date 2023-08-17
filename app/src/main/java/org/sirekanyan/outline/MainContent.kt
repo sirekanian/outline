@@ -72,8 +72,18 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
                 }
             },
         )
-        state.selectedKey?.let {
-            KeyBottomSheet(key = it, onDismissRequest = { state.selectedKey = null })
+        state.selected?.let { selected ->
+            state.selectedKey?.let { selectedKey ->
+                KeyBottomSheet(
+                    key = selectedKey,
+                    onDismissRequest = { state.selectedKey = null },
+                    onDeleteClick = {
+                        state.scope.launch {
+                            api.deleteAccessKey(selected, selectedKey.accessKey.id)
+                        }
+                    },
+                )
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.serialization.kotlinx.json.json
@@ -39,6 +40,10 @@ class OutlineApi {
 
     suspend fun createAccessKey(apiUrl: String) {
         httpClient.post("$apiUrl/access-keys")
+    }
+
+    suspend fun deleteAccessKey(apiUrl: String, id: String) {
+        httpClient.delete("$apiUrl/access-keys/$id")
     }
 
 }
