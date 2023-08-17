@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 class AccessKey(
     val id: String,
-    val name: String,
     val accessUrl: String,
-)
+    private val name: String,
+) {
+    val nameOrDefault: String
+        get() = name.ifEmpty { "Key $id" }
+}

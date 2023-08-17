@@ -34,6 +34,7 @@ import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
+import org.sirekanyan.outline.ui.KeyBottomSheet
 import org.sirekanyan.outline.ui.KeyContent
 
 @Composable
@@ -56,7 +57,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
             LazyColumn(contentPadding = WindowInsets.systemBars.asPaddingValues()) {
                 keys.sortedByDescending(Key::traffic).forEach { key ->
                     item {
-                        KeyContent(key)
+                        KeyContent(key, onClick = { state.selectedKey = key })
                     }
                 }
             }
@@ -71,6 +72,9 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
                 }
             },
         )
+        state.selectedKey?.let {
+            KeyBottomSheet(key = it, onDismissRequest = { state.selectedKey = null })
+        }
     }
 }
 

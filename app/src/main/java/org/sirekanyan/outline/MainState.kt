@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.sirekanyan.outline.api.model.Key
 
 @Composable
 fun rememberMainState(): MainState {
@@ -23,6 +24,7 @@ class MainState(val scope: CoroutineScope) {
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
     val selected by derivedStateOf { (page as? SelectedPage)?.selected }
+    var selectedKey by mutableStateOf<Key?>(null)
 
     fun openDrawer() {
         scope.launch {
