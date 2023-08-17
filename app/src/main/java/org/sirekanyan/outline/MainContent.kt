@@ -1,12 +1,12 @@
 package org.sirekanyan.outline
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.ApiUrlDao
+import org.sirekanyan.outline.ext.plus
 import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
@@ -40,27 +41,26 @@ import org.sirekanyan.outline.ui.KeyContent
 @Composable
 fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Key>) {
     ModalNavigationDrawer({ DrawerContent(api, dao, state) }, drawerState = state.drawer) {
+        val contentPadding = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         if (state.page is HelloPage) {
-            Column {
-                MainTopAppBar {
-                    state.openDrawer()
-                }
-                Box(Modifier.fillMaxSize().navigationBarsPadding(), Alignment.Center) {
-                    TextButton(onClick = { state.page = DraftPage }) {
-                        Icon(Icons.Default.Add, null)
-                        Spacer(Modifier.size(8.dp))
-                        Text("Add server")
-                    }
+            Box(Modifier.fillMaxSize().padding(contentPadding), Alignment.Center) {
+                TextButton(onClick = { state.page = DraftPage }) {
+                    Icon(Icons.Default.Add, null)
+                    Spacer(Modifier.size(8.dp))
+                    Text("Add server")
                 }
             }
         } else {
-            LazyColumn(contentPadding = WindowInsets.systemBars.asPaddingValues()) {
+            LazyColumn(contentPadding = contentPadding + PaddingValues(bottom = 88.dp)) {
                 keys.sortedByDescending(Key::traffic).forEach { key ->
                     item {
                         KeyContent(key, onClick = { state.selectedKey = key })
                     }
                 }
             }
+        }
+        MainTopAppBar {
+            state.openDrawer()
         }
         AddKeyButton(
             visible = state.selected != null,
@@ -95,7 +95,7 @@ private fun MainTopAppBar(onMenuClick: () -> Unit) {
         title = { Text(stringResource(R.string.app_name)) },
         navigationIcon = { IconButton({ onMenuClick() }) { Icon(Icons.Default.Menu, null) } },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
+            MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.98f),
         ),
     )
 }
