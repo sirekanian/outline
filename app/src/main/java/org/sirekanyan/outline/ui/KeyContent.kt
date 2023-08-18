@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.text.formatTraffic
@@ -24,7 +25,7 @@ fun KeyContent(key: Key, onClick: () -> Unit) {
         Arrangement.SpaceBetween,
         Alignment.CenterVertically,
     ) {
-        Text(key.accessKey.nameOrDefault)
+        Text(key.accessKey.nameOrDefault, Modifier.weight(1f), overflow = Ellipsis, maxLines = 1)
         key.traffic?.let { traffic ->
             Text(
                 text = formatTraffic(traffic),
