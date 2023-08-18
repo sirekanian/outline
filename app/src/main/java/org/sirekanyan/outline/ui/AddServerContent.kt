@@ -19,20 +19,20 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.HelloPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.db.ApiUrlDao
 
 @Composable
-fun DraftContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
+fun AddServerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
     var draft by remember { mutableStateOf("") }
     var error by remember(draft) { mutableStateOf("") }
     suspend fun onAddClick() {
         try {
             api.getServerName(draft)
             dao.insertUrl(draft)
+            state.dialog = null
             state.page = SelectedPage(draft)
             state.closeDrawer(animated = false)
         } catch (exception: Exception) {
@@ -43,7 +43,7 @@ fun DraftContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
     Column {
         DialogToolbar(
             title = "Add server",
-            onCloseClick = { state.page = HelloPage },
+            onCloseClick = { state.dialog = null },
             action = "Add" to { state.scope.launch { onAddClick() } },
         )
         val focusRequester = remember { FocusRequester() }

@@ -18,7 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.sirekanyan.outline.DraftPage
+import org.sirekanyan.outline.AddServerDialog
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
@@ -56,7 +56,7 @@ fun DrawerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
             modifier = Modifier.padding(horizontal = 12.dp),
             selected = false,
             onClick = {
-                state.page = DraftPage
+                state.dialog = AddServerDialog
             },
         )
     }

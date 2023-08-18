@@ -18,14 +18,13 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.EditKeyPage
+import org.sirekanyan.outline.EditKeyDialog
 import org.sirekanyan.outline.MainState
-import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.OutlineApi
 
 @Composable
-fun EditKeyContent(api: OutlineApi, state: MainState, page: EditKeyPage) {
-    val accessKey = page.key.accessKey
+fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
+    val accessKey = dialog.key.accessKey
     var draft by remember {
         mutableStateOf(TextFieldValue(accessKey.nameOrDefault, TextRange(Int.MAX_VALUE)))
     }
@@ -35,13 +34,13 @@ fun EditKeyContent(api: OutlineApi, state: MainState, page: EditKeyPage) {
     Column {
         DialogToolbar(
             title = "Edit key",
-            onCloseClick = { state.page = SelectedPage(page.selected) },
+            onCloseClick = { state.dialog = null },
             action = "Save" to {
                 state.scope.launch {
                     try {
                         val newName = draft.text.ifBlank { accessKey.defaultName }
-                        api.renameAccessKey(page.selected, accessKey.id, newName)
-                        state.page = SelectedPage(page.selected)
+                        api.renameAccessKey(dialog.selected, accessKey.id, newName)
+                        state.dialog = null
                     } catch (exception: Exception) {
                         exception.printStackTrace()
                         error = "Check name or try again"

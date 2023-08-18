@@ -15,7 +15,7 @@ import androidx.core.view.WindowCompat
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.rememberApiUrlDao
-import org.sirekanyan.outline.ui.DraftContent
+import org.sirekanyan.outline.ui.AddServerContent
 import org.sirekanyan.outline.ui.EditKeyContent
 import org.sirekanyan.outline.ui.theme.OutlineTheme
 
@@ -32,16 +32,20 @@ class MainActivity : ComponentActivity() {
             }
             BackHandler {
                 when {
-                    state.page is DraftPage -> state.page = HelloPage
+                    state.dialog != null -> state.dialog = null
                     state.drawer.isOpen -> state.closeDrawer()
                 }
             }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    when (val page = state.page) {
-                        is DraftPage -> DraftContent(api, dao, state)
-                        is EditKeyPage -> EditKeyContent(api, state, page)
-                        else -> MainContent(api, dao, state, keys)
+                    MainContent(api, dao, state, keys)
+                    state.dialog?.let { dialog ->
+                        Surface {
+                            when (dialog) {
+                                is AddServerDialog -> AddServerContent(api, dao, state)
+                                is EditKeyDialog -> EditKeyContent(api, state, dialog)
+                            }
+                        }
                     }
                 }
             }

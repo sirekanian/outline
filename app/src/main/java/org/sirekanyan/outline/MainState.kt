@@ -23,6 +23,7 @@ class MainState(val scope: CoroutineScope) {
 
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
+    var dialog by mutableStateOf<Dialog?>(null)
     val selected by derivedStateOf { (page as? SelectedPage)?.selected }
     var selectedKey by mutableStateOf<Key?>(null)
 
@@ -48,8 +49,10 @@ sealed class Page
 
 data object HelloPage : Page()
 
-data object DraftPage : Page()
-
-data class EditKeyPage(val selected: String, val key: Key) : Page()
-
 data class SelectedPage(val selected: String) : Page()
+
+sealed class Dialog
+
+data object AddServerDialog : Dialog()
+
+data class EditKeyDialog(val selected: String, val key: Key) : Dialog()

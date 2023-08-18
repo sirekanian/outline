@@ -44,7 +44,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
         val contentPadding = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         if (state.page is HelloPage) {
             Box(Modifier.fillMaxSize().padding(contentPadding), Alignment.Center) {
-                TextButton(onClick = { state.page = DraftPage }) {
+                TextButton(onClick = { state.dialog = AddServerDialog }) {
                     Icon(Icons.Default.Add, null)
                     Spacer(Modifier.size(8.dp))
                     Text("Add server")
@@ -78,7 +78,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
                     key = selectedKey,
                     onDismissRequest = { state.selectedKey = null },
                     onEditClick = {
-                        state.page = EditKeyPage(selected, selectedKey)
+                        state.dialog = EditKeyDialog(selected, selectedKey)
                     },
                     onDeleteClick = {
                         state.scope.launch {
