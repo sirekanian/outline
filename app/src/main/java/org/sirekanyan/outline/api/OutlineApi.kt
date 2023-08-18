@@ -7,10 +7,15 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.sirekanyan.outline.api.model.AccessKeysResponse
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.api.model.RenameRequest
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
 
@@ -40,6 +45,13 @@ class OutlineApi {
 
     suspend fun createAccessKey(apiUrl: String) {
         httpClient.post("$apiUrl/access-keys")
+    }
+
+    suspend fun renameAccessKey(apiUrl: String, id: String, name: String) {
+        httpClient.put("$apiUrl/access-keys/$id/name") {
+            contentType(ContentType.Application.Json)
+            setBody(RenameRequest(name))
+        }
     }
 
     suspend fun deleteAccessKey(apiUrl: String, id: String) {

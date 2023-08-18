@@ -16,6 +16,7 @@ import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.rememberApiUrlDao
 import org.sirekanyan.outline.ui.DraftContent
+import org.sirekanyan.outline.ui.EditKeyContent
 import org.sirekanyan.outline.ui.theme.OutlineTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,10 +38,10 @@ class MainActivity : ComponentActivity() {
             }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    if (state.page is DraftPage) {
-                        DraftContent(api, dao, state)
-                    } else {
-                        MainContent(api, dao, state, keys)
+                    when (val page = state.page) {
+                        is DraftPage -> DraftContent(api, dao, state)
+                        is EditKeyPage -> EditKeyContent(api, state, page)
+                        else -> MainContent(api, dao, state, keys)
                     }
                 }
             }

@@ -3,8 +3,6 @@ package org.sirekanyan.outline.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,51 +14,54 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.HelloPage
+import org.sirekanyan.outline.EditKeyPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.db.ApiUrlDao
 
 @Composable
-fun DraftContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
-    var draft by remember { mutableStateOf("") }
-    var error by remember(draft) { mutableStateOf("") }
-    suspend fun onAddClick() {
-        try {
-            api.getServerName(draft)
-            dao.insertUrl(draft)
-            state.page = SelectedPage(draft)
-            state.closeDrawer(animated = false)
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-            error = "Check URL or try again"
-        }
+fun EditKeyContent(api: OutlineApi, state: MainState, page: EditKeyPage) {
+    val accessKey = page.key.accessKey
+    var draft by remember {
+        mutableStateOf(TextFieldValue(accessKey.nameOrDefault, TextRange(Int.MAX_VALUE)))
+    }
+    var error by remember(draft) {
+        mutableStateOf("")
     }
     Column {
         DialogToolbar(
-            title = "Add server",
-            onCloseClick = { state.page = HelloPage },
-            action = "Add" to { state.scope.launch { onAddClick() } },
+            title = "Edit key",
+            onCloseClick = { state.page = SelectedPage(page.selected) },
+            action = "Save" to {
+                state.scope.launch {
+                    try {
+                        val newName = draft.text.ifBlank { accessKey.defaultName }
+                        api.renameAccessKey(page.selected, accessKey.id, newName)
+                        state.page = SelectedPage(page.selected)
+                    } catch (exception: Exception) {
+                        exception.printStackTrace()
+                        error = "Check name or try again"
+                    }
+                }
+            },
         )
         val focusRequester = remember { FocusRequester() }
         OutlinedTextField(
             value = draft,
-            onValueChange = { draft = it.trim() },
+            onValueChange = { draft = it.copy(text = it.text.trim('\n')) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 24.dp)
                 .focusRequester(focusRequester),
-            label = { Text("Management API URL") },
-            placeholder = { Text("https://xx.xx.xx.xx:xxx/xxxxx") },
+            label = { Text("Name") },
+            placeholder = { Text(accessKey.defaultName) },
             isError = error.isNotEmpty(),
             supportingText = { Text(error) },
             maxLines = 4,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { state.scope.launch { onAddClick() } })
         )
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()

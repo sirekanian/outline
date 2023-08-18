@@ -8,6 +8,8 @@ class AccessKey(
     val accessUrl: String,
     private val name: String,
 ) {
+    val defaultName: String
+        get() = "Key $id"
     val nameOrDefault: String
-        get() = name.ifEmpty { "Key $id" }
+        get() = name.ifEmpty { defaultName }
 }

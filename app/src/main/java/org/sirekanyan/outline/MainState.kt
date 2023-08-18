@@ -50,4 +50,6 @@ data object HelloPage : Page()
 
 data object DraftPage : Page()
 
+data class EditKeyPage(val selected: String, val key: Key) : Page()
+
 data class SelectedPage(val selected: String) : Page()

@@ -77,6 +77,9 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
                 KeyBottomSheet(
                     key = selectedKey,
                     onDismissRequest = { state.selectedKey = null },
+                    onEditClick = {
+                        state.page = EditKeyPage(selected, selectedKey)
+                    },
                     onDeleteClick = {
                         state.scope.launch {
                             api.deleteAccessKey(selected, selectedKey.accessKey.id)
