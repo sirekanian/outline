@@ -1,5 +1,6 @@
 package org.sirekanyan.outline.ui
 
+import android.content.Intent
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -59,6 +61,22 @@ fun KeyBottomSheet(key: Key, onDismissRequest: () -> Unit, onDeleteClick: () -> 
                     }.invokeOnCompletion {
                         onDismissRequest()
                     }
+                },
+            )
+            ListItem(
+                headlineContent = { Text("Share") },
+                leadingContent = { Icon(Icons.Default.Share, null) },
+                modifier = Modifier.clickable {
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        onDismissRequest()
+                    }
+                    localContext.startActivity(
+                        Intent(Intent.ACTION_SEND)
+                            .putExtra(Intent.EXTRA_TEXT, key.accessKey.accessUrl)
+                            .setType("text/plain")
+                    )
                 },
             )
             ListItem(
