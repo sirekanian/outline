@@ -30,16 +30,16 @@ class MainActivity : ComponentActivity() {
             val keys by produceState(listOf<Key>(), state.selected) {
                 value = state.selected?.let { api.getKeys(it) } ?: listOf()
             }
-            BackHandler {
-                when {
-                    state.dialog != null -> state.dialog = null
-                    state.drawer.isOpen -> state.closeDrawer()
-                }
-            }
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    BackHandler(state.drawer.isOpen) {
+                        state.closeDrawer()
+                    }
                     MainContent(api, dao, state, keys)
                     state.dialog?.let { dialog ->
+                        BackHandler(state.dialog != null) {
+                            state.dialog = null
+                        }
                         Surface {
                             when (dialog) {
                                 is AddServerDialog -> AddServerContent(api, dao, state)
