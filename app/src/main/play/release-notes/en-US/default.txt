@@ -1,0 +1,13 @@
+v0.1.4
+- Added edit key button
+- Minor improvements
+
+v0.1.3
+- Added delete key button
+- Minor improvements
+
+v0.1.2
+- Minor bugfixes
+
+v0.1.1
+- Initial version
