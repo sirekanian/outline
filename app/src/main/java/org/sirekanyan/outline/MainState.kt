@@ -11,15 +11,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 
 @Composable
-fun rememberMainState(): MainState {
+fun rememberMainState(api: OutlineApi): MainState {
     val scope = rememberCoroutineScope()
-    return remember { MainState(scope) }
+    return remember { MainState(scope, api) }
 }
 
-class MainState(val scope: CoroutineScope) {
+class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
 
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
@@ -43,13 +44,21 @@ class MainState(val scope: CoroutineScope) {
         }
     }
 
+    suspend fun refreshCurrentKeys() {
+        (page as? SelectedPage)?.let { page ->
+            page.keys = api.getKeys(page.selected)
+        }
+    }
+
 }
 
 sealed class Page
 
 data object HelloPage : Page()
 
-data class SelectedPage(val selected: String) : Page()
+data class SelectedPage(val selected: String) : Page() {
+    var keys by mutableStateOf(listOf<Key>())
+}
 
 sealed class Dialog
 

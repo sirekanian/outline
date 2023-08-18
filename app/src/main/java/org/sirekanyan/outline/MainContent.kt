@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,23 +40,29 @@ import org.sirekanyan.outline.ui.KeyBottomSheet
 import org.sirekanyan.outline.ui.KeyContent
 
 @Composable
-fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Key>) {
+fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
     ModalNavigationDrawer({ DrawerContent(api, dao, state) }, drawerState = state.drawer) {
         val contentPadding = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
-        if (state.page is HelloPage) {
-            Box(Modifier.fillMaxSize().padding(contentPadding), Alignment.Center) {
-                TextButton(onClick = { state.dialog = AddServerDialog }) {
-                    Icon(Icons.Default.Add, null)
-                    Spacer(Modifier.size(8.dp))
-                    Text("Add server")
+        when (val page = state.page) {
+            is HelloPage -> {
+                Box(Modifier.fillMaxSize().padding(contentPadding), Alignment.Center) {
+                    TextButton(onClick = { state.dialog = AddServerDialog }) {
+                        Icon(Icons.Default.Add, null)
+                        Spacer(Modifier.size(8.dp))
+                        Text("Add server")
+                    }
                 }
             }
-        } else {
-            LazyColumn(contentPadding = contentPadding + PaddingValues(bottom = 88.dp)) {
-                keys.sortedByDescending(Key::traffic).forEach { key ->
-                    item {
-                        KeyContent(key, onClick = { state.selectedKey = key })
+            is SelectedPage -> {
+                LazyColumn(contentPadding = contentPadding + PaddingValues(bottom = 88.dp)) {
+                    page.keys.sortedByDescending(Key::traffic).forEach { key ->
+                        item {
+                            KeyContent(key, onClick = { state.selectedKey = key })
+                        }
                     }
+                }
+                LaunchedEffect(page.selected) {
+                    state.refreshCurrentKeys()
                 }
             }
         }
@@ -68,6 +75,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
                 state.selected?.let {
                     state.scope.launch {
                         api.createAccessKey(it)
+                        state.refreshCurrentKeys()
                     }
                 }
             },
@@ -83,6 +91,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState, keys: List<Ke
                     onDeleteClick = {
                         state.scope.launch {
                             api.deleteAccessKey(selected, selectedKey.accessKey.id)
+                            state.refreshCurrentKeys()
                         }
                     },
                 )
