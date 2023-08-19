@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,21 +31,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.ext.plus
+import org.sirekanyan.outline.feature.keys.KeysContent
+import org.sirekanyan.outline.feature.keys.KeysErrorContent
+import org.sirekanyan.outline.feature.keys.KeysErrorState
+import org.sirekanyan.outline.feature.keys.KeysLoadingState
+import org.sirekanyan.outline.feature.keys.KeysSuccessState
 import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
-import org.sirekanyan.outline.ui.KeyContent
 
 @Composable
 fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
     ModalNavigationDrawer({ DrawerContent(api, dao, state) }, drawerState = state.drawer) {
-        val contentPadding = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
+        val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
-                Box(Modifier.fillMaxSize().padding(contentPadding), Alignment.Center) {
+                Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
                     TextButton(onClick = { state.dialog = AddServerDialog }) {
                         Icon(Icons.Default.Add, null)
                         Spacer(Modifier.size(8.dp))
@@ -54,15 +57,28 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 }
             }
             is SelectedPage -> {
-                LazyColumn(contentPadding = contentPadding + PaddingValues(bottom = 88.dp)) {
-                    page.keys.sortedByDescending(Key::traffic).forEach { key ->
-                        item {
-                            KeyContent(key, onClick = { state.selectedKey = key })
+                when (val keys = page.keys) {
+                    is KeysLoadingState -> {
+                        Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
+                            CircularProgressIndicator()
                         }
+                    }
+                    is KeysErrorState -> {
+                        KeysErrorContent(
+                            insets = insets,
+                            onRetry = {
+                                state.scope.launch {
+                                    state.refreshCurrentKeys(showLoading = true)
+                                }
+                            },
+                        )
+                    }
+                    is KeysSuccessState -> {
+                        KeysContent(insets, state, keys)
                     }
                 }
                 LaunchedEffect(page.selected) {
-                    state.refreshCurrentKeys()
+                    state.refreshCurrentKeys(showLoading = true)
                 }
             }
         }
@@ -75,7 +91,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 state.selected?.let {
                     state.scope.launch {
                         api.createAccessKey(it)
-                        state.refreshCurrentKeys()
+                        state.refreshCurrentKeys(showLoading = false)
                     }
                 }
             },
@@ -91,7 +107,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                     onDeleteClick = {
                         state.scope.launch {
                             api.deleteAccessKey(selected, selectedKey.accessKey.id)
-                            state.refreshCurrentKeys()
+                            state.refreshCurrentKeys(showLoading = false)
                         }
                     },
                 )

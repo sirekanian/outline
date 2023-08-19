@@ -45,7 +45,7 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
                         exception.printStackTrace()
                         error = "Check name or try again"
                     }
-                    state.refreshCurrentKeys()
+                    state.refreshCurrentKeys(showLoading = false)
                 }
             },
         )

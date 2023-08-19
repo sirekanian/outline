@@ -13,6 +13,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.feature.keys.KeysErrorState
+import org.sirekanyan.outline.feature.keys.KeysLoadingState
+import org.sirekanyan.outline.feature.keys.KeysState
+import org.sirekanyan.outline.feature.keys.KeysSuccessState
 
 @Composable
 fun rememberMainState(api: OutlineApi): MainState {
@@ -44,9 +48,17 @@ class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
         }
     }
 
-    suspend fun refreshCurrentKeys() {
+    suspend fun refreshCurrentKeys(showLoading: Boolean) {
         (page as? SelectedPage)?.let { page ->
-            page.keys = api.getKeys(page.selected)
+            if (showLoading) {
+                page.keys = KeysLoadingState
+            }
+            page.keys = try {
+                KeysSuccessState(api.getKeys(page.selected))
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                KeysErrorState
+            }
         }
     }
 
@@ -57,7 +69,7 @@ sealed class Page
 data object HelloPage : Page()
 
 data class SelectedPage(val selected: String) : Page() {
-    var keys by mutableStateOf(listOf<Key>())
+    var keys by mutableStateOf<KeysState>(KeysLoadingState)
 }
 
 sealed class Dialog

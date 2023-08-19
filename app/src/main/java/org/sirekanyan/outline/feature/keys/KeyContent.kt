@@ -1,4 +1,4 @@
-package org.sirekanyan.outline.ui
+package org.sirekanyan.outline.feature.keys
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
