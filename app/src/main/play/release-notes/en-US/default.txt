@@ -1,3 +1,6 @@
+v0.1.5
+- Bugfixes and improvements
+
 v0.1.4
 - Added edit key button
 - Minor improvements
