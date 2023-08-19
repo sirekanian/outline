@@ -98,10 +98,10 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
             isVisible = state.isFabVisible,
             isLoading = state.isFabLoading,
             onClick = {
-                state.selected?.let {
+                state.selectedPage?.let { page ->
                     state.scope.launch {
                         state.isFabLoading = true
-                        api.createAccessKey(it)
+                        api.createAccessKey(page.selected)
                         state.refreshCurrentKeys(showLoading = false)
                     }.invokeOnCompletion {
                         state.isFabLoading = false
@@ -109,13 +109,13 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 }
             },
         )
-        state.selected?.let { selected ->
-            state.selectedKey?.let { selectedKey ->
+        state.selectedPage?.let { page ->
+            state.selectedKey?.let { key ->
                 KeyBottomSheet(
-                    key = selectedKey,
+                    key = key,
                     onDismissRequest = { state.selectedKey = null },
-                    onEditClick = { state.dialog = EditKeyDialog(selected, selectedKey) },
-                    onDeleteClick = { state.dialog = DeleteKeyDialog(selected, selectedKey) },
+                    onEditClick = { state.dialog = EditKeyDialog(page.selected, key) },
+                    onDeleteClick = { state.dialog = DeleteKeyDialog(page.selected, key) },
                 )
             }
         }

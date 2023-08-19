@@ -57,7 +57,7 @@ class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
     var dialog by mutableStateOf<Dialog?>(null)
-    val selected by derivedStateOf { (page as? SelectedPage)?.selected }
+    val selectedPage by derivedStateOf { page as? SelectedPage }
     var selectedKey by mutableStateOf<Key?>(null)
     val isFabVisible by derivedStateOf { (page as? SelectedPage)?.keys is KeysSuccessState }
     var isFabLoading by mutableStateOf(false)

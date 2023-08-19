@@ -33,7 +33,7 @@ fun DrawerContent(dao: ApiUrlDao, state: MainState) {
         )
         val apiUrls by remember { dao.observeUrls() }.collectAsState(listOf())
         apiUrls.forEach { apiUrl ->
-            val selected = state.selected == apiUrl
+            val selected = state.selectedPage?.selected == apiUrl
             val serverName by produceState(state.servers.getDefaultName(apiUrl), state.drawer.isOpen) {
                 value = state.servers.getName(apiUrl)
             }
