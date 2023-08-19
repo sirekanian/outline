@@ -1,3 +1,7 @@
+v0.1.7
+- Added delete confirmation dialog
+- Minor improvements
+
 v0.1.6
 - Appearance improvements
 
