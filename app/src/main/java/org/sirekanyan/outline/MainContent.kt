@@ -114,15 +114,8 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 KeyBottomSheet(
                     key = selectedKey,
                     onDismissRequest = { state.selectedKey = null },
-                    onEditClick = {
-                        state.dialog = EditKeyDialog(selected, selectedKey)
-                    },
-                    onDeleteClick = {
-                        state.scope.launch {
-                            api.deleteAccessKey(selected, selectedKey.accessKey.id)
-                            state.refreshCurrentKeys(showLoading = false)
-                        }
-                    },
+                    onEditClick = { state.dialog = EditKeyDialog(selected, selectedKey) },
+                    onDeleteClick = { state.dialog = DeleteKeyDialog(selected, selectedKey) },
                 )
             }
         }

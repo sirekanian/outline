@@ -107,3 +107,5 @@ sealed class Dialog
 data object AddServerDialog : Dialog()
 
 data class EditKeyDialog(val selected: String, val key: Key) : Dialog()
+
+data class DeleteKeyDialog(val selected: String, val key: Key) : Dialog()
