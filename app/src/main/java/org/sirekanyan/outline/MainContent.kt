@@ -82,10 +82,10 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                         KeysContent(insets, state, keys)
                     }
                 }
-                LaunchedEffect(page.selected) {
+                LaunchedEffect(page.apiUrl) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
-                val apiUrl = page.selected
+                val apiUrl = page.apiUrl
                 val serverName by produceState(state.servers.getDefaultName(apiUrl), apiUrl) {
                     value = state.servers.getName(apiUrl)
                 }
@@ -101,7 +101,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 state.selectedPage?.let { page ->
                     state.scope.launch {
                         state.isFabLoading = true
-                        api.createAccessKey(page.selected)
+                        api.createAccessKey(page.apiUrl)
                         state.refreshCurrentKeys(showLoading = false)
                     }.invokeOnCompletion {
                         state.isFabLoading = false
@@ -114,8 +114,8 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 KeyBottomSheet(
                     key = key,
                     onDismissRequest = { state.selectedKey = null },
-                    onEditClick = { state.dialog = EditKeyDialog(page.selected, key) },
-                    onDeleteClick = { state.dialog = DeleteKeyDialog(page.selected, key) },
+                    onEditClick = { state.dialog = EditKeyDialog(page.apiUrl, key) },
+                    onDeleteClick = { state.dialog = DeleteKeyDialog(page.apiUrl, key) },
                 )
             }
         }

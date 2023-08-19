@@ -84,7 +84,7 @@ class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
                 page.keys = KeysLoadingState
             }
             page.keys = try {
-                KeysSuccessState(api.getKeys(page.selected))
+                KeysSuccessState(api.getKeys(page.apiUrl))
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 KeysErrorState
@@ -98,7 +98,7 @@ sealed class Page
 
 data object HelloPage : Page()
 
-data class SelectedPage(val selected: String) : Page() {
+data class SelectedPage(val apiUrl: String) : Page() {
     var keys by mutableStateOf<KeysState>(KeysLoadingState)
 }
 
@@ -106,6 +106,6 @@ sealed class Dialog
 
 data object AddServerDialog : Dialog()
 
-data class EditKeyDialog(val selected: String, val key: Key) : Dialog()
+data class EditKeyDialog(val apiUrl: String, val key: Key) : Dialog()
 
-data class DeleteKeyDialog(val selected: String, val key: Key) : Dialog()
+data class DeleteKeyDialog(val apiUrl: String, val key: Key) : Dialog()

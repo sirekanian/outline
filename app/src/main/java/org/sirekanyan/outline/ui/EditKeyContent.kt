@@ -39,7 +39,7 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
                     val isSuccess = try {
                         isLoading = true
                         val newName = draft.text.ifBlank { accessKey.defaultName }
-                        api.renameAccessKey(dialog.selected, accessKey.id, newName)
+                        api.renameAccessKey(dialog.apiUrl, accessKey.id, newName)
                         state.dialog = null
                         true
                     } catch (exception: Exception) {
