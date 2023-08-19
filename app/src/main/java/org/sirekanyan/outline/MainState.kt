@@ -1,5 +1,7 @@
 package org.sirekanyan.outline
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.Composable
@@ -9,19 +11,43 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysState
 import org.sirekanyan.outline.feature.keys.KeysSuccessState
+import java.net.ConnectException
+import java.net.UnknownHostException
 
 @Composable
 fun rememberMainState(api: OutlineApi): MainState {
-    val scope = rememberCoroutineScope()
-    return remember { MainState(scope, api) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope {
+        CoroutineExceptionHandler { _, throwable ->
+            if (throwable is UnknownHostException) {
+                Log.e("OUTLINE", "Uncaught exception: ${throwable.message}")
+            } else {
+                Log.e("OUTLINE", "Uncaught exception", throwable)
+            }
+            when (throwable) {
+                is UnknownHostException, is ConnectException -> {
+                    Toast.makeText(context, "Check network connection", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    val supervisor = remember { SupervisorJob() }
+    return remember { MainState(scope + supervisor, api) }
 }
 
 class MainState(val scope: CoroutineScope, private val api: OutlineApi) {

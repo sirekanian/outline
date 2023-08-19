@@ -37,15 +37,19 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
             onCloseClick = { state.dialog = null },
             action = "Save" to {
                 state.scope.launch {
-                    try {
+                    val isSuccess = try {
                         val newName = draft.text.ifBlank { accessKey.defaultName }
                         api.renameAccessKey(dialog.selected, accessKey.id, newName)
                         state.dialog = null
+                        true
                     } catch (exception: Exception) {
                         exception.printStackTrace()
                         error = "Check name or try again"
+                        false
                     }
-                    state.refreshCurrentKeys(showLoading = false)
+                    if (isSuccess) {
+                        state.refreshCurrentKeys(showLoading = false)
+                    }
                 }
             },
         )

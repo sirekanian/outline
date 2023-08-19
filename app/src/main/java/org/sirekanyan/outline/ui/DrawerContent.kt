@@ -1,6 +1,7 @@
 package org.sirekanyan.outline.ui
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -37,7 +38,11 @@ fun DrawerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
         apiUrls.forEach { apiUrl ->
             val selected = state.selected == apiUrl
             val serverName by produceState(Uri.parse(apiUrl).host.orEmpty()) {
-                value = api.getServerName(apiUrl)
+                try {
+                    value = api.getServerName(apiUrl)
+                } catch (exception: Exception) {
+                    Log.d("OUTLINE", "Cannot fetch server name", exception)
+                }
             }
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Done, null) },
