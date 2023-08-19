@@ -28,8 +28,10 @@ import org.sirekanyan.outline.db.ApiUrlDao
 fun AddServerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
     var draft by remember { mutableStateOf("") }
     var error by remember(draft) { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
     suspend fun onAddClick() {
         try {
+            isLoading = true
             api.getServerName(draft)
             dao.insertUrl(draft)
             state.dialog = null
@@ -38,6 +40,8 @@ fun AddServerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
         } catch (exception: Exception) {
             exception.printStackTrace()
             error = "Check URL or try again"
+        } finally {
+            isLoading = false
         }
     }
     Column {
@@ -45,6 +49,7 @@ fun AddServerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
             title = "Add server",
             onCloseClick = { state.dialog = null },
             action = "Add" to { state.scope.launch { onAddClick() } },
+            isLoading = isLoading,
         )
         val focusRequester = remember { FocusRequester() }
         OutlinedTextField(

@@ -28,9 +28,8 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
     var draft by remember {
         mutableStateOf(TextFieldValue(accessKey.nameOrDefault, TextRange(Int.MAX_VALUE)))
     }
-    var error by remember(draft) {
-        mutableStateOf("")
-    }
+    var error by remember(draft) { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
     Column {
         DialogToolbar(
             title = "Edit key",
@@ -38,6 +37,7 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
             action = "Save" to {
                 state.scope.launch {
                     val isSuccess = try {
+                        isLoading = true
                         val newName = draft.text.ifBlank { accessKey.defaultName }
                         api.renameAccessKey(dialog.selected, accessKey.id, newName)
                         state.dialog = null
@@ -46,12 +46,15 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
                         exception.printStackTrace()
                         error = "Check name or try again"
                         false
+                    } finally {
+                        isLoading = false
                     }
                     if (isSuccess) {
                         state.refreshCurrentKeys(showLoading = false)
                     }
                 }
             },
+            isLoading = isLoading,
         )
         val focusRequester = remember { FocusRequester() }
         OutlinedTextField(
