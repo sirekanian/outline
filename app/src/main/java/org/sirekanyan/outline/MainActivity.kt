@@ -46,8 +46,11 @@ class MainActivity : ComponentActivity() {
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
                                         state.scope.launch {
+                                            state.deletingKey = key
                                             api.deleteAccessKey(apiUrl, key.accessKey.id)
                                             state.refreshCurrentKeys(showLoading = false)
+                                        }.invokeOnCompletion {
+                                            state.deletingKey = null
                                         }
                                     }
                                 )
