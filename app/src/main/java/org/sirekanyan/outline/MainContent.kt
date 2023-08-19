@@ -86,12 +86,16 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
             state.openDrawer()
         }
         AddKeyButton(
-            visible = (state.page as? SelectedPage)?.keys is KeysSuccessState,
+            isVisible = state.isFabVisible,
+            isLoading = state.isFabLoading,
             onClick = {
                 state.selected?.let {
                     state.scope.launch {
+                        state.isFabLoading = true
                         api.createAccessKey(it)
                         state.refreshCurrentKeys(showLoading = false)
+                    }.invokeOnCompletion {
+                        state.isFabLoading = false
                     }
                 }
             },

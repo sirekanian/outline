@@ -57,6 +57,8 @@ class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
     var dialog by mutableStateOf<Dialog?>(null)
     val selected by derivedStateOf { (page as? SelectedPage)?.selected }
     var selectedKey by mutableStateOf<Key?>(null)
+    val isFabVisible by derivedStateOf { (page as? SelectedPage)?.keys is KeysSuccessState }
+    var isFabLoading by mutableStateOf(false)
 
     fun openDrawer() {
         scope.launch {
