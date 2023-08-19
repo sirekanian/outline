@@ -86,7 +86,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
             state.openDrawer()
         }
         AddKeyButton(
-            visible = state.selected != null,
+            visible = (state.page as? SelectedPage)?.keys is KeysSuccessState,
             onClick = {
                 state.selected?.let {
                     state.scope.launch {
