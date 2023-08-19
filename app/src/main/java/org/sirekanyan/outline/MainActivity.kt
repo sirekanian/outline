@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         }
                         Surface {
                             when (dialog) {
-                                is AddServerDialog -> AddServerContent(api, dao, state)
+                                is AddServerDialog -> AddServerContent(dao, state)
                                 is EditKeyDialog -> EditKeyContent(api, state, dialog)
                             }
                         }

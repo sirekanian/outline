@@ -21,18 +21,17 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.db.ApiUrlDao
 
 @Composable
-fun AddServerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
+fun AddServerContent(dao: ApiUrlDao, state: MainState) {
     var draft by remember { mutableStateOf("") }
     var error by remember(draft) { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     suspend fun onAddClick() {
         try {
             isLoading = true
-            api.getServerName(draft)
+            state.servers.fetchName(draft)
             dao.insertUrl(draft)
             state.dialog = null
             state.page = SelectedPage(draft)

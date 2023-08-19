@@ -25,6 +25,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,7 +46,7 @@ import org.sirekanyan.outline.ui.KeyBottomSheet
 
 @Composable
 fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
-    ModalNavigationDrawer({ DrawerContent(api, dao, state) }, drawerState = state.drawer) {
+    ModalNavigationDrawer({ DrawerContent(dao, state) }, drawerState = state.drawer) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
@@ -54,6 +56,9 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                         Spacer(Modifier.size(8.dp))
                         Text("Add server")
                     }
+                }
+                MainTopAppBar(stringResource(R.string.app_name)) {
+                    state.openDrawer()
                 }
             }
             is SelectedPage -> {
@@ -80,10 +85,14 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 LaunchedEffect(page.selected) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
+                val apiUrl = page.selected
+                val serverName by produceState(state.servers.getDefaultName(apiUrl), apiUrl) {
+                    value = state.servers.getName(apiUrl)
+                }
+                MainTopAppBar(serverName) {
+                    state.openDrawer()
+                }
             }
-        }
-        MainTopAppBar {
-            state.openDrawer()
         }
         AddKeyButton(
             isVisible = state.isFabVisible,
@@ -122,9 +131,9 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun MainTopAppBar(onMenuClick: () -> Unit) {
+private fun MainTopAppBar(title: String, onMenuClick: () -> Unit) {
     TopAppBar(
-        title = { Text(stringResource(R.string.app_name)) },
+        title = { Text(title) },
         navigationIcon = { IconButton({ onMenuClick() }) { Icon(Icons.Default.Menu, null) } },
         colors = TopAppBarDefaults.topAppBarColors(
             MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.98f),

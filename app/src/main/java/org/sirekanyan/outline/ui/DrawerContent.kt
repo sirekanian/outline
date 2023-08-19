@@ -1,7 +1,5 @@
 package org.sirekanyan.outline.ui
 
-import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -23,11 +21,10 @@ import org.sirekanyan.outline.AddServerDialog
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.db.ApiUrlDao
 
 @Composable
-fun DrawerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
+fun DrawerContent(dao: ApiUrlDao, state: MainState) {
     ModalDrawerSheet {
         Text(
             text = stringResource(R.string.app_name),
@@ -37,12 +34,8 @@ fun DrawerContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
         val apiUrls by remember { dao.observeUrls() }.collectAsState(listOf())
         apiUrls.forEach { apiUrl ->
             val selected = state.selected == apiUrl
-            val serverName by produceState(Uri.parse(apiUrl).host.orEmpty()) {
-                try {
-                    value = api.getServerName(apiUrl)
-                } catch (exception: Exception) {
-                    Log.d("OUTLINE", "Cannot fetch server name", exception)
-                }
+            val serverName by produceState(state.servers.getDefaultName(apiUrl), state.drawer.isOpen) {
+                value = state.servers.getName(apiUrl)
             }
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Done, null) },

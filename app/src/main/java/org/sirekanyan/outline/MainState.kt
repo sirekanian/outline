@@ -23,6 +23,7 @@ import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysState
 import org.sirekanyan.outline.feature.keys.KeysSuccessState
+import org.sirekanyan.outline.repository.ServerNameRepository
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -52,6 +53,7 @@ fun rememberMainState(api: OutlineApi): MainState {
 
 class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
 
+    val servers = ServerNameRepository(api)
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
     var dialog by mutableStateOf<Dialog?>(null)
