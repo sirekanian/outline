@@ -1,3 +1,6 @@
+v0.1.6
+- Appearance improvements
+
 v0.1.5
 - Bugfixes and improvements
 
