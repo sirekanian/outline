@@ -6,7 +6,8 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -43,6 +44,8 @@ fun KeyBottomSheet(
     val localClipboard = LocalClipboardManager.current
     val localContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    // insets should be kept outside of the modal bottom sheet to work properly
+    val insets = WindowInsets.navigationBars.asPaddingValues()
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -50,7 +53,7 @@ fun KeyBottomSheet(
         dragHandle = {},
         windowInsets = WindowInsets(0.dp),
     ) {
-        Column(Modifier.navigationBarsPadding().padding(top = 4.dp)) {
+        Column(Modifier.padding(insets).padding(top = 4.dp)) {
             Text(
                 text = key.accessKey.nameOrDefault,
                 modifier = Modifier.padding(16.dp),
