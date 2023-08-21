@@ -1,0 +1,3 @@
+This application uses Outline Server Management API to manage Outline VPN servers. You can find more information on https://getoutline.org
+
+Source code of this application is open and available on GitHub under Apache 2.0 license: https://github.com/sirekanian/outline
