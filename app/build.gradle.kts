@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("plugin.serialization")
-    id("com.squareup.sqldelight")
+    id("app.cash.sqldelight")
     id("org.sirekanyan.version-checker")
 }
 
@@ -65,13 +65,15 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.7")
 
     // sqldelight
-    implementation("com.squareup.sqldelight:android-driver:1.5.5")
-    implementation("com.squareup.sqldelight:coroutines-extensions:1.5.5")
+    implementation("app.cash.sqldelight:android-driver:2.0.0")
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 
 }
 
 sqldelight {
-    database("OutlineDatabase") {
-        packageName = "org.sirekanyan.outline.db"
+    databases {
+        create("OutlineDatabase") {
+            packageName.set("org.sirekanyan.outline.db")
+        }
     }
 }

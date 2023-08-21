@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -21,7 +22,7 @@ class ApiUrlDao(app: Application) {
     private val queries = OutlineDatabase(driver).apiUrlQueries
 
     fun observeUrls(): Flow<List<String>> =
-        queries.selectUrls().asFlow().mapToList()
+        queries.selectUrls().asFlow().mapToList(Dispatchers.IO)
 
     fun insertUrl(id: String) {
         queries.insertUrl(id)
