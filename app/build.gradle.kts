@@ -25,7 +25,14 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard.pro")
-            signingConfig = signingConfigs.getByName("debug")
+            if (findProperty("signingConfig") == "release") {
+                signingConfig = signingConfigs.create("release") {
+                    storeFile(file(System.getenv("SIGNING_KEYSTORE_FILE")))
+                    storePassword(System.getenv("SIGNING_KEYSTORE_PASSWORD"))
+                    keyAlias(System.getenv("SIGNING_KEY_ALIAS"))
+                    keyPassword(System.getenv("SIGNING_KEY_PASSWORD"))
+                }
+            }
         }
     }
     compileOptions {
