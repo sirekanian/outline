@@ -34,12 +34,12 @@ fun DrawerContent(dao: ApiUrlDao, state: MainState) {
         val apiUrls by remember { dao.observeUrls() }.collectAsState(listOf())
         apiUrls.forEach { apiUrl ->
             val isSelected = state.selectedPage?.apiUrl == apiUrl
-            val serverName by produceState(state.servers.getDefaultName(apiUrl), state.drawer.isOpen) {
-                value = state.servers.getName(apiUrl)
+            val server by produceState(state.servers.getCachedServer(apiUrl), state.drawer.isOpen) {
+                value = state.servers.getServer(apiUrl)
             }
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Done, null) },
-                label = { Text(serverName, style = MaterialTheme.typography.labelLarge) },
+                label = { Text(server.name, style = MaterialTheme.typography.labelLarge) },
                 modifier = Modifier.padding(horizontal = 12.dp),
                 selected = isSelected,
                 onClick = {

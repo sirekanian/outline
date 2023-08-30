@@ -38,7 +38,7 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
     suspend fun onAddClick() {
         try {
             isLoading = true
-            state.servers.fetchName(draft)
+            state.servers.fetchServer(draft)
             dao.insertUrl(draft)
             state.dialog = null
             state.page = SelectedPage(draft)

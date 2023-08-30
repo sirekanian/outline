@@ -86,10 +86,10 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
                 val apiUrl = page.apiUrl
-                val serverName by produceState(state.servers.getDefaultName(apiUrl), apiUrl) {
-                    value = state.servers.getName(apiUrl)
+                val server by produceState(state.servers.getCachedServer(apiUrl), apiUrl) {
+                    value = state.servers.getServer(apiUrl)
                 }
-                MainTopAppBar(serverName) {
+                MainTopAppBar(server.name) {
                     state.openDrawer()
                 }
             }

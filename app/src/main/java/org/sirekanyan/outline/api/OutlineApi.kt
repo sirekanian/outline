@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 import org.sirekanyan.outline.api.model.AccessKeysResponse
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.RenameRequest
+import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
 
@@ -28,8 +29,8 @@ class OutlineApi {
         engine { https.trustManager = InsecureTrustManager } // TODO: remove insecure http
     }
 
-    suspend fun getServerName(apiUrl: String): String =
-        httpClient.get("$apiUrl/server").body<ServerNameResponse>().name
+    suspend fun getServer(apiUrl: String): Server =
+        Server(httpClient.get("$apiUrl/server").body<ServerNameResponse>().name)
 
     suspend fun getKeys(apiUrl: String): List<Key> {
         val accessKeys = getAccessKeys(apiUrl).accessKeys
