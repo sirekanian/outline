@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
+import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.db.ApiUrlDao
 
@@ -35,7 +36,12 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
     var draft by remember { mutableStateOf("") }
     var error by remember(draft) { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+    var isDialogVisible by remember { mutableStateOf(false) }
     suspend fun onAddClick() {
+        if (draft.startsWith("ss://")) {
+            isDialogVisible = true
+            return
+        }
         try {
             isLoading = true
             state.servers.fetchServer(draft)
@@ -91,5 +97,8 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
                 color = LocalContentColor.current.copy(alpha = 0.66f),
             )
         }
+    }
+    if (isDialogVisible) {
+        NotSupportedContent(onDismissRequest = { isDialogVisible = false })
     }
 }
