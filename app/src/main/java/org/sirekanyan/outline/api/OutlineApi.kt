@@ -1,5 +1,6 @@
 package org.sirekanyan.outline.api
 
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -31,21 +32,26 @@ class OutlineApi {
 
     suspend fun getServer(apiUrl: String): Server {
         val name = httpClient.get("$apiUrl/server").body<ServerNameResponse>().name
-        val transferMetrics = getTransferMetrics(apiUrl).bytesTransferredByUserId
-        return Server(name, transferMetrics.values.sum())
+        val transferMetrics = getTransferMetrics(apiUrl)?.bytesTransferredByUserId
+        return Server(name, transferMetrics?.values?.sum())
     }
 
     suspend fun getKeys(apiUrl: String): List<Key> {
         val accessKeys = getAccessKeys(apiUrl).accessKeys
-        val transferMetrics = getTransferMetrics(apiUrl).bytesTransferredByUserId
-        return accessKeys.map { accessKey -> Key(accessKey, transferMetrics[accessKey.id]) }
+        val transferMetrics = getTransferMetrics(apiUrl)?.bytesTransferredByUserId
+        return accessKeys.map { accessKey -> Key(accessKey, transferMetrics?.get(accessKey.id)) }
     }
 
     private suspend fun getAccessKeys(apiUrl: String): AccessKeysResponse =
         httpClient.get("$apiUrl/access-keys").body()
 
-    private suspend fun getTransferMetrics(apiUrl: String): TransferMetricsResponse =
-        httpClient.get("$apiUrl/metrics/transfer").body()
+    private suspend fun getTransferMetrics(apiUrl: String): TransferMetricsResponse? =
+        try {
+            httpClient.get("$apiUrl/metrics/transfer").body()
+        } catch (exception: Exception) {
+            Log.d("OUTLINE", "Cannot fetch transfer metrics", exception)
+            null
+        }
 
     suspend fun createAccessKey(apiUrl: String) {
         httpClient.post("$apiUrl/access-keys")
