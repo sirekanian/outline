@@ -22,6 +22,7 @@ import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.db.ApiUrlDao
+import org.sirekanyan.outline.text.formatTraffic
 
 @Composable
 fun DrawerContent(dao: ApiUrlDao, state: MainState) {
@@ -40,6 +41,15 @@ fun DrawerContent(dao: ApiUrlDao, state: MainState) {
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Done, null) },
                 label = { Text(server.name, style = MaterialTheme.typography.labelLarge) },
+                badge = {
+                    server.traffic?.let { traffic ->
+                        Text(
+                            text = formatTraffic(traffic),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                    }
+                },
                 modifier = Modifier.padding(horizontal = 12.dp),
                 selected = isSelected,
                 onClick = {

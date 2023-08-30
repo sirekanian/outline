@@ -11,7 +11,7 @@ class ServerRepository(private val api: OutlineApi) {
     private val cache: MutableMap<String, Server> = ConcurrentHashMap()
 
     fun getCachedServer(apiUrl: String): Server =
-        cache[apiUrl] ?: Server(Uri.parse(apiUrl).host.orEmpty())
+        cache[apiUrl] ?: Server(Uri.parse(apiUrl).host.orEmpty(), traffic = null)
 
     suspend fun fetchServer(apiUrl: String): Server =
         api.getServer(apiUrl).also { fetched ->

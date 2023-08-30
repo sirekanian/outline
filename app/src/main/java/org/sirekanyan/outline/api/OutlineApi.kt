@@ -29,8 +29,11 @@ class OutlineApi {
         engine { https.trustManager = InsecureTrustManager } // TODO: remove insecure http
     }
 
-    suspend fun getServer(apiUrl: String): Server =
-        Server(httpClient.get("$apiUrl/server").body<ServerNameResponse>().name)
+    suspend fun getServer(apiUrl: String): Server {
+        val name = httpClient.get("$apiUrl/server").body<ServerNameResponse>().name
+        val transferMetrics = getTransferMetrics(apiUrl).bytesTransferredByUserId
+        return Server(name, transferMetrics.values.sum())
+    }
 
     suspend fun getKeys(apiUrl: String): List<Key> {
         val accessKeys = getAccessKeys(apiUrl).accessKeys
