@@ -91,7 +91,7 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
                 },
             )
             Text(
-                text = "Trust self-signed certificates",
+                text = "Trust all certificates (insecure)",
                 modifier = Modifier.padding(end = 16.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = LocalContentColor.current.copy(alpha = 0.66f),
