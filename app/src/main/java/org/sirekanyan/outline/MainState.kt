@@ -1,6 +1,5 @@
 package org.sirekanyan.outline
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -19,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysState
@@ -33,9 +33,9 @@ fun rememberMainState(api: OutlineApi): MainState {
     val scope = rememberCoroutineScope {
         CoroutineExceptionHandler { _, throwable ->
             if (throwable is UnknownHostException) {
-                Log.e("OUTLINE", "Uncaught exception: ${throwable.message}")
+                logError("Uncaught exception: ${throwable.message}", throwable = null)
             } else {
-                Log.e("OUTLINE", "Uncaught exception", throwable)
+                logError("Uncaught exception", throwable)
             }
             when (throwable) {
                 is UnknownHostException, is ConnectException -> {

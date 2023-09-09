@@ -1,6 +1,5 @@
 package org.sirekanyan.outline.api
 
-import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -20,6 +19,7 @@ import org.sirekanyan.outline.api.model.RenameRequest
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
+import org.sirekanyan.outline.ext.logDebug
 
 class OutlineApi {
 
@@ -49,7 +49,7 @@ class OutlineApi {
         try {
             httpClient.get("$apiUrl/metrics/transfer").body()
         } catch (exception: Exception) {
-            Log.d("OUTLINE", "Cannot fetch transfer metrics", exception)
+            logDebug("Cannot fetch transfer metrics", exception)
             null
         }
 

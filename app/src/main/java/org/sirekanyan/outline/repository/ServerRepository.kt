@@ -1,9 +1,9 @@
 package org.sirekanyan.outline.repository
 
 import android.net.Uri
-import android.util.Log
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Server
+import org.sirekanyan.outline.ext.logDebug
 import java.util.concurrent.ConcurrentHashMap
 
 class ServerRepository(private val api: OutlineApi) {
@@ -23,7 +23,7 @@ class ServerRepository(private val api: OutlineApi) {
             try {
                 return fetchServer(apiUrl)
             } catch (exception: Exception) {
-                Log.d("OUTLINE", "Cannot fetch server name", exception)
+                logDebug("Cannot fetch server name", exception)
             }
         }
         return getCachedServer(apiUrl)
