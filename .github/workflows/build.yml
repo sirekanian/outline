@@ -13,11 +13,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - shell: bash
-        run: ./gradlew lintDebug
+        run: ./gradlew lintFdroidDebug
+      - shell: bash
+        run: ./gradlew lintPlayDebug
       - if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          path: app/build/reports/lint-results-debug.html
+          path: app/build/reports/lint-results-*.html
   assemble:
     runs-on: ubuntu-latest
     steps:
@@ -33,12 +35,15 @@ jobs:
           SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ACRA_URI: ${{ secrets.ACRA_URI }}
+          ACRA_LOGIN: ${{ secrets.ACRA_LOGIN }}
+          ACRA_PASSWORD: ${{ secrets.ACRA_PASSWORD }}
         run: |
           base64 --decode <<< "$SIGNING_KEYSTORE_BASE64" > app/release.keystore
-          ./gradlew assembleRelease bundleRelease -PsigningConfig=release
+          ./gradlew assembleRelease bundleRelease
       - if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            app/build/outputs/apk/release/*-release*.apk
-            app/build/outputs/bundle/release/*-release.aab
+            app/build/outputs/apk/*/*/*release*.apk
+            app/build/outputs/bundle/*/*release*.aab

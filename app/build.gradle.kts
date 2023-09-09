@@ -25,13 +25,23 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard.pro")
-            if (findProperty("signingConfig") == "release") {
-                signingConfig = signingConfigs.create("release") {
-                    storeFile(file(System.getenv("SIGNING_KEYSTORE_FILE")))
-                    storePassword(System.getenv("SIGNING_KEYSTORE_PASSWORD"))
-                    keyAlias(System.getenv("SIGNING_KEY_ALIAS"))
-                    keyPassword(System.getenv("SIGNING_KEY_PASSWORD"))
-                }
+            signingConfig = signingConfigs.create("release") {
+                storeFile = System.getenv("SIGNING_KEYSTORE_FILE")?.let(::file)
+                storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            }
+        }
+    }
+    flavorDimensions += "store"
+    productFlavors {
+        create("fdroid") {
+            dimension = "store"
+        }
+        create("play") {
+            dimension = "store"
+            listOf("ACRA_URI", "ACRA_LOGIN", "ACRA_PASSWORD").forEach { key ->
+                buildConfigField("String", key, System.getenv(key)?.let { "\"$it\"" } ?: "null")
             }
         }
     }
