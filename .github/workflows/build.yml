@@ -47,3 +47,4 @@ jobs:
           files: |
             app/build/outputs/apk/*/*/*release*.apk
             app/build/outputs/bundle/*/*release*.aab
+            app/build/outputs/mapping/*/mapping.txt

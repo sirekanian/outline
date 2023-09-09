@@ -57,6 +57,7 @@ android {
         warningsAsErrors = true
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -84,6 +85,9 @@ dependencies {
     // sqldelight
     implementation("app.cash.sqldelight:android-driver:2.0.0")
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
+
+    // crash reporting
+    add("playImplementation", "ch.acra:acra-http:5.11.1")
 
 }
 
