@@ -98,3 +98,33 @@ sqldelight {
         }
     }
 }
+
+androidComponents {
+    onVariants { variant ->
+        val variantName = variant.name.replaceFirstChar(Char::titlecase)
+        val verifyTask = task("verify${variantName}Environment") {
+            doLast {
+                buildSet {
+                    if (variant.buildType == "release") {
+                        add("SIGNING_KEYSTORE_FILE")
+                        add("SIGNING_KEYSTORE_PASSWORD")
+                        add("SIGNING_KEY_ALIAS")
+                        add("SIGNING_KEY_PASSWORD")
+                    }
+                    if (variant.flavorName == "play") {
+                        add("ACRA_URI")
+                        add("ACRA_LOGIN")
+                        add("ACRA_PASSWORD")
+                    }
+                }.forEach { key ->
+                    if (System.getenv(key).isNullOrEmpty()) {
+                        error("Please specify $key environment variable")
+                    }
+                }
+            }
+        }
+        afterEvaluate {
+            tasks.getByName("assemble$variantName").dependsOn(verifyTask)
+        }
+    }
+}
