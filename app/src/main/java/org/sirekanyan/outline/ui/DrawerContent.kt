@@ -1,6 +1,13 @@
 package org.sirekanyan.outline.ui
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
@@ -26,7 +33,15 @@ import org.sirekanyan.outline.text.formatTraffic
 
 @Composable
 fun DrawerContent(dao: ApiUrlDao, state: MainState) {
-    ModalDrawerSheet {
+    val insets = WindowInsets.systemBars.asPaddingValues()
+    ModalDrawerSheet(windowInsets = WindowInsets(0.dp)) {
+        DrawerSheetContent(dao, state, insets)
+    }
+}
+
+@Composable
+private fun DrawerSheetContent(dao: ApiUrlDao, state: MainState, insets: PaddingValues) {
+    Column(Modifier.verticalScroll(rememberScrollState()).padding(insets).padding(bottom = 8.dp)) {
         Text(
             text = stringResource(R.string.app_name),
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
