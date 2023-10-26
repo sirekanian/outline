@@ -1,3 +1,20 @@
+v0.1.13
+- Added vertical scroll for drawer
+- Added delete server button
+
+v0.1.12
+- Added crash reporting for Google Play builds
+
+v0.1.11
+- Added error dialog for ss:// links
+
+v0.1.10
+- Added server traffic
+- Changed app colors
+
+v0.1.9
+- Technical release
+
 v0.1.8
 - Minor bugfixes
 
