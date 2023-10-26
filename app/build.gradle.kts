@@ -73,13 +73,13 @@ android {
 dependencies {
 
     // compose
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.compose.material3:material3:1.1.2")
 
     // ktor
-    implementation("io.ktor:ktor-client-cio:2.3.4")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.4")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
+    implementation("io.ktor:ktor-client-cio:2.3.5")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.5")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.5")
     implementation("org.slf4j:slf4j-simple:2.0.9")
 
     // sqldelight
@@ -87,7 +87,7 @@ dependencies {
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 
     // crash reporting
-    add("playImplementation", "ch.acra:acra-http:5.11.2")
+    add("playImplementation", "ch.acra:acra-http:5.11.3")
 
 }
 
