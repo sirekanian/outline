@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -15,7 +17,7 @@ android {
         targetSdk = 34
         versionCode = (property("appVersionCode") as String).toInt()
         versionName = property("appVersionName") as String
-        setProperty("archivesBaseName", "$applicationId-$versionName-$versionCode")
+        archivesName.set("$applicationId-$versionName-$versionCode")
         vectorDrawables {
             useSupportLibrary = true
         }
