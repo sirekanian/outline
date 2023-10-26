@@ -15,6 +15,7 @@ import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.db.rememberApiUrlDao
 import org.sirekanyan.outline.ui.AddServerContent
 import org.sirekanyan.outline.ui.DeleteKeyContent
+import org.sirekanyan.outline.ui.DeleteServerContent
 import org.sirekanyan.outline.ui.EditKeyContent
 import org.sirekanyan.outline.ui.theme.OutlineTheme
 
@@ -52,6 +53,18 @@ class MainActivity : ComponentActivity() {
                                         }.invokeOnCompletion {
                                             state.deletingKey = null
                                         }
+                                    }
+                                )
+                            }
+                            is DeleteServerDialog -> {
+                                val (apiUrl, serverName) = dialog
+                                DeleteServerContent(
+                                    serverName = serverName,
+                                    onDismiss = { state.dialog = null },
+                                    onConfirm = {
+                                        dao.deleteUrl(apiUrl)
+                                        state.page = HelloPage
+                                        state.openDrawer()
                                     }
                                 )
                             }

@@ -110,3 +110,5 @@ data object AddServerDialog : Dialog()
 data class EditKeyDialog(val apiUrl: String, val key: Key) : Dialog()
 
 data class DeleteKeyDialog(val apiUrl: String, val key: Key) : Dialog()
+
+data class DeleteServerDialog(val apiUrl: String, val serverName: String) : Dialog()

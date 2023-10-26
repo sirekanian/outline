@@ -11,18 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,9 +51,10 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                         Text("Add server")
                     }
                 }
-                MainTopAppBar(stringResource(R.string.app_name)) {
-                    state.openDrawer()
-                }
+                MainTopAppBar(
+                    title = stringResource(R.string.app_name),
+                    onMenuClick = state::openDrawer,
+                )
             }
             is SelectedPage -> {
                 when (val keys = page.keys) {
@@ -89,9 +84,15 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 val server by produceState(state.servers.getCachedServer(apiUrl), apiUrl) {
                     value = state.servers.getServer(apiUrl)
                 }
-                MainTopAppBar(server.name) {
-                    state.openDrawer()
-                }
+                MainTopAppBar(
+                    title = server.name,
+                    onMenuClick = state::openDrawer,
+                    items = listOf(
+                        MenuItem("Delete", Icons.Default.Delete) {
+                            state.dialog = DeleteServerDialog(page.apiUrl, server.name)
+                        },
+                    ),
+                )
             }
         }
         AddKeyButton(
@@ -120,16 +121,4 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
             }
         }
     }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun MainTopAppBar(title: String, onMenuClick: () -> Unit) {
-    TopAppBar(
-        title = { Text(title) },
-        navigationIcon = { IconButton({ onMenuClick() }) { Icon(Icons.Default.Menu, null) } },
-        colors = TopAppBarDefaults.topAppBarColors(
-            MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.98f),
-        ),
-    )
 }

@@ -12,10 +12,28 @@ import org.sirekanyan.outline.api.model.Key
 
 @Composable
 fun DeleteKeyContent(key: Key, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    ConfirmationAlertDialog(
+        text = "Are you sure you want to delete the key named \"${key.accessKey.nameOrDefault}\"?",
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+    )
+}
+
+@Composable
+fun DeleteServerContent(serverName: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    ConfirmationAlertDialog(
+        text = "Are you sure you want to delete the server named \"$serverName\"?",
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+    )
+}
+
+@Composable
+private fun ConfirmationAlertDialog(text: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(
         icon = { Icon(Icons.Default.Delete, null) },
         title = { Text("Confirmation") },
-        text = { Text("Are you sure you want to delete the key named \"${key.accessKey.nameOrDefault}\"?") },
+        text = { Text(text) },
         onDismissRequest = onDismiss,
         dismissButton = { TextButton(onDismiss) { Text("Cancel") } },
         confirmButton = {
