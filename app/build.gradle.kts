@@ -80,7 +80,7 @@ dependencies {
 
     // ktor
     // noinspection GradleDependency todo: https://youtrack.jetbrains.com/issue/KTOR-6396
-    implementation("io.ktor:ktor-client-cio:2.3.4")
+    implementation("io.ktor:ktor-client-okhttp:2.3.4")
     // noinspection GradleDependency todo: https://youtrack.jetbrains.com/issue/KTOR-6396
     implementation("io.ktor:ktor-client-content-negotiation:2.3.4")
     // noinspection GradleDependency todo: https://youtrack.jetbrains.com/issue/KTOR-6396

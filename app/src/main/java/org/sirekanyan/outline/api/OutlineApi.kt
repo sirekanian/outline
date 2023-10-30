@@ -2,7 +2,7 @@ package org.sirekanyan.outline.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -13,6 +13,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
 import org.sirekanyan.outline.api.model.AccessKeysResponse
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.RenameRequest
@@ -20,14 +21,27 @@ import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
 import org.sirekanyan.outline.ext.logDebug
+import java.security.SecureRandom
+import javax.net.ssl.SSLContext
+
+private fun setInsecureHttp(builder: OkHttpClient.Builder) {
+    val sslContext = SSLContext.getInstance("SSL")
+    sslContext.init(null, arrayOf(InsecureTrustManager), SecureRandom())
+    builder.sslSocketFactory(sslContext.socketFactory, InsecureTrustManager)
+    builder.hostnameVerifier { _, _ -> true }
+}
 
 class OutlineApi {
 
-    private val httpClient = HttpClient(CIO) {
+    private val httpClient = HttpClient(OkHttp) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }
-        engine { https.trustManager = InsecureTrustManager } // TODO: remove insecure http
+        engine {
+            config {
+                setInsecureHttp(this) // TODO: remove insecure http
+            }
+        }
     }
 
     suspend fun getServer(apiUrl: String): Server {
