@@ -79,12 +79,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.2")
 
     // ktor
-    // noinspection GradleDependency todo: https://youtrack.jetbrains.com/issue/KTOR-6396
-    implementation("io.ktor:ktor-client-okhttp:2.3.4")
-    // noinspection GradleDependency todo: https://youtrack.jetbrains.com/issue/KTOR-6396
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.4")
-    // noinspection GradleDependency todo: https://youtrack.jetbrains.com/issue/KTOR-6396
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
+    implementation("io.ktor:ktor-client-okhttp:2.3.5")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.5")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.5")
     implementation("org.slf4j:slf4j-simple:2.0.9")
 
     // sqldelight
@@ -94,10 +91,6 @@ dependencies {
     // crash reporting
     add("playImplementation", "ch.acra:acra-http:5.11.3")
 
-}
-
-versionCheckerOptions {
-    "io.ktor" lessThan "2.3.5" // todo: https://youtrack.jetbrains.com/issue/KTOR-6396
 }
 
 sqldelight {
