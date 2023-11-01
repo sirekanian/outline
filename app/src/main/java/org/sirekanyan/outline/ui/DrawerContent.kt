@@ -37,6 +37,7 @@ import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.db.ApiUrlDao
+import org.sirekanyan.outline.db.model.ApiUrl
 import org.sirekanyan.outline.isPlayFlavor
 import org.sirekanyan.outline.text.formatTraffic
 import org.sirekanyan.outline.ui.icons.IconOpenInNew
@@ -65,7 +66,7 @@ private fun DrawerSheetContent(dao: ApiUrlDao, state: MainState, insets: Padding
             style = MaterialTheme.typography.titleSmall,
         )
         val apiUrls by remember { dao.observeUrls() }.collectAsState(listOf())
-        apiUrls.forEach { apiUrl ->
+        apiUrls.map(ApiUrl::id).forEach { apiUrl ->
             val isSelected = state.selectedPage?.apiUrl == apiUrl
             val server by produceState(state.servers.getCachedServer(apiUrl), state.drawer.isOpen) {
                 value = state.servers.getServer(apiUrl)

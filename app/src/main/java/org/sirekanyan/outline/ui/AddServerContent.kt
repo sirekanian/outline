@@ -30,6 +30,7 @@ import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.db.ApiUrlDao
+import org.sirekanyan.outline.db.model.ApiUrl
 
 @Composable
 fun AddServerContent(dao: ApiUrlDao, state: MainState) {
@@ -45,7 +46,7 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
         try {
             isLoading = true
             state.servers.fetchServer(draft)
-            dao.insertUrl(draft)
+            dao.insertUrl(ApiUrl(draft, true)) // TODO: remove insecure flag
             state.dialog = null
             state.page = SelectedPage(draft)
             state.closeDrawer(animated = false)
@@ -91,7 +92,7 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
                 },
             )
             Text(
-                text = "Trust all certificates (insecure)",
+                text = "Allow insecure connection",
                 modifier = Modifier.padding(end = 16.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = LocalContentColor.current.copy(alpha = 0.66f),

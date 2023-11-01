@@ -1,12 +1,13 @@
 CREATE TABLE IF NOT EXISTS ApiUrl (
-  id TEXT NOT NULL PRIMARY KEY
+  id TEXT NOT NULL PRIMARY KEY,
+  insecure INTEGER AS kotlin.Boolean NOT NULL DEFAULT 0
 );
 
 selectUrls:
 SELECT * FROM ApiUrl;
 
 insertUrl:
-INSERT OR IGNORE INTO ApiUrl (id) VALUES (?);
+INSERT OR IGNORE INTO ApiUrl VALUES ?;
 
 deleteUrl:
 DELETE FROM ApiUrl WHERE id = ?;
