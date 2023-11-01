@@ -1,6 +1,5 @@
 package org.sirekanyan.outline.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -35,6 +33,7 @@ import org.sirekanyan.outline.db.model.ApiUrl
 @Composable
 fun AddServerContent(dao: ApiUrlDao, state: MainState) {
     var draft by remember { mutableStateOf("") }
+    var insecure by remember { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
@@ -46,7 +45,7 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
         try {
             isLoading = true
             state.servers.fetchServer(draft)
-            dao.insertUrl(ApiUrl(draft, true)) // TODO: remove insecure flag
+            dao.insertUrl(ApiUrl(draft, insecure))
             state.dialog = null
             state.page = SelectedPage(draft)
             state.closeDrawer(animated = false)
@@ -84,12 +83,9 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
             focusRequester.requestFocus()
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val context = LocalContext.current
             Checkbox(
-                checked = true,
-                onCheckedChange = {
-                    Toast.makeText(context, "Cannot be changed for now", Toast.LENGTH_SHORT).show()
-                },
+                checked = insecure,
+                onCheckedChange = { insecure = it },
             )
             Text(
                 text = "Allow insecure connection",
