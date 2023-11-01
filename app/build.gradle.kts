@@ -97,6 +97,7 @@ sqldelight {
     databases {
         create("OutlineDatabase") {
             packageName.set("org.sirekanyan.outline.db")
+            schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
         }
     }
 }
