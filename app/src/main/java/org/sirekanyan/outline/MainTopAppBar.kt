@@ -47,8 +47,8 @@ private fun MainMenu(items: List<MenuItem>) {
         IconButton({ isMenuVisible = !isMenuVisible }) {
             Icon(Icons.Outlined.MoreVert, null)
         }
-        items.forEach { (text, icon, onClick) ->
-            DropdownMenu(isMenuVisible, { isMenuVisible = false }) {
+        DropdownMenu(isMenuVisible, { isMenuVisible = false }) {
+            items.forEach { (text, icon, onClick) ->
                 DropdownMenuItem(
                     text = { Text(text) },
                     trailingIcon = { Icon(icon, null) },
