@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.db.model.ApiUrl
 import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
@@ -99,7 +100,7 @@ sealed class Page
 
 data object HelloPage : Page()
 
-data class SelectedPage(val apiUrl: String) : Page() {
+data class SelectedPage(val apiUrl: ApiUrl) : Page() {
     var keys by mutableStateOf<KeysState>(KeysLoadingState)
 }
 
@@ -107,8 +108,8 @@ sealed class Dialog
 
 data object AddServerDialog : Dialog()
 
-data class EditKeyDialog(val apiUrl: String, val key: Key) : Dialog()
+data class EditKeyDialog(val apiUrl: ApiUrl, val key: Key) : Dialog()
 
-data class DeleteKeyDialog(val apiUrl: String, val key: Key) : Dialog()
+data class DeleteKeyDialog(val apiUrl: ApiUrl, val key: Key) : Dialog()
 
-data class DeleteServerDialog(val apiUrl: String, val serverName: String) : Dialog()
+data class DeleteServerDialog(val apiUrl: ApiUrl, val serverName: String) : Dialog()

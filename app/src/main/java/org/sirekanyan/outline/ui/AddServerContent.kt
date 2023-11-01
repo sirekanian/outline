@@ -44,10 +44,11 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
         }
         try {
             isLoading = true
-            state.servers.fetchServer(draft)
-            dao.insertUrl(ApiUrl(draft, insecure))
+            val apiUrl = ApiUrl(draft, insecure)
+            state.servers.fetchServer(apiUrl)
+            dao.insertUrl(apiUrl)
             state.dialog = null
-            state.page = SelectedPage(draft)
+            state.page = SelectedPage(apiUrl)
             state.closeDrawer(animated = false)
         } catch (exception: Exception) {
             exception.printStackTrace()
