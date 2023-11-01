@@ -29,6 +29,7 @@ import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.db.model.ApiUrl
+import javax.net.ssl.SSLException
 
 @Composable
 fun AddServerContent(dao: ApiUrlDao, state: MainState) {
@@ -50,6 +51,9 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
             state.dialog = null
             state.page = SelectedPage(apiUrl)
             state.closeDrawer(animated = false)
+        } catch (exception: SSLException) {
+            exception.printStackTrace()
+            error = "Cannot establish a secure connection"
         } catch (exception: Exception) {
             exception.printStackTrace()
             error = "Check URL or try again"
