@@ -7,7 +7,7 @@ selectUrls:
 SELECT * FROM ApiUrl;
 
 insertUrl:
-INSERT OR IGNORE INTO ApiUrl VALUES ?;
+INSERT OR REPLACE INTO ApiUrl VALUES ?;
 
 deleteUrl:
 DELETE FROM ApiUrl WHERE id = ?;
