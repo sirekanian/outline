@@ -20,6 +20,16 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: app/build/reports/lint-results-*.html
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - shell: bash
+        run: ./gradlew verifySqlDelightMigration
   assemble:
     runs-on: ubuntu-latest
     steps:
