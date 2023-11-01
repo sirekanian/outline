@@ -3,6 +3,7 @@ package org.sirekanyan.outline.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.engine.okhttp.OkHttpConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
@@ -25,6 +26,16 @@ import org.sirekanyan.outline.ext.logDebug
 import java.security.SecureRandom
 import javax.net.ssl.SSLContext
 
+private fun createOkHttpClient(block: OkHttpConfig.() -> Unit = {}): HttpClient =
+    HttpClient(OkHttp) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        engine {
+            block()
+        }
+    }
+
 private fun setInsecureHttp(builder: OkHttpClient.Builder) {
     val sslContext = SSLContext.getInstance("SSL")
     sslContext.init(null, arrayOf(InsecureTrustManager), SecureRandom())
@@ -34,14 +45,10 @@ private fun setInsecureHttp(builder: OkHttpClient.Builder) {
 
 class OutlineApi {
 
-    private val httpClient = HttpClient(OkHttp) {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-        engine {
-            config {
-                setInsecureHttp(this) // TODO: remove insecure http
-            }
+    private val httpClient = createOkHttpClient()
+    private val insecureHttpClient = createOkHttpClient {
+        config {
+            setInsecureHttp(this)
         }
     }
 
@@ -51,7 +58,8 @@ class OutlineApi {
         path: String,
         block: HttpRequestBuilder.() -> Unit = {},
     ): HttpResponse {
-        return httpClient.request(apiUrl.id + '/' + path) { method = httpMethod; block() }
+        val client = if (apiUrl.insecure) insecureHttpClient else httpClient
+        return client.request(apiUrl.id + '/' + path) { method = httpMethod; block() }
     }
 
     suspend fun getServer(apiUrl: ApiUrl): Server {
