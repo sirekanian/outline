@@ -4,11 +4,6 @@ import android.content.Intent
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -16,18 +11,14 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.ui.icons.IconCopy
@@ -44,21 +35,11 @@ fun KeyBottomSheet(
     val localClipboard = LocalClipboardManager.current
     val localContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    // insets should be kept outside of the modal bottom sheet to work properly
-    val insets = WindowInsets.navigationBars.asPaddingValues()
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
+    SimpleBottomSheet(
+        title = key.accessKey.nameOrDefault,
         sheetState = sheetState,
-        shape = RectangleShape,
-        dragHandle = {},
-        windowInsets = WindowInsets(0.dp),
-    ) {
-        Column(Modifier.padding(insets).padding(top = 4.dp)) {
-            Text(
-                text = key.accessKey.nameOrDefault,
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.labelLarge,
-            )
+        onDismissRequest = onDismissRequest,
+        items = {
             ListItem(
                 headlineContent = { Text("Copy") },
                 leadingContent = { Icon(IconCopy, null) },
@@ -108,6 +89,6 @@ fun KeyBottomSheet(
                     }
                 },
             )
-        }
-    }
+        },
+    )
 }
