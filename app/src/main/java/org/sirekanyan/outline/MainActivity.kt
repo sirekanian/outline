@@ -62,7 +62,9 @@ class MainActivity : ComponentActivity() {
                                     serverName = serverName,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
-                                        dao.deleteUrl(apiUrl.id)
+                                        state.scope.launch {
+                                            dao.deleteUrl(apiUrl.id)
+                                        }
                                         state.page = HelloPage
                                         state.openDrawer()
                                     }

@@ -7,6 +7,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.db.model.ApiUrl
 
@@ -23,12 +24,15 @@ class ApiUrlDao(database: OutlineDatabase) {
     fun observeUrls(): Flow<List<ApiUrl>> =
         queries.selectUrls().asFlow().mapToList(Dispatchers.IO)
 
-    fun insertUrl(url: ApiUrl) {
-        queries.insertUrl(url)
-    }
+    suspend fun insertUrl(url: ApiUrl) =
+        withContext(Dispatchers.IO) {
+            queries.insertUrl(url)
+        }
 
-    fun deleteUrl(id: String) {
-        queries.deleteUrl(id)
+    suspend fun deleteUrl(id: String) {
+        withContext(Dispatchers.IO) {
+            queries.deleteUrl(id)
+        }
     }
 
 }
