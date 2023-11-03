@@ -2,7 +2,7 @@ package org.sirekanyan.outline
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,13 +45,13 @@ private fun MainMenu(items: List<MenuItem>) {
     if (items.isNotEmpty()) {
         var isMenuVisible by remember { mutableStateOf(false) }
         IconButton({ isMenuVisible = !isMenuVisible }) {
-            Icon(Icons.Outlined.MoreVert, null)
+            Icon(Icons.Default.MoreVert, null)
         }
         DropdownMenu(isMenuVisible, { isMenuVisible = false }) {
             items.forEach { (text, icon, onClick) ->
                 DropdownMenuItem(
                     text = { Text(text) },
-                    trailingIcon = { Icon(icon, null) },
+                    leadingIcon = { Icon(icon, null) },
                     onClick = {
                         isMenuVisible = false
                         onClick()

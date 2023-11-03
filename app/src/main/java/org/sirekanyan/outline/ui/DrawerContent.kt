@@ -60,7 +60,7 @@ private fun DrawerSheetContent(dao: ApiUrlDao, state: MainState, insets: Padding
             .padding(bottom = 8.dp),
     ) {
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(R.string.outln_app_name),
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
             style = MaterialTheme.typography.titleSmall,
         )

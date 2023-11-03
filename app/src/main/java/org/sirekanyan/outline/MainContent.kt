@@ -52,7 +52,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                     }
                 }
                 MainTopAppBar(
-                    title = stringResource(R.string.app_name),
+                    title = stringResource(R.string.outln_app_name),
                     onMenuClick = state::openDrawer,
                 )
             }

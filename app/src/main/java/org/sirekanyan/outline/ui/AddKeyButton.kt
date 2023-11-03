@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -41,7 +41,7 @@ fun AddKeyButton(isVisible: Boolean, isLoading: Boolean, onClick: () -> Unit) {
                     if (isLoading) {
                         CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
                     } else {
-                        Icon(Icons.Outlined.Add, null)
+                        Icon(Icons.Default.Add, null)
                         Spacer(Modifier.width(12.dp))
                         Text("Add key")
                         Spacer(Modifier.width(4.dp))
