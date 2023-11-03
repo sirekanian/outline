@@ -36,22 +36,21 @@ import org.sirekanyan.outline.BuildConfig
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.isPlayFlavor
 import org.sirekanyan.outline.text.formatTraffic
 import org.sirekanyan.outline.ui.icons.IconOpenInNew
 import org.sirekanyan.outline.ui.icons.IconPlayStore
 
 @Composable
-fun DrawerContent(dao: ApiUrlDao, state: MainState) {
+fun DrawerContent(state: MainState) {
     val insets = WindowInsets.systemBars.asPaddingValues()
     ModalDrawerSheet(windowInsets = WindowInsets(0.dp)) {
-        DrawerSheetContent(dao, state, insets)
+        DrawerSheetContent(state, insets)
     }
 }
 
 @Composable
-private fun DrawerSheetContent(dao: ApiUrlDao, state: MainState, insets: PaddingValues) {
+private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -64,7 +63,7 @@ private fun DrawerSheetContent(dao: ApiUrlDao, state: MainState, insets: Padding
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
             style = MaterialTheme.typography.titleSmall,
         )
-        val apiUrls by remember { dao.observeUrls() }.collectAsState(listOf())
+        val apiUrls by remember { state.dao.observeUrls() }.collectAsState(listOf())
         apiUrls.forEach { apiUrl ->
             val isSelected = state.selectedPage?.apiUrl?.id == apiUrl.id
             val server by produceState(state.servers.getCachedServer(apiUrl), state.drawer.isOpen) {

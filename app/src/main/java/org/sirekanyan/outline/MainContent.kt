@@ -26,8 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.ext.plus
 import org.sirekanyan.outline.feature.keys.KeysContent
 import org.sirekanyan.outline.feature.keys.KeysErrorContent
@@ -39,8 +37,8 @@ import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
 
 @Composable
-fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
-    ModalNavigationDrawer({ DrawerContent(dao, state) }, drawerState = state.drawer) {
+fun MainContent(state: MainState) {
+    ModalNavigationDrawer({ DrawerContent(state) }, drawerState = state.drawer) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
@@ -102,7 +100,7 @@ fun MainContent(api: OutlineApi, dao: ApiUrlDao, state: MainState) {
                 state.selectedPage?.let { page ->
                     state.scope.launch {
                         state.isFabLoading = true
-                        api.createAccessKey(page.apiUrl)
+                        state.api.createAccessKey(page.apiUrl)
                         state.refreshCurrentKeys(showLoading = false)
                     }.invokeOnCompletion {
                         state.isFabLoading = false

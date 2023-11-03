@@ -27,12 +27,11 @@ import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.db.model.ApiUrl
 import javax.net.ssl.SSLException
 
 @Composable
-fun AddServerContent(dao: ApiUrlDao, state: MainState) {
+fun AddServerContent(state: MainState) {
     var draft by remember { mutableStateOf("") }
     var insecure by remember { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf("") }
@@ -47,7 +46,7 @@ fun AddServerContent(dao: ApiUrlDao, state: MainState) {
             isLoading = true
             val apiUrl = ApiUrl(draft, insecure)
             state.servers.fetchServer(apiUrl)
-            dao.insertUrl(apiUrl)
+            state.dao.insertUrl(apiUrl)
             state.dialog = null
             state.page = SelectedPage(apiUrl)
             state.closeDrawer(animated = false)

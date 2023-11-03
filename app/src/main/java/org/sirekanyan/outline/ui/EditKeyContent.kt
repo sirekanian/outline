@@ -20,10 +20,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.EditKeyDialog
 import org.sirekanyan.outline.MainState
-import org.sirekanyan.outline.api.OutlineApi
 
 @Composable
-fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
+fun EditKeyContent(state: MainState, dialog: EditKeyDialog) {
     val accessKey = dialog.key.accessKey
     var draft by remember {
         mutableStateOf(TextFieldValue(accessKey.nameOrDefault, TextRange(Int.MAX_VALUE)))
@@ -39,7 +38,7 @@ fun EditKeyContent(api: OutlineApi, state: MainState, dialog: EditKeyDialog) {
                     val isSuccess = try {
                         isLoading = true
                         val newName = draft.text.ifBlank { accessKey.defaultName }
-                        api.renameAccessKey(dialog.apiUrl, accessKey.id, newName)
+                        state.api.renameAccessKey(dialog.apiUrl, accessKey.id, newName)
                         state.dialog = null
                         true
                     } catch (exception: Exception) {

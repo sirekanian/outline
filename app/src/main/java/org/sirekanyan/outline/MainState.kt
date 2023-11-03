@@ -18,7 +18,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.db.model.ApiUrl
+import org.sirekanyan.outline.db.rememberApiUrlDao
 import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
@@ -29,7 +31,7 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 
 @Composable
-fun rememberMainState(api: OutlineApi): MainState {
+fun rememberMainState(): MainState {
     val context = LocalContext.current
     val scope = rememberCoroutineScope {
         CoroutineExceptionHandler { _, throwable ->
@@ -49,10 +51,12 @@ fun rememberMainState(api: OutlineApi): MainState {
         }
     }
     val supervisor = remember { SupervisorJob() }
-    return remember { MainState(scope + supervisor, api) }
+    val api = remember { OutlineApi() }
+    val dao = rememberApiUrlDao()
+    return remember { MainState(scope + supervisor, api, dao) }
 }
 
-class MainState(val scope: CoroutineScope, private val api: OutlineApi) {
+class MainState(val scope: CoroutineScope, val api: OutlineApi, val dao: ApiUrlDao) {
 
     val servers = ServerRepository(api)
     val drawer = DrawerState(DrawerValue.Closed)
