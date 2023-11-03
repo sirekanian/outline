@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -19,12 +20,12 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 fun SimpleBottomSheet(
     title: String,
-    sheetState: SheetState,
     onDismissRequest: () -> Unit,
-    items: @Composable () -> Unit,
+    items: @Composable (SheetState) -> Unit,
 ) {
     // insets should be kept outside of the modal bottom sheet to work properly
     val insets = WindowInsets.navigationBars.asPaddingValues()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -34,7 +35,7 @@ fun SimpleBottomSheet(
     ) {
         Column(Modifier.padding(insets).padding(top = 4.dp)) {
             Text(title, Modifier.padding(16.dp), style = MaterialTheme.typography.labelLarge)
-            items()
+            items(sheetState)
         }
     }
 }

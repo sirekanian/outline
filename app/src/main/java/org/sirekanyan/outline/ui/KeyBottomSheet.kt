@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -31,15 +30,13 @@ fun KeyBottomSheet(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val localClipboard = LocalClipboardManager.current
     val localContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     SimpleBottomSheet(
         title = key.accessKey.nameOrDefault,
-        sheetState = sheetState,
         onDismissRequest = onDismissRequest,
-        items = {
+        items = { sheetState ->
             ListItem(
                 headlineContent = { Text("Copy") },
                 leadingContent = { Icon(IconCopy, null) },

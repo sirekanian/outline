@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 class AccessKey(
     val id: String,
     val accessUrl: String,
-    private val name: String,
+    val name: String,
 ) {
     val defaultName: String
         get() = "Key $id"

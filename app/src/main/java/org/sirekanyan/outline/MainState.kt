@@ -14,18 +14,22 @@ import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.ApiUrlDao
+import org.sirekanyan.outline.db.KeyValueDao
 import org.sirekanyan.outline.db.model.ApiUrl
 import org.sirekanyan.outline.db.rememberApiUrlDao
+import org.sirekanyan.outline.db.rememberKeyValueDao
 import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysState
 import org.sirekanyan.outline.feature.keys.KeysSuccessState
+import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.repository.ServerRepository
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -53,10 +57,16 @@ fun rememberMainState(): MainState {
     val supervisor = remember { SupervisorJob() }
     val api = remember { OutlineApi() }
     val dao = rememberApiUrlDao()
-    return remember { MainState(scope + supervisor, api, dao) }
+    val prefs = rememberKeyValueDao()
+    return remember { MainState(scope + supervisor, api, dao, prefs) }
 }
 
-class MainState(val scope: CoroutineScope, val api: OutlineApi, val dao: ApiUrlDao) {
+class MainState(
+    val scope: CoroutineScope,
+    val api: OutlineApi,
+    val dao: ApiUrlDao,
+    private val prefs: KeyValueDao,
+) {
 
     val servers = ServerRepository(api)
     val drawer = DrawerState(DrawerValue.Closed)
@@ -67,6 +77,13 @@ class MainState(val scope: CoroutineScope, val api: OutlineApi, val dao: ApiUrlD
     val isFabVisible by derivedStateOf { (page as? SelectedPage)?.keys is KeysSuccessState }
     var isFabLoading by mutableStateOf(false)
     var deletingKey by mutableStateOf<Key?>(null)
+    val sorting = prefs.observe(Sorting.KEY).map(Sorting::getByKey)
+
+    fun putSorting(sorting: Sorting) {
+        scope.launch {
+            prefs.put(Sorting.KEY, sorting.key)
+        }
+    }
 
     fun openDrawer() {
         scope.launch {

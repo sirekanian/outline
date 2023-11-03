@@ -19,8 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,12 +36,17 @@ import org.sirekanyan.outline.feature.keys.KeysErrorContent
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysSuccessState
+import org.sirekanyan.outline.feature.sort.SortBottomSheet
+import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
+import org.sirekanyan.outline.ui.icons.IconSort
 
 @Composable
 fun MainContent(state: MainState) {
+    val sorting by state.sorting.collectAsState(Sorting.DEFAULT)
+    var isSortingVisible by remember { mutableStateOf(false) }
     ModalNavigationDrawer({ DrawerContent(state) }, drawerState = state.drawer) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
@@ -72,7 +81,7 @@ fun MainContent(state: MainState) {
                         )
                     }
                     is KeysSuccessState -> {
-                        KeysContent(insets, state, keys)
+                        KeysContent(insets, state, keys, sorting)
                     }
                 }
                 LaunchedEffect(page.apiUrl) {
@@ -86,6 +95,9 @@ fun MainContent(state: MainState) {
                     title = server.name,
                     onMenuClick = state::openDrawer,
                     items = listOf(
+                        MenuItem("Sort by…", IconSort) {
+                            isSortingVisible = true
+                        },
                         MenuItem("Delete", Icons.Default.Delete) {
                             state.dialog = DeleteServerDialog(page.apiUrl, server.name)
                         },
@@ -117,6 +129,13 @@ fun MainContent(state: MainState) {
                     onDeleteClick = { state.dialog = DeleteKeyDialog(page.apiUrl, key) },
                 )
             }
+        }
+        if (isSortingVisible) {
+            SortBottomSheet(
+                sorting = sorting,
+                onSortingChange = { state.putSorting(it) },
+                onDismissRequest = { isSortingVisible = false },
+            )
         }
     }
 }
