@@ -19,7 +19,7 @@ fun rememberKeyValueDao(): KeyValueDao {
 
 class KeyValueDao(database: OutlineDatabase) {
 
-    private val queries = database.keyValueQueries
+    private val queries = database.keyValueEntityQueries
 
     fun observe(key: String): Flow<String?> =
         queries.select(key).asFlow().mapToOneNotNull(Dispatchers.IO).map { it.content }

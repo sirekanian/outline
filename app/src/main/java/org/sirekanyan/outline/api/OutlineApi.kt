@@ -21,7 +21,7 @@ import org.sirekanyan.outline.api.model.RenameRequest
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
-import org.sirekanyan.outline.db.model.ApiUrl
+import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.ext.logDebug
 import java.security.SecureRandom
 import javax.net.ssl.SSLContext
@@ -54,50 +54,50 @@ class OutlineApi {
 
     private suspend fun request(
         httpMethod: HttpMethod,
-        apiUrl: ApiUrl,
+        server: ServerEntity,
         path: String,
         block: HttpRequestBuilder.() -> Unit = {},
     ): HttpResponse {
-        val client = if (apiUrl.insecure) insecureHttpClient else httpClient
-        return client.request(apiUrl.id + '/' + path) { method = httpMethod; block() }
+        val client = if (server.insecure) insecureHttpClient else httpClient
+        return client.request(server.id + '/' + path) { method = httpMethod; block() }
     }
 
-    suspend fun getServer(apiUrl: ApiUrl): Server {
-        val name = request(HttpMethod.Get, apiUrl, "server").body<ServerNameResponse>().name
-        val transferMetrics = getTransferMetrics(apiUrl)?.bytesTransferredByUserId
+    suspend fun getServer(server: ServerEntity): Server {
+        val name = request(HttpMethod.Get, server, "server").body<ServerNameResponse>().name
+        val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
         return Server(name, transferMetrics?.values?.sum())
     }
 
-    suspend fun getKeys(apiUrl: ApiUrl): List<Key> {
-        val accessKeys = getAccessKeys(apiUrl).accessKeys
-        val transferMetrics = getTransferMetrics(apiUrl)?.bytesTransferredByUserId
+    suspend fun getKeys(server: ServerEntity): List<Key> {
+        val accessKeys = getAccessKeys(server).accessKeys
+        val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
         return accessKeys.map { accessKey -> Key(accessKey, transferMetrics?.get(accessKey.id)) }
     }
 
-    private suspend fun getAccessKeys(apiUrl: ApiUrl): AccessKeysResponse =
-        request(HttpMethod.Get, apiUrl, "access-keys").body()
+    private suspend fun getAccessKeys(server: ServerEntity): AccessKeysResponse =
+        request(HttpMethod.Get, server, "access-keys").body()
 
-    private suspend fun getTransferMetrics(apiUrl: ApiUrl): TransferMetricsResponse? =
+    private suspend fun getTransferMetrics(server: ServerEntity): TransferMetricsResponse? =
         try {
-            request(HttpMethod.Get, apiUrl, "metrics/transfer").body()
+            request(HttpMethod.Get, server, "metrics/transfer").body()
         } catch (exception: Exception) {
             logDebug("Cannot fetch transfer metrics", exception)
             null
         }
 
-    suspend fun createAccessKey(apiUrl: ApiUrl) {
-        request(HttpMethod.Post, apiUrl, "access-keys")
+    suspend fun createAccessKey(server: ServerEntity) {
+        request(HttpMethod.Post, server, "access-keys")
     }
 
-    suspend fun renameAccessKey(apiUrl: ApiUrl, id: String, name: String) {
-        request(HttpMethod.Put, apiUrl, "access-keys/$id/name") {
+    suspend fun renameAccessKey(server: ServerEntity, id: String, name: String) {
+        request(HttpMethod.Put, server, "access-keys/$id/name") {
             contentType(ContentType.Application.Json)
             setBody(RenameRequest(name))
         }
     }
 
-    suspend fun deleteAccessKey(apiUrl: ApiUrl, id: String) {
-        request(HttpMethod.Delete, apiUrl, "access-keys/$id")
+    suspend fun deleteAccessKey(server: ServerEntity, id: String) {
+        request(HttpMethod.Delete, server, "access-keys/$id")
     }
 
 }

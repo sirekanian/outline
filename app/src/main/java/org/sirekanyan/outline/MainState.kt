@@ -19,11 +19,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
-import org.sirekanyan.outline.db.ApiUrlDao
 import org.sirekanyan.outline.db.KeyValueDao
-import org.sirekanyan.outline.db.model.ApiUrl
-import org.sirekanyan.outline.db.rememberApiUrlDao
+import org.sirekanyan.outline.db.ServerDao
+import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.db.rememberKeyValueDao
+import org.sirekanyan.outline.db.rememberServerDao
 import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
@@ -56,7 +56,7 @@ fun rememberMainState(): MainState {
     }
     val supervisor = remember { SupervisorJob() }
     val api = remember { OutlineApi() }
-    val dao = rememberApiUrlDao()
+    val dao = rememberServerDao()
     val prefs = rememberKeyValueDao()
     return remember { MainState(scope + supervisor, api, dao, prefs) }
 }
@@ -64,7 +64,7 @@ fun rememberMainState(): MainState {
 class MainState(
     val scope: CoroutineScope,
     val api: OutlineApi,
-    val dao: ApiUrlDao,
+    val dao: ServerDao,
     private val prefs: KeyValueDao,
 ) {
 
@@ -107,7 +107,7 @@ class MainState(
                 page.keys = KeysLoadingState
             }
             page.keys = try {
-                KeysSuccessState(api.getKeys(page.apiUrl))
+                KeysSuccessState(api.getKeys(page.server))
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 KeysErrorState
@@ -121,7 +121,7 @@ sealed class Page
 
 data object HelloPage : Page()
 
-data class SelectedPage(val apiUrl: ApiUrl) : Page() {
+data class SelectedPage(val server: ServerEntity) : Page() {
     var keys by mutableStateOf<KeysState>(KeysLoadingState)
 }
 
@@ -129,8 +129,8 @@ sealed class Dialog
 
 data object AddServerDialog : Dialog()
 
-data class EditKeyDialog(val apiUrl: ApiUrl, val key: Key) : Dialog()
+data class EditKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
 
-data class DeleteKeyDialog(val apiUrl: ApiUrl, val key: Key) : Dialog()
+data class DeleteKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
 
-data class DeleteServerDialog(val apiUrl: ApiUrl, val serverName: String) : Dialog()
+data class DeleteServerDialog(val server: ServerEntity, val serverName: String) : Dialog()

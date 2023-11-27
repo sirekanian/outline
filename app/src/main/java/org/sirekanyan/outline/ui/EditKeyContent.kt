@@ -38,7 +38,7 @@ fun EditKeyContent(state: MainState, dialog: EditKeyDialog) {
                     val isSuccess = try {
                         isLoading = true
                         val newName = draft.text.ifBlank { accessKey.defaultName }
-                        state.api.renameAccessKey(dialog.apiUrl, accessKey.id, newName)
+                        state.api.renameAccessKey(dialog.server, accessKey.id, newName)
                         state.dialog = null
                         true
                     } catch (exception: Exception) {

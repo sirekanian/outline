@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS ServerEntity (
+  id TEXT NOT NULL PRIMARY KEY,
+  insecure INTEGER AS kotlin.Boolean NOT NULL DEFAULT 0
+);
+
+selectUrls:
+SELECT * FROM ServerEntity;
+
+insertUrl:
+INSERT OR REPLACE INTO ServerEntity VALUES ?;
+
+deleteUrl:
+DELETE FROM ServerEntity WHERE id = ?;

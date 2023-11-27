@@ -9,24 +9,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.app
-import org.sirekanyan.outline.db.model.ApiUrl
+import org.sirekanyan.outline.db.model.ServerEntity
 
 @Composable
-fun rememberApiUrlDao(): ApiUrlDao {
+fun rememberServerDao(): ServerDao {
     val database = LocalContext.current.app().database
-    return remember { ApiUrlDao(database) }
+    return remember { ServerDao(database) }
 }
 
-class ApiUrlDao(database: OutlineDatabase) {
+class ServerDao(database: OutlineDatabase) {
 
-    private val queries = database.apiUrlQueries
+    private val queries = database.serverEntityQueries
 
-    fun observeUrls(): Flow<List<ApiUrl>> =
+    fun observeUrls(): Flow<List<ServerEntity>> =
         queries.selectUrls().asFlow().mapToList(Dispatchers.IO)
 
-    suspend fun insertUrl(url: ApiUrl) =
+    suspend fun insertUrl(server: ServerEntity) =
         withContext(Dispatchers.IO) {
-            queries.insertUrl(url)
+            queries.insertUrl(server)
         }
 
     suspend fun deleteUrl(id: String) {

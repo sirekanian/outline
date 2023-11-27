@@ -36,14 +36,14 @@ class MainActivity : ComponentActivity() {
                             is AddServerDialog -> Surface { AddServerContent(state) }
                             is EditKeyDialog -> Surface { EditKeyContent(state, dialog) }
                             is DeleteKeyDialog -> {
-                                val (apiUrl, key) = dialog
+                                val (server, key) = dialog
                                 DeleteKeyContent(
                                     key = key,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
                                         state.scope.launch {
                                             state.deletingKey = key
-                                            state.api.deleteAccessKey(apiUrl, key.accessKey.id)
+                                            state.api.deleteAccessKey(server, key.accessKey.id)
                                             state.refreshCurrentKeys(showLoading = false)
                                         }.invokeOnCompletion {
                                             state.deletingKey = null
@@ -52,13 +52,13 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             is DeleteServerDialog -> {
-                                val (apiUrl, serverName) = dialog
+                                val (server, serverName) = dialog
                                 DeleteServerContent(
                                     serverName = serverName,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
                                         state.scope.launch {
-                                            state.dao.deleteUrl(apiUrl.id)
+                                            state.dao.deleteUrl(server.id)
                                         }
                                         state.page = HelloPage
                                         state.openDrawer()

@@ -63,11 +63,12 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
             style = MaterialTheme.typography.titleSmall,
         )
-        val apiUrls by remember { state.dao.observeUrls() }.collectAsState(listOf())
-        apiUrls.forEach { apiUrl ->
-            val isSelected = state.selectedPage?.apiUrl?.id == apiUrl.id
-            val server by produceState(state.servers.getCachedServer(apiUrl), state.drawer.isOpen) {
-                value = state.servers.getServer(apiUrl)
+        val serverEntities by remember { state.dao.observeUrls() }.collectAsState(listOf())
+        serverEntities.forEach { serverEntity ->
+            val isSelected = state.selectedPage?.server?.id == serverEntity.id
+            val cachedServer = state.servers.getCachedServer(serverEntity)
+            val server by produceState(cachedServer, state.drawer.isOpen) {
+                value = state.servers.getServer(serverEntity)
             }
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Done, null) },
@@ -84,7 +85,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 modifier = Modifier.padding(horizontal = 12.dp),
                 selected = isSelected,
                 onClick = {
-                    state.page = SelectedPage(apiUrl)
+                    state.page = SelectedPage(serverEntity)
                     state.closeDrawer()
                 },
             )

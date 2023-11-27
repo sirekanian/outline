@@ -84,12 +84,13 @@ fun MainContent(state: MainState) {
                         KeysContent(insets, state, keys, sorting)
                     }
                 }
-                LaunchedEffect(page.apiUrl) {
+                LaunchedEffect(page.server) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
-                val apiUrl = page.apiUrl
-                val server by produceState(state.servers.getCachedServer(apiUrl), apiUrl) {
-                    value = state.servers.getServer(apiUrl)
+                val serverEntity = page.server
+                val cachedServer = state.servers.getCachedServer(serverEntity)
+                val server by produceState(cachedServer, serverEntity) {
+                    value = state.servers.getServer(serverEntity)
                 }
                 MainTopAppBar(
                     title = server.name,
@@ -99,7 +100,7 @@ fun MainContent(state: MainState) {
                             isSortingVisible = true
                         },
                         MenuItem("Delete", Icons.Default.Delete) {
-                            state.dialog = DeleteServerDialog(page.apiUrl, server.name)
+                            state.dialog = DeleteServerDialog(page.server, server.name)
                         },
                     ),
                 )
@@ -112,7 +113,7 @@ fun MainContent(state: MainState) {
                 state.selectedPage?.let { page ->
                     state.scope.launch {
                         state.isFabLoading = true
-                        state.api.createAccessKey(page.apiUrl)
+                        state.api.createAccessKey(page.server)
                         state.refreshCurrentKeys(showLoading = false)
                     }.invokeOnCompletion {
                         state.isFabLoading = false
@@ -125,8 +126,8 @@ fun MainContent(state: MainState) {
                 KeyBottomSheet(
                     key = key,
                     onDismissRequest = { state.selectedKey = null },
-                    onEditClick = { state.dialog = EditKeyDialog(page.apiUrl, key) },
-                    onDeleteClick = { state.dialog = DeleteKeyDialog(page.apiUrl, key) },
+                    onEditClick = { state.dialog = EditKeyDialog(page.server, key) },
+                    onDeleteClick = { state.dialog = DeleteKeyDialog(page.server, key) },
                 )
             }
         }
