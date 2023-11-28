@@ -11,3 +11,6 @@ INSERT OR REPLACE INTO ServerEntity VALUES ?;
 
 deleteUrl:
 DELETE FROM ServerEntity WHERE id = ?;
+
+truncate:
+DELETE FROM ServerEntity;

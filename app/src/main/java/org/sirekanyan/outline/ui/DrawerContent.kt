@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +33,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.sirekanyan.outline.AddServerDialog
 import org.sirekanyan.outline.BuildConfig
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
+import org.sirekanyan.outline.app
+import org.sirekanyan.outline.db.DebugDao
 import org.sirekanyan.outline.isPlayFlavor
 import org.sirekanyan.outline.text.formatTraffic
 import org.sirekanyan.outline.ui.icons.IconOpenInNew
@@ -101,6 +105,18 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             Spacer(Modifier.weight(1f))
             Divider(Modifier.padding(vertical = 8.dp))
             val context = LocalContext.current
+            if (BuildConfig.DEBUG) {
+                val debugDao = remember { DebugDao(context.app().database) }
+                DrawerItem(
+                    icon = Icons.Default.Warning,
+                    label = "Reset database",
+                    onClick = {
+                        state.scope.launch {
+                            debugDao.reset()
+                        }
+                    },
+                )
+            }
             val playUri = "https://play.google.com/store/apps/details?id=${context.packageName}"
             DrawerItem(
                 icon = IconPlayStore,
