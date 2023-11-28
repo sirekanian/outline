@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -70,9 +71,9 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             val server by produceState(cachedServer, state.drawer.isOpen) {
                 value = state.servers.getServer(serverEntity)
             }
-            NavigationDrawerItem(
-                icon = { Icon(Icons.Default.Done, null) },
-                label = { Text(server.name, style = MaterialTheme.typography.labelLarge) },
+            DrawerItem(
+                icon = Icons.Default.Done,
+                label = server.name,
                 badge = {
                     server.traffic?.let { traffic ->
                         Text(
@@ -82,7 +83,6 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                         )
                     }
                 },
-                modifier = Modifier.padding(horizontal = 12.dp),
                 selected = isSelected,
                 onClick = {
                     state.page = SelectedPage(serverEntity)
@@ -90,11 +90,9 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 },
             )
         }
-        NavigationDrawerItem(
-            icon = { Icon(Icons.Default.Add, null) },
-            label = { Text("Add server", style = MaterialTheme.typography.labelLarge) },
-            modifier = Modifier.padding(horizontal = 12.dp),
-            selected = false,
+        DrawerItem(
+            icon = Icons.Default.Add,
+            label = "Add server",
             onClick = {
                 state.dialog = AddServerDialog
             },
@@ -104,14 +102,30 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             Divider(Modifier.padding(vertical = 8.dp))
             val context = LocalContext.current
             val playUri = "https://play.google.com/store/apps/details?id=${context.packageName}"
-            NavigationDrawerItem(
-                icon = { Icon(IconPlayStore, null) },
-                label = { Text("Rate on Play Store", style = MaterialTheme.typography.labelLarge) },
+            DrawerItem(
+                icon = IconPlayStore,
+                label = "Rate on Play Store",
                 badge = { Icon(IconOpenInNew, null) },
-                modifier = Modifier.padding(horizontal = 12.dp),
-                selected = false,
                 onClick = { context.startActivity(Intent(ACTION_VIEW, Uri.parse(playUri))) },
             )
         }
     }
+}
+
+@Composable
+fun DrawerItem(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    badge: (@Composable () -> Unit)? = null,
+    selected: Boolean = false,
+) {
+    NavigationDrawerItem(
+        icon = { Icon(icon, null) },
+        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        badge = badge,
+        modifier = Modifier.padding(horizontal = 12.dp),
+        selected = selected,
+        onClick = onClick,
+    )
 }
