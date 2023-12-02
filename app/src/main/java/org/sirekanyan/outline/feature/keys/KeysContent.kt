@@ -11,14 +11,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.MainState
+import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.ext.plus
 import org.sirekanyan.outline.feature.sort.Sorting
 
 @Composable
-fun KeysContent(insets: PaddingValues, state: MainState, keys: KeysSuccessState, sorting: Sorting) {
-    val sortedKeys by produceState(listOf(), keys.values, sorting.key) {
+fun KeysContent(insets: PaddingValues, state: MainState, keys: List<Key>, sorting: Sorting) {
+    val sortedKeys by produceState(listOf(), keys, sorting.key) {
         value = withContext(Dispatchers.IO) {
-            keys.values.sortedWith(sorting.comparator)
+            keys.sortedWith(sorting.comparator)
         }
     }
     LazyColumn(contentPadding = insets + PaddingValues(bottom = 88.dp)) {

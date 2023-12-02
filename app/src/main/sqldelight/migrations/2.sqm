@@ -1,2 +1,11 @@
 ALTER TABLE ApiUrl RENAME TO ServerEntity;
 ALTER TABLE KeyValue RENAME TO KeyValueEntity;
+
+CREATE TABLE IF NOT EXISTS KeyEntity (
+  serverId TEXT NOT NULL,
+  id TEXT NOT NULL,
+  url TEXT NOT NULL,
+  name TEXT NOT NULL,
+  traffic INTEGER,
+  PRIMARY KEY (serverId, id)
+);

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,13 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.ext.plus
 import org.sirekanyan.outline.feature.keys.KeysContent
 import org.sirekanyan.outline.feature.keys.KeysErrorContent
 import org.sirekanyan.outline.feature.keys.KeysErrorState
+import org.sirekanyan.outline.feature.keys.KeysIdleState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
-import org.sirekanyan.outline.feature.keys.KeysSuccessState
 import org.sirekanyan.outline.feature.sort.SortBottomSheet
 import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.ui.AddKeyButton
@@ -64,7 +66,15 @@ fun MainContent(state: MainState) {
                 )
             }
             is SelectedPage -> {
-                when (val keys = page.keys) {
+                val serverEntity = page.server
+                val keys by rememberFlowAsState(listOf(), serverEntity.id) {
+                    state.servers.observeKeys(serverEntity)
+                }
+                KeysContent(insets, state, keys, sorting)
+                when (page.keys) {
+                    is KeysIdleState -> {
+                        // nothing
+                    }
                     is KeysLoadingState -> {
                         Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
                             CircularProgressIndicator()
@@ -80,14 +90,10 @@ fun MainContent(state: MainState) {
                             },
                         )
                     }
-                    is KeysSuccessState -> {
-                        KeysContent(insets, state, keys, sorting)
-                    }
                 }
                 LaunchedEffect(page.server) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
-                val serverEntity = page.server
                 val cachedServer = state.servers.getCachedServer(serverEntity)
                 val server by produceState(cachedServer, serverEntity) {
                     value = state.servers.getServer(serverEntity)
@@ -140,3 +146,7 @@ fun MainContent(state: MainState) {
         }
     }
 }
+
+@Composable
+private fun <T> rememberFlowAsState(initial: T, key: Any? = null, block: () -> Flow<T>): State<T> =
+    remember(key, calculation = block).collectAsState(initial)

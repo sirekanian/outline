@@ -7,6 +7,7 @@ import org.sirekanyan.outline.db.model.ServerEntity
 
 class DebugDao(private val database: OutlineDatabase) {
 
+    private val keyQueries = database.keyEntityQueries
     private val serverQueries = database.serverEntityQueries
 
     init {
@@ -18,6 +19,7 @@ class DebugDao(private val database: OutlineDatabase) {
     suspend fun reset() {
         withContext(Dispatchers.IO) {
             database.transaction {
+                keyQueries.truncate()
                 serverQueries.truncate()
                 listOf<String>(
                     // add your debug servers here

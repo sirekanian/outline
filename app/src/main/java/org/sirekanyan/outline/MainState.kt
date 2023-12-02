@@ -13,22 +13,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
+import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.db.KeyDao
 import org.sirekanyan.outline.db.KeyValueDao
 import org.sirekanyan.outline.db.ServerDao
 import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.db.rememberKeyDao
 import org.sirekanyan.outline.db.rememberKeyValueDao
 import org.sirekanyan.outline.db.rememberServerDao
 import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.feature.keys.KeysErrorState
+import org.sirekanyan.outline.feature.keys.KeysIdleState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysState
-import org.sirekanyan.outline.feature.keys.KeysSuccessState
 import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.repository.ServerRepository
 import java.net.ConnectException
@@ -58,7 +62,8 @@ fun rememberMainState(): MainState {
     val api = remember { OutlineApi() }
     val dao = rememberServerDao()
     val prefs = rememberKeyValueDao()
-    return remember { MainState(scope + supervisor, api, dao, prefs) }
+    val cache = rememberKeyDao()
+    return remember { MainState(scope + supervisor, api, dao, prefs, cache) }
 }
 
 class MainState(
@@ -66,15 +71,16 @@ class MainState(
     val api: OutlineApi,
     val dao: ServerDao,
     private val prefs: KeyValueDao,
+    cache: KeyDao,
 ) {
 
-    val servers = ServerRepository(api)
+    val servers = ServerRepository(api, cache)
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
     var dialog by mutableStateOf<Dialog?>(null)
     val selectedPage by derivedStateOf { page as? SelectedPage }
     var selectedKey by mutableStateOf<Key?>(null)
-    val isFabVisible by derivedStateOf { (page as? SelectedPage)?.keys is KeysSuccessState }
+    val isFabVisible by derivedStateOf { (page as? SelectedPage)?.keys is KeysIdleState }
     var isFabLoading by mutableStateOf(false)
     var deletingKey by mutableStateOf<Key?>(null)
     val sorting = prefs.observe(Sorting.KEY).map(Sorting::getByKey)
@@ -102,12 +108,14 @@ class MainState(
     }
 
     suspend fun refreshCurrentKeys(showLoading: Boolean) {
-        (page as? SelectedPage)?.let { page ->
+        val page = page as? SelectedPage ?: return
+        withContext(Dispatchers.IO) {
             if (showLoading) {
                 page.keys = KeysLoadingState
             }
             page.keys = try {
-                KeysSuccessState(api.getKeys(page.server))
+                servers.updateKeys(page.server)
+                KeysIdleState
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 KeysErrorState
@@ -122,7 +130,7 @@ sealed class Page
 data object HelloPage : Page()
 
 data class SelectedPage(val server: ServerEntity) : Page() {
-    var keys by mutableStateOf<KeysState>(KeysLoadingState)
+    var keys by mutableStateOf<KeysState>(KeysIdleState)
 }
 
 sealed class Dialog
