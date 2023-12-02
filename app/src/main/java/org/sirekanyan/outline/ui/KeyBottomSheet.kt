@@ -1,8 +1,6 @@
 package org.sirekanyan.outline.ui
 
 import android.content.Intent
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -20,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.ui.icons.IconCopy
 
 @Composable
@@ -42,7 +41,7 @@ fun KeyBottomSheet(
                 leadingContent = { Icon(IconCopy, null) },
                 modifier = Modifier.clickable {
                     localClipboard.setText(AnnotatedString(key.accessKey.accessUrl))
-                    Toast.makeText(localContext, "Copied", LENGTH_SHORT).show()
+                    localContext.showToast("Copied")
                     coroutineScope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {

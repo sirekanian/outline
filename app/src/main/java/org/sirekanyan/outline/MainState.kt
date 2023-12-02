@@ -1,6 +1,5 @@
 package org.sirekanyan.outline
 
-import android.widget.Toast
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import org.sirekanyan.outline.db.rememberKeyDao
 import org.sirekanyan.outline.db.rememberKeyValueDao
 import org.sirekanyan.outline.db.rememberServerDao
 import org.sirekanyan.outline.ext.logError
+import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysIdleState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
@@ -50,10 +50,10 @@ fun rememberMainState(): MainState {
             }
             when (throwable) {
                 is UnknownHostException, is ConnectException -> {
-                    Toast.makeText(context, "Check network connection", Toast.LENGTH_SHORT).show()
+                    context.showToast("Check network connection")
                 }
                 else -> {
-                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                    context.showToast("Something went wrong")
                 }
             }
         }
