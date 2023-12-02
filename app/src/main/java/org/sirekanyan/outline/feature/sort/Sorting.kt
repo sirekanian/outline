@@ -15,13 +15,16 @@ enum class Sorting(val key: String, @StringRes val title: Int, val comparator: C
     NAME(
         key = "name",
         title = R.string.outln_sorting_by_name,
-        comparator = compareBy({ it.accessKey.name.isEmpty() }, { it.accessKey.name.lowercase() }),
+        comparator = compareBy<Key> { it.accessKey.name.isEmpty() }
+            .thenBy { it.accessKey.name.lowercase() }
+            .thenBy { it.accessKey.id.toLongOrNull() },
     ),
 
     TRAFFIC(
         key = "traffic",
         title = R.string.outln_sorting_by_traffic,
-        comparator = compareByDescending { it.traffic },
+        comparator = compareByDescending<Key> { it.traffic }
+            .thenBy { it.accessKey.id.toLongOrNull() },
     );
 
     companion object {
