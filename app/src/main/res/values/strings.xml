@@ -3,4 +3,5 @@
     <string name="outln_sorting_by_id">Id</string>
     <string name="outln_sorting_by_name">Name</string>
     <string name="outln_sorting_by_traffic">Traffic</string>
+    <string name="outln_network_error">Check your network connection</string>
 </resources>

@@ -31,11 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.ext.plus
+import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.feature.keys.KeysContent
 import org.sirekanyan.outline.feature.keys.KeysErrorContent
 import org.sirekanyan.outline.feature.keys.KeysErrorState
@@ -90,14 +92,21 @@ fun MainContent(state: MainState) {
                         }
                     }
                     is KeysErrorState -> {
-                        KeysErrorContent(
-                            insets = insets,
-                            onRetry = {
-                                state.scope.launch {
-                                    state.refreshCurrentKeys(showLoading = true)
-                                }
-                            },
-                        )
+                        if (serverEntity.cached) {
+                            val context = LocalContext.current
+                            LaunchedEffect(Unit) {
+                                context.showToast(R.string.outln_network_error)
+                            }
+                        } else {
+                            KeysErrorContent(
+                                insets = insets,
+                                onRetry = {
+                                    state.scope.launch {
+                                        state.refreshCurrentKeys(showLoading = true)
+                                    }
+                                },
+                            )
+                        }
                     }
                 }
                 LaunchedEffect(page.server) {

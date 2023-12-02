@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.sirekanyan.outline.R
 
 @Composable
 fun KeysErrorContent(insets: PaddingValues, onRetry: () -> Unit) {
@@ -22,7 +24,7 @@ fun KeysErrorContent(insets: PaddingValues, onRetry: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Check your network connection",
+            text = stringResource(R.string.outln_network_error),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
         )
