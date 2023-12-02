@@ -8,6 +8,9 @@ import org.sirekanyan.outline.db.OutlineDatabase
 fun Context.app(): App =
     applicationContext as App
 
+fun isDebugBuild(): Boolean =
+    BuildConfig.DEBUG
+
 @Suppress("KotlinConstantConditions")
 fun isPlayFlavor(): Boolean =
     BuildConfig.FLAVOR == "play"

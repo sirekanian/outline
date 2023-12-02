@@ -2,8 +2,8 @@ package org.sirekanyan.outline.db
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.sirekanyan.outline.BuildConfig
 import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.isDebugBuild
 
 class DebugDao(private val database: OutlineDatabase) {
 
@@ -11,7 +11,7 @@ class DebugDao(private val database: OutlineDatabase) {
     private val serverQueries = database.serverEntityQueries
 
     init {
-        require(BuildConfig.DEBUG) {
+        require(isDebugBuild()) {
             error("Not allowed in production builds")
         }
     }
