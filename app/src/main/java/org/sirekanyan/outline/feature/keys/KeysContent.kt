@@ -22,7 +22,7 @@ fun KeysContent(insets: PaddingValues, state: MainState, keys: List<Key>, sortin
             keys.sortedWith(sorting.comparator)
         }
     }
-    LazyColumn(contentPadding = insets + PaddingValues(bottom = 88.dp)) {
+    LazyColumn(contentPadding = insets + PaddingValues(top = 4.dp, bottom = 88.dp)) {
         sortedKeys.forEach { key ->
             item {
                 val isDeleting = key.accessKey.accessUrl == state.deletingKey?.accessKey?.accessUrl

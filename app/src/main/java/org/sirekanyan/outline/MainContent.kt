@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
@@ -76,8 +79,14 @@ fun MainContent(state: MainState) {
                         // nothing
                     }
                     is KeysLoadingState -> {
-                        Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
-                            CircularProgressIndicator()
+                        if (keys.isNotEmpty()) {
+                            Box(Modifier.fillMaxSize().padding(insets).alpha(0.95f)) {
+                                LinearProgressIndicator(Modifier.fillMaxWidth())
+                            }
+                        } else {
+                            Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
+                                CircularProgressIndicator()
+                            }
                         }
                     }
                     is KeysErrorState -> {
