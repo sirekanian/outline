@@ -1,5 +1,10 @@
 package org.sirekanyan.outline
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -77,23 +82,34 @@ fun MainContent(state: MainState) {
                     state.servers.observeKeys(serverEntity)
                 }
                 KeysContent(insets, state, keys, sorting)
+                val hasKeys = keys.isNotEmpty()
+                Box(Modifier.fillMaxSize().padding(insets).alpha(0.95f)) {
+                    AnimatedVisibility(
+                        visible = page.keys is KeysLoadingState && hasKeys,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
+                    ) {
+                        LinearProgressIndicator(Modifier.fillMaxWidth())
+                    }
+                }
+                Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
+                    AnimatedVisibility(
+                        visible = page.keys is KeysLoadingState && !hasKeys,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
                 when (page.keys) {
                     is KeysIdleState -> {
                         // nothing
                     }
                     is KeysLoadingState -> {
-                        if (keys.isNotEmpty()) {
-                            Box(Modifier.fillMaxSize().padding(insets).alpha(0.95f)) {
-                                LinearProgressIndicator(Modifier.fillMaxWidth())
-                            }
-                        } else {
-                            Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
-                                CircularProgressIndicator()
-                            }
-                        }
+                        // nothing
                     }
                     is KeysErrorState -> {
-                        if (serverEntity.cached) {
+                        if (hasKeys) {
                             val context = LocalContext.current
                             LaunchedEffect(Unit) {
                                 context.showToast(R.string.outln_network_error)
