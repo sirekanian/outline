@@ -137,7 +137,9 @@ sealed class Dialog
 
 data object AddServerDialog : Dialog()
 
-data class EditKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
+data class RenameServerDialog(val server: ServerEntity, val serverName: String) : Dialog()
+
+data class RenameKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
 
 data class DeleteKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
 

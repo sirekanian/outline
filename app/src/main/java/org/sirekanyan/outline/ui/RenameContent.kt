@@ -18,27 +18,31 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.EditKeyDialog
 import org.sirekanyan.outline.MainState
 
 @Composable
-fun EditKeyContent(state: MainState, dialog: EditKeyDialog) {
-    val accessKey = dialog.key.accessKey
+fun RenameContent(
+    state: MainState,
+    dialogTitle: String,
+    initialName: String,
+    defaultName: String,
+    onSaveClicked: suspend (String) -> Unit,
+) {
     var draft by remember {
-        mutableStateOf(TextFieldValue(accessKey.nameOrDefault, TextRange(Int.MAX_VALUE)))
+        mutableStateOf(TextFieldValue(initialName, TextRange(Int.MAX_VALUE)))
     }
     var error by remember(draft) { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     Column {
         DialogToolbar(
-            title = "Edit key",
+            title = dialogTitle,
             onCloseClick = { state.dialog = null },
             action = "Save" to {
                 state.scope.launch {
                     val isSuccess = try {
                         isLoading = true
-                        val newName = draft.text.ifBlank { accessKey.defaultName }
-                        state.api.renameAccessKey(dialog.server, accessKey.id, newName)
+                        val newName = draft.text.ifBlank { defaultName }
+                        onSaveClicked(newName)
                         state.dialog = null
                         true
                     } catch (exception: Exception) {
@@ -64,7 +68,7 @@ fun EditKeyContent(state: MainState, dialog: EditKeyDialog) {
                 .padding(horizontal = 16.dp, vertical = 24.dp)
                 .focusRequester(focusRequester),
             label = { Text("Name") },
-            placeholder = { Text(accessKey.defaultName) },
+            placeholder = { Text(defaultName) },
             isError = error.isNotEmpty(),
             supportingText = { Text(error) },
             maxLines = 4,

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -123,6 +124,9 @@ fun MainContent(state: MainState) {
                         MenuItem("Sort by…", IconSort) {
                             isSortingVisible = true
                         },
+                        MenuItem("Edit", Icons.Default.Edit) {
+                            state.dialog = RenameServerDialog(page.server, server.name)
+                        },
                         MenuItem("Delete", Icons.Default.Delete) {
                             state.dialog = DeleteServerDialog(page.server, server.name)
                         },
@@ -150,7 +154,7 @@ fun MainContent(state: MainState) {
                 KeyBottomSheet(
                     key = key,
                     onDismissRequest = { state.selectedKey = null },
-                    onEditClick = { state.dialog = EditKeyDialog(page.server, key) },
+                    onEditClick = { state.dialog = RenameKeyDialog(page.server, key) },
                     onDeleteClick = { state.dialog = DeleteKeyDialog(page.server, key) },
                 )
             }

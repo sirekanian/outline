@@ -68,6 +68,13 @@ class OutlineApi {
         return Server(name, transferMetrics?.values?.sum())
     }
 
+    suspend fun renameServer(server: ServerEntity, name: String) {
+        request(HttpMethod.Put, server, "name") {
+            contentType(ContentType.Application.Json)
+            setBody(RenameRequest(name))
+        }
+    }
+
     suspend fun getKeys(server: ServerEntity): List<Key> {
         val accessKeys = getAccessKeys(server).accessKeys
         val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
