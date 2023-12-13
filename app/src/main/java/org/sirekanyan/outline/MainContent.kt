@@ -79,7 +79,7 @@ fun MainContent(state: MainState) {
             is SelectedPage -> {
                 val serverEntity = page.server
                 val keys by rememberFlowAsState(listOf(), serverEntity.id) {
-                    state.servers.observeKeys(serverEntity)
+                    state.keys.observeKeys(serverEntity)
                 }
                 KeysContent(insets, state, keys, sorting)
                 val hasKeys = keys.isNotEmpty()

@@ -34,6 +34,7 @@ import org.sirekanyan.outline.feature.keys.KeysIdleState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
 import org.sirekanyan.outline.feature.keys.KeysState
 import org.sirekanyan.outline.feature.sort.Sorting
+import org.sirekanyan.outline.repository.KeyRepository
 import org.sirekanyan.outline.repository.ServerRepository
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -74,7 +75,8 @@ class MainState(
     cache: KeyDao,
 ) {
 
-    val servers = ServerRepository(api, cache)
+    val servers = ServerRepository(api)
+    val keys = KeyRepository(api, cache)
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
     var dialog by mutableStateOf<Dialog?>(null)
@@ -114,7 +116,7 @@ class MainState(
                 page.keys = KeysLoadingState
             }
             page.keys = try {
-                servers.updateKeys(page.server)
+                keys.updateKeys(page.server)
                 KeysIdleState
             } catch (exception: Exception) {
                 exception.printStackTrace()
