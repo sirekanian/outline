@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.api.model.createServerEntity
 import javax.net.ssl.SSLException
 
 @Composable
@@ -44,11 +44,9 @@ fun AddServerContent(state: MainState) {
         }
         try {
             isLoading = true
-            val serverEntity = ServerEntity(draft, insecure)
-            state.servers.fetchServer(serverEntity)
-            state.dao.insertUrl(serverEntity)
+            val server = state.servers.updateServer(createServerEntity(draft, insecure))
             state.dialog = null
-            state.page = SelectedPage(serverEntity)
+            state.page = SelectedPage(server)
             state.closeDrawer(animated = false)
         } catch (exception: SSLException) {
             exception.printStackTrace()

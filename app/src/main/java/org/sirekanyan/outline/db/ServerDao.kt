@@ -3,11 +3,9 @@ package org.sirekanyan.outline.db
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import app.cash.sqldelight.Query
 import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.db.model.ServerEntity
 
@@ -21,16 +19,26 @@ class ServerDao(database: OutlineDatabase) {
 
     private val queries = database.serverEntityQueries
 
-    fun observeUrls(): Flow<List<ServerEntity>> =
-        queries.selectUrls().asFlow().mapToList(Dispatchers.IO)
+    fun selectAll(): List<ServerEntity> =
+        queries.selectAll().executeAsList()
 
-    suspend fun insertUrl(server: ServerEntity) =
-        withContext(Dispatchers.IO) {
-            queries.insertUrl(server)
+    fun observeAll(): Flow<Query<ServerEntity>> =
+        queries.selectAll().asFlow()
+
+    fun insert(server: ServerEntity) {
+        queries.insert(server)
+    }
+
+    fun insertAll(servers: List<ServerEntity>) {
+        queries.transaction {
+            servers.forEach {
+                queries.insert(it)
+            }
         }
+    }
 
     fun deleteUrl(id: String) {
-        queries.deleteUrl(id)
+        queries.delete(id)
     }
 
 }

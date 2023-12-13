@@ -55,9 +55,9 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             is DeleteServerDialog -> {
-                                val (server, serverName) = dialog
+                                val (server) = dialog
                                 DeleteServerContent(
-                                    serverName = serverName,
+                                    serverName = server.name,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
                                         state.scope.launch(IO) {

@@ -1,37 +1,52 @@
 package org.sirekanyan.outline.repository
 
+import app.cash.sqldelight.coroutines.mapToList
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.api.model.getHost
+import org.sirekanyan.outline.db.ServerDao
 import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.ext.logDebug
-import java.util.concurrent.ConcurrentHashMap
 
-class ServerRepository(private val api: OutlineApi) {
+class ServerRepository(private val api: OutlineApi, private val serverDao: ServerDao) {
 
-    private val cache: MutableMap<String, ServerEntity> = ConcurrentHashMap()
+    fun observeServers(): Flow<List<ServerEntity>> =
+        serverDao.observeAll().mapToList(IO)
 
-    fun getCachedServer(server: ServerEntity): ServerEntity =
-        cache[server.id] ?: server.copy(name = server.getHost(), traffic = null)
-
-    suspend fun fetchServer(server: ServerEntity): ServerEntity =
-        api.getServer(server).also { fetched ->
-            cache[server.id] = fetched
-        }
-
-    suspend fun getServer(server: ServerEntity): ServerEntity {
-        if (!cache.containsKey(server.id)) {
-            try {
-                return fetchServer(server)
-            } catch (exception: Exception) {
-                logDebug("Cannot fetch server name", exception)
+    suspend fun updateServers(servers: List<ServerEntity>) {
+        withContext(IO) {
+            val deferredServers = servers.map {
+                async {
+                    try {
+                        api.getServer(it)
+                    } catch (exception: Exception) {
+                        logDebug("Cannot get server", exception)
+                        null
+                    }
+                }
             }
+            serverDao.insertAll(deferredServers.awaitAll().filterNotNull())
         }
-        return getCachedServer(server)
     }
+
+    suspend fun updateServer(server: ServerEntity): ServerEntity =
+        withContext(IO) {
+            refreshServer(server)
+        }
 
     suspend fun renameServer(server: ServerEntity, newName: String) {
-        api.renameServer(server, newName)
-        cache.clear()
+        withContext(IO) {
+            api.renameServer(server, newName)
+            refreshServer(server)
+        }
     }
+
+    private suspend fun refreshServer(server: ServerEntity): ServerEntity =
+        api.getServer(server).also { newServer ->
+            serverDao.insert(newServer)
+        }
 
 }

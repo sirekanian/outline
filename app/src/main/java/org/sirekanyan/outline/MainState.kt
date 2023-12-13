@@ -75,7 +75,7 @@ class MainState(
     cache: KeyDao,
 ) {
 
-    val servers = ServerRepository(api)
+    val servers = ServerRepository(api, dao)
     val keys = KeyRepository(api, cache)
     val drawer = DrawerState(DrawerValue.Closed)
     var page by mutableStateOf<Page>(HelloPage)
@@ -139,10 +139,10 @@ sealed class Dialog
 
 data object AddServerDialog : Dialog()
 
-data class RenameServerDialog(val server: ServerEntity, val serverName: String) : Dialog()
+data class RenameServerDialog(val server: ServerEntity) : Dialog()
 
 data class RenameKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
 
 data class DeleteKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
 
-data class DeleteServerDialog(val server: ServerEntity, val serverName: String) : Dialog()
+data class DeleteServerDialog(val server: ServerEntity) : Dialog()

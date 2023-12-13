@@ -1,6 +1,6 @@
 package org.sirekanyan.outline.db
 
-import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.api.model.createServerEntity
 import org.sirekanyan.outline.isDebugBuild
 
 class DebugDao(private val database: OutlineDatabase) {
@@ -21,7 +21,7 @@ class DebugDao(private val database: OutlineDatabase) {
             listOf<String>(
                 // add your debug servers here
             ).forEach { url ->
-                serverQueries.insertUrl(ServerEntity(url, insecure = true))
+                serverQueries.insert(createServerEntity(url, insecure = true))
             }
         }
     }

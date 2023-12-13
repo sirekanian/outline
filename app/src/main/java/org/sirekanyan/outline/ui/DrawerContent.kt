@@ -24,9 +24,8 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,6 +40,7 @@ import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.db.DebugDao
+import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
 import org.sirekanyan.outline.isPlayFlavor
 import org.sirekanyan.outline.text.formatTraffic
@@ -69,13 +69,14 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
             style = MaterialTheme.typography.titleSmall,
         )
-        val serverEntities by remember { state.dao.observeUrls() }.collectAsState(listOf())
-        serverEntities.forEach { serverEntity ->
-            val isSelected = state.selectedPage?.server?.id == serverEntity.id
-            val cachedServer = state.servers.getCachedServer(serverEntity)
-            val server by produceState(cachedServer, state.drawer.isOpen) {
-                value = state.servers.getServer(serverEntity)
+        val servers by rememberFlowAsState(listOf()) { state.servers.observeServers() }
+        if (servers.isNotEmpty()) {
+            LaunchedEffect(Unit) {
+                state.servers.updateServers(servers)
             }
+        }
+        servers.forEach { server ->
+            val isSelected = state.selectedPage?.server?.id == server.id
             DrawerItem(
                 icon = Icons.Default.Done,
                 label = server.name,
@@ -90,7 +91,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 },
                 selected = isSelected,
                 onClick = {
-                    state.page = SelectedPage(serverEntity)
+                    state.page = SelectedPage(server)
                     state.closeDrawer()
                 },
             )

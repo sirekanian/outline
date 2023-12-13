@@ -27,11 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,9 +38,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.ext.plus
+import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.feature.keys.KeysContent
 import org.sirekanyan.outline.feature.keys.KeysErrorContent
@@ -77,9 +75,8 @@ fun MainContent(state: MainState) {
                 )
             }
             is SelectedPage -> {
-                val serverEntity = page.server
-                val keys by rememberFlowAsState(listOf(), serverEntity.id) {
-                    state.keys.observeKeys(serverEntity)
+                val keys by rememberFlowAsState(listOf(), page.server.id) {
+                    state.keys.observeKeys(page.server)
                 }
                 KeysContent(insets, state, keys, sorting)
                 val hasKeys = keys.isNotEmpty()
@@ -129,22 +126,18 @@ fun MainContent(state: MainState) {
                 LaunchedEffect(page.server) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
-                val cachedServer = state.servers.getCachedServer(serverEntity)
-                val server by produceState(cachedServer, serverEntity) {
-                    value = state.servers.getServer(serverEntity)
-                }
                 MainTopAppBar(
-                    title = server.name,
+                    title = page.server.name,
                     onMenuClick = state::openDrawer,
                     items = listOf(
                         MenuItem("Sort by…", IconSort) {
                             isSortingVisible = true
                         },
                         MenuItem("Edit", Icons.Default.Edit) {
-                            state.dialog = RenameServerDialog(page.server, server.name)
+                            state.dialog = RenameServerDialog(page.server)
                         },
                         MenuItem("Delete", Icons.Default.Delete) {
-                            state.dialog = DeleteServerDialog(page.server, server.name)
+                            state.dialog = DeleteServerDialog(page.server)
                         },
                     ),
                 )
@@ -184,7 +177,3 @@ fun MainContent(state: MainState) {
         }
     }
 }
-
-@Composable
-private fun <T> rememberFlowAsState(initial: T, key: Any? = null, block: () -> Flow<T>): State<T> =
-    remember(key, calculation = block).collectAsState(initial)

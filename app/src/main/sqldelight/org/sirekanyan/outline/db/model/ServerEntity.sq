@@ -1,15 +1,17 @@
 CREATE TABLE IF NOT EXISTS ServerEntity (
   id TEXT NOT NULL PRIMARY KEY,
-  insecure INTEGER AS kotlin.Boolean NOT NULL DEFAULT 0
+  insecure INTEGER AS kotlin.Boolean NOT NULL DEFAULT 0,
+  name TEXT NOT NULL DEFAULT '',
+  traffic INTEGER
 );
 
-selectUrls:
-SELECT * FROM ServerEntity;
+selectAll:
+SELECT * FROM ServerEntity ORDER BY id;
 
-insertUrl:
+insert:
 INSERT OR REPLACE INTO ServerEntity VALUES ?;
 
-deleteUrl:
+delete:
 DELETE FROM ServerEntity WHERE id = ?;
 
 truncate:
