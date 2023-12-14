@@ -63,7 +63,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.6"
     }
     packaging {
         resources {
@@ -75,18 +75,18 @@ android {
 dependencies {
 
     // compose
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.material3:material3:1.1.2")
 
     // ktor
-    implementation("io.ktor:ktor-client-okhttp:2.3.6")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
+    implementation("io.ktor:ktor-client-okhttp:2.3.7")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
     implementation("org.slf4j:slf4j-simple:2.0.9")
 
     // sqldelight
-    implementation("app.cash.sqldelight:android-driver:2.0.0")
-    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
+    implementation("app.cash.sqldelight:android-driver:2.0.1")
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
 
     // crash reporting
     add("playImplementation", "ch.acra:acra-http:5.11.3")
