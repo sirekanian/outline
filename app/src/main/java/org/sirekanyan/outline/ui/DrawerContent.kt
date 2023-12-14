@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -38,8 +37,7 @@ import org.sirekanyan.outline.AddServerDialog
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.app
-import org.sirekanyan.outline.db.DebugDao
+import org.sirekanyan.outline.db.rememberDebugDao
 import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
 import org.sirekanyan.outline.isPlayFlavor
@@ -108,7 +106,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             Divider(Modifier.padding(vertical = 8.dp))
             val context = LocalContext.current
             if (isDebugBuild()) {
-                val debugDao = remember { DebugDao(context.app().database) }
+                val debugDao = rememberDebugDao()
                 DrawerItem(
                     icon = Icons.Default.Warning,
                     label = "Reset database",

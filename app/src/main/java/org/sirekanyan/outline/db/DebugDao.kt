@@ -1,29 +1,16 @@
 package org.sirekanyan.outline.db
 
-import org.sirekanyan.outline.api.model.createServerEntity
-import org.sirekanyan.outline.isDebugBuild
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import org.sirekanyan.outline.app
 
-class DebugDao(private val database: OutlineDatabase) {
+@Composable
+fun rememberDebugDao(): DebugDao {
+    val database = LocalContext.current.app().database
+    return remember { DebugDaoImpl(database) }
+}
 
-    private val keyQueries = database.keyEntityQueries
-    private val serverQueries = database.serverEntityQueries
-
-    init {
-        require(isDebugBuild()) {
-            error("Not allowed in production builds")
-        }
-    }
-
-    fun reset() {
-        database.transaction {
-            keyQueries.truncate()
-            serverQueries.truncate()
-            listOf<String>(
-                // add your debug servers here
-            ).forEach { url ->
-                serverQueries.insert(createServerEntity(url, insecure = true))
-            }
-        }
-    }
-
+interface DebugDao {
+    fun reset()
 }
