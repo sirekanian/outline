@@ -18,7 +18,6 @@ import okhttp3.OkHttpClient
 import org.sirekanyan.outline.api.model.AccessKeysResponse
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.RenameRequest
-import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
 import org.sirekanyan.outline.db.model.ServerEntity
@@ -62,10 +61,10 @@ class OutlineApi {
         return client.request(server.id + '/' + path) { method = httpMethod; block() }
     }
 
-    suspend fun getServer(server: ServerEntity): Server {
+    suspend fun getServer(server: ServerEntity): ServerEntity {
         val name = request(HttpMethod.Get, server, "server").body<ServerNameResponse>().name
         val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
-        return Server(name, transferMetrics?.values?.sum())
+        return ServerEntity(server.id, server.insecure, name, transferMetrics?.values?.sum())
     }
 
     suspend fun renameServer(server: ServerEntity, name: String) {

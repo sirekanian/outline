@@ -5,5 +5,3 @@ import org.sirekanyan.outline.db.model.ServerEntity
 
 fun ServerEntity.getHost(): String =
     Uri.parse(id).host.orEmpty()
-
-class Server(val name: String, val traffic: Long?)
