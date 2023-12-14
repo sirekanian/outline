@@ -29,10 +29,8 @@ class ServerDao(database: OutlineDatabase) {
             queries.insertUrl(server)
         }
 
-    suspend fun deleteUrl(id: String) {
-        withContext(Dispatchers.IO) {
-            queries.deleteUrl(id)
-        }
+    fun deleteUrl(id: String) {
+        queries.deleteUrl(id)
     }
 
 }

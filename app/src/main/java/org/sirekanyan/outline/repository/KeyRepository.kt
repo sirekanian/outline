@@ -1,7 +1,10 @@
 package org.sirekanyan.outline.repository
 
+import app.cash.sqldelight.coroutines.mapToList
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.AccessKey
 import org.sirekanyan.outline.api.model.Key
@@ -14,15 +17,19 @@ import org.sirekanyan.outline.db.model.ServerEntity
 class KeyRepository(private val api: OutlineApi, private val keyDao: KeyDao) {
 
     fun observeKeys(server: ServerEntity): Flow<List<Key>> =
-        keyDao.observe(server).map(List<KeyEntity>::fromEntities)
+        keyDao.observe(server).mapToList(IO).map(List<KeyEntity>::fromEntities)
 
     suspend fun updateKeys(server: ServerEntity) {
-        val keys = api.getKeys(server)
-        keyDao.update(server, keys.toEntities(server))
+        withContext(IO) {
+            val keys = api.getKeys(server)
+            keyDao.update(server, keys.toEntities(server))
+        }
     }
 
     suspend fun renameKey(server: ServerEntity, accessKey: AccessKey, newName: String) {
-        api.renameAccessKey(server, accessKey.id, newName)
+        withContext(IO) {
+            api.renameAccessKey(server, accessKey.id, newName)
+        }
     }
 
 }

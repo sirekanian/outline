@@ -1,7 +1,5 @@
 package org.sirekanyan.outline.db
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.isDebugBuild
 
@@ -16,16 +14,14 @@ class DebugDao(private val database: OutlineDatabase) {
         }
     }
 
-    suspend fun reset() {
-        withContext(Dispatchers.IO) {
-            database.transaction {
-                keyQueries.truncate()
-                serverQueries.truncate()
-                listOf<String>(
-                    // add your debug servers here
-                ).forEach { url ->
-                    serverQueries.insertUrl(ServerEntity(url, insecure = true))
-                }
+    fun reset() {
+        database.transaction {
+            keyQueries.truncate()
+            serverQueries.truncate()
+            listOf<String>(
+                // add your debug servers here
+            ).forEach { url ->
+                serverQueries.insertUrl(ServerEntity(url, insecure = true))
             }
         }
     }

@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.AddServerDialog
 import org.sirekanyan.outline.MainState
@@ -111,7 +112,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                     icon = Icons.Default.Warning,
                     label = "Reset database",
                     onClick = {
-                        state.scope.launch {
+                        state.scope.launch(IO) {
                             debugDao.reset()
                         }
                     },

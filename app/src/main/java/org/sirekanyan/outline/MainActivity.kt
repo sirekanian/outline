@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.ui.AddServerContent
 import org.sirekanyan.outline.ui.DeleteKeyContent
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
                                     serverName = serverName,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
-                                        state.scope.launch {
+                                        state.scope.launch(IO) {
                                             state.dao.deleteUrl(server.id)
                                         }
                                         state.page = HelloPage
