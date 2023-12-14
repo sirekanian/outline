@@ -1,6 +1,7 @@
 package org.sirekanyan.outline.db
 
-import org.sirekanyan.outline.api.model.createServerEntity
+import org.sirekanyan.outline.BuildConfig
+import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.isDebugBuild
 
 class DebugDaoImpl(private val database: OutlineDatabase) : DebugDao {
@@ -18,10 +19,11 @@ class DebugDaoImpl(private val database: OutlineDatabase) : DebugDao {
         database.transaction {
             keyQueries.truncate()
             serverQueries.truncate()
-            listOf<String>(
-                // add your debug servers here
-            ).forEach { url ->
-                serverQueries.insert(createServerEntity(url, insecure = true))
+            listOfNotNull(
+                BuildConfig.DEBUG_SERVER1,
+                BuildConfig.DEBUG_SERVER2,
+            ).forEachIndexed { index, url ->
+                serverQueries.insert(ServerEntity(url, true, "Server ${index + 1}", null))
             }
         }
     }

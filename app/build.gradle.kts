@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -23,6 +24,16 @@ android {
         }
     }
     buildTypes {
+        debug {
+            val props = Properties().also {
+                it.load(File("debug.properties").also(File::createNewFile).inputStream())
+            }
+            isDebuggable = props.getProperty("DEBUGGABLE").toBoolean()
+            buildConfigField("boolean", "DEBUG", "true")
+            listOf("DEBUG_SERVER1", "DEBUG_SERVER2").forEach { key ->
+                buildConfigField("String", key, props.getProperty(key)?.let { "\"$it\"" } ?: "null")
+            }
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
