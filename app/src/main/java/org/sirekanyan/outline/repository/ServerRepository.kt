@@ -29,7 +29,8 @@ class ServerRepository(private val api: OutlineApi) {
         return getCachedServer(server)
     }
 
-    fun clearCache() {
+    suspend fun renameServer(server: ServerEntity, newName: String) {
+        api.renameServer(server, newName)
         cache.clear()
     }
 

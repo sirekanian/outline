@@ -8,7 +8,6 @@ import org.sirekanyan.outline.api.model.getHost
 @Composable
 fun RenameServerContent(state: MainState, dialog: RenameServerDialog) {
     RenameContent(state, "Edit server", dialog.serverName, dialog.server.getHost()) { newName ->
-        state.api.renameServer(dialog.server, newName)
-        state.servers.clearCache()
+        state.servers.renameServer(dialog.server, newName)
     }
 }

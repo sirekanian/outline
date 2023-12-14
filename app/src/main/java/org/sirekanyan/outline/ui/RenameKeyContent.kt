@@ -8,6 +8,6 @@ import org.sirekanyan.outline.RenameKeyDialog
 fun RenameKeyContent(state: MainState, dialog: RenameKeyDialog) {
     val accessKey = dialog.key.accessKey
     RenameContent(state, "Edit key", accessKey.name, accessKey.defaultName) { newName ->
-        state.api.renameAccessKey(dialog.server, accessKey.id, newName)
+        state.keys.renameKey(dialog.server, accessKey, newName)
     }
 }
