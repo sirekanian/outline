@@ -10,6 +10,11 @@ CREATE TABLE IF NOT EXISTS KeyEntity (
 selectKeys:
 SELECT * FROM KeyEntity WHERE serverId = ?;
 
+selectAllKeys:
+SELECT k.*, s.insecure, s.name serverName, s.traffic serverTraffic
+  FROM KeyEntity k, ServerEntity s
+  WHERE k.serverId = s.id;
+
 insertKey:
 INSERT OR REPLACE INTO KeyEntity VALUES ?;
 

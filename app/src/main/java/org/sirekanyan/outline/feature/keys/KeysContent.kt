@@ -10,6 +10,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.sirekanyan.outline.HelloPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.ext.plus
@@ -22,7 +23,7 @@ fun KeysContent(insets: PaddingValues, state: MainState, keys: List<Key>, sortin
             keys.sortedWith(sorting.comparator)
         }
     }
-    LazyColumn(contentPadding = insets + PaddingValues(top = 4.dp, bottom = 88.dp)) {
+    LazyColumn(contentPadding = insets + PaddingValues(top = 4.dp, bottom = 4.dp)) {
         sortedKeys.forEach { key ->
             item {
                 val isDeleting = key.accessKey.accessUrl == state.deletingKey?.accessKey?.accessUrl
@@ -30,7 +31,7 @@ fun KeysContent(insets: PaddingValues, state: MainState, keys: List<Key>, sortin
                 CompositionLocalProvider(
                     LocalContentColor provides LocalContentColor.current.copy(alpha = alpha)
                 ) {
-                    KeyContent(key, onClick = { state.selectedKey = key })
+                    KeyContent(key, state.page is HelloPage, onClick = { state.selectedKey = key })
                 }
             }
         }

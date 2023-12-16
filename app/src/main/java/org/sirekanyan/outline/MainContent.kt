@@ -62,23 +62,35 @@ fun MainContent(state: MainState) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
-                Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
-                    TextButton(onClick = { state.dialog = AddServerDialog }) {
-                        Icon(Icons.Default.Add, null)
-                        Spacer(Modifier.size(8.dp))
-                        Text("Add server")
+                val allKeys by rememberFlowAsState(initial = null) { state.keys.observeAllKeys() }
+                allKeys?.let { keys ->
+                    if (keys.isNotEmpty()) {
+                        KeysContent(insets, state, keys, sorting)
+                    } else {
+                        Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
+                            TextButton(onClick = { state.dialog = AddServerDialog }) {
+                                Icon(Icons.Default.Add, null)
+                                Spacer(Modifier.size(8.dp))
+                                Text("Add server")
+                            }
+                        }
                     }
                 }
                 MainTopAppBar(
                     title = stringResource(R.string.outln_app_name),
                     onMenuClick = state::openDrawer,
+                    items = listOf(
+                        MenuItem("Sort by…", IconSort) {
+                            isSortingVisible = true
+                        },
+                    )
                 )
             }
             is SelectedPage -> {
                 val keys by rememberFlowAsState(listOf(), page.server.id) {
                     state.keys.observeKeys(page.server)
                 }
-                KeysContent(insets, state, keys, sorting)
+                KeysContent(insets + PaddingValues(bottom = 88.dp), state, keys, sorting)
                 val hasKeys = keys.isNotEmpty()
                 Box(Modifier.fillMaxSize().padding(insets).alpha(0.95f)) {
                     AnimatedVisibility(

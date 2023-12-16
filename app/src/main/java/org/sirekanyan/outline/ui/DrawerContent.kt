@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.AddServerDialog
+import org.sirekanyan.outline.HelloPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
@@ -101,8 +103,18 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 state.dialog = AddServerDialog
             },
         )
+        Spacer(Modifier.weight(1f))
+        if (servers.isNotEmpty()) {
+            DrawerItem(
+                icon = Icons.Default.Search,
+                label = "All servers",
+                onClick = {
+                    state.page = HelloPage
+                    state.closeDrawer()
+                },
+            )
+        }
         if (isPlayFlavor() || isDebugBuild()) {
-            Spacer(Modifier.weight(1f))
             Divider(Modifier.padding(vertical = 8.dp))
             val context = LocalContext.current
             if (isDebugBuild()) {

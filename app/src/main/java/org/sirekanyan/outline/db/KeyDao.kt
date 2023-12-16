@@ -8,6 +8,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import kotlinx.coroutines.flow.Flow
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.db.model.KeyEntity
+import org.sirekanyan.outline.db.model.SelectAllKeys
 import org.sirekanyan.outline.db.model.ServerEntity
 
 @Composable
@@ -22,6 +23,9 @@ class KeyDao(database: OutlineDatabase) {
 
     fun observe(server: ServerEntity): Flow<Query<KeyEntity>> =
         queries.selectKeys(server.id).asFlow()
+
+    fun observeAll(): Flow<Query<SelectAllKeys>> =
+        queries.selectAllKeys().asFlow()
 
     fun update(server: ServerEntity, keys: List<KeyEntity>) {
         queries.transaction {

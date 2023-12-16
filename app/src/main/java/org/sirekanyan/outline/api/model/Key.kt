@@ -1,6 +1,7 @@
 package org.sirekanyan.outline.api.model
 
 import org.sirekanyan.outline.db.model.KeyEntity
+import org.sirekanyan.outline.db.model.SelectAllKeys
 import org.sirekanyan.outline.db.model.ServerEntity
 
 fun List<Key>.toEntities(): List<KeyEntity> =
@@ -12,6 +13,15 @@ fun List<Key>.toEntities(): List<KeyEntity> =
 fun List<KeyEntity>.fromEntities(server: ServerEntity): List<Key> =
     map { entity ->
         Key(server, AccessKey(entity.id, entity.url, entity.name), entity.traffic)
+    }
+
+fun List<SelectAllKeys>.fromEntities(): List<Key> =
+    map { entity ->
+        Key(
+            ServerEntity(entity.serverId, entity.insecure, entity.serverName, entity.serverTraffic),
+            AccessKey(entity.id, entity.url, entity.name),
+            entity.traffic,
+        )
     }
 
 class Key(val server: ServerEntity, val accessKey: AccessKey, val traffic: Long?)
