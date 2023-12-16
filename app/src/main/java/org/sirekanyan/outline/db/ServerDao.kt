@@ -15,9 +15,10 @@ fun rememberServerDao(): ServerDao {
     return remember { ServerDao(database) }
 }
 
-class ServerDao(database: OutlineDatabase) {
+class ServerDao(private val database: OutlineDatabase) {
 
     private val queries = database.serverEntityQueries
+    private val keyQueries = database.keyEntityQueries
 
     fun selectAll(): List<ServerEntity> =
         queries.selectAll().executeAsList()
@@ -38,7 +39,10 @@ class ServerDao(database: OutlineDatabase) {
     }
 
     fun deleteUrl(id: String) {
-        queries.delete(id)
+        database.transaction {
+            keyQueries.deleteKeys(id)
+            queries.delete(id)
+        }
     }
 
 }
