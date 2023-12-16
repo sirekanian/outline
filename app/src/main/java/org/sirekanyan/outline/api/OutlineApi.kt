@@ -77,7 +77,7 @@ class OutlineApi {
     suspend fun getKeys(server: ServerEntity): List<Key> {
         val accessKeys = getAccessKeys(server).accessKeys
         val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
-        return accessKeys.map { accessKey -> Key(accessKey, transferMetrics?.get(accessKey.id)) }
+        return accessKeys.map { Key(server, it, transferMetrics?.get(it.id)) }
     }
 
     private suspend fun getAccessKeys(server: ServerEntity): AccessKeysResponse =

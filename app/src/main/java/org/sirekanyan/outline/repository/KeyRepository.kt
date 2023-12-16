@@ -11,18 +11,17 @@ import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.fromEntities
 import org.sirekanyan.outline.api.model.toEntities
 import org.sirekanyan.outline.db.KeyDao
-import org.sirekanyan.outline.db.model.KeyEntity
 import org.sirekanyan.outline.db.model.ServerEntity
 
 class KeyRepository(private val api: OutlineApi, private val keyDao: KeyDao) {
 
     fun observeKeys(server: ServerEntity): Flow<List<Key>> =
-        keyDao.observe(server).mapToList(IO).map(List<KeyEntity>::fromEntities)
+        keyDao.observe(server).mapToList(IO).map { it.fromEntities(server) }
 
     suspend fun updateKeys(server: ServerEntity) {
         withContext(IO) {
             val keys = api.getKeys(server)
-            keyDao.update(server, keys.toEntities(server))
+            keyDao.update(server, keys.toEntities())
         }
     }
 

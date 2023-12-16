@@ -158,15 +158,13 @@ fun MainContent(state: MainState) {
                 }
             },
         )
-        state.selectedPage?.let { page ->
-            state.selectedKey?.let { key ->
-                KeyBottomSheet(
-                    key = key,
-                    onDismissRequest = { state.selectedKey = null },
-                    onEditClick = { state.dialog = RenameKeyDialog(page.server, key) },
-                    onDeleteClick = { state.dialog = DeleteKeyDialog(page.server, key) },
-                )
-            }
+        state.selectedKey?.let { key ->
+            KeyBottomSheet(
+                key = key,
+                onDismissRequest = { state.selectedKey = null },
+                onEditClick = { state.dialog = RenameKeyDialog(key.server, key) },
+                onDeleteClick = { state.dialog = DeleteKeyDialog(key.server, key) },
+            )
         }
         if (isSortingVisible) {
             SortBottomSheet(
