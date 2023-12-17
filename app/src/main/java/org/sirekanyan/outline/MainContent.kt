@@ -96,9 +96,9 @@ fun MainContent(state: MainState) {
                     MainTopAppBar(
                         title = { Text(stringResource(R.string.outln_app_name)) },
                         onMenuClick = state::openDrawer,
-                        items = listOf(
-                            MenuItem("Search", Icons.Default.Search) { search.openSearch() },
+                        visibleItems = listOf(
                             MenuItem("Sort by…", IconSort) { isSortingVisible = true },
+                            MenuItem("Search", Icons.Default.Search) { search.openSearch() },
                         ),
                     )
                 }
@@ -158,7 +158,7 @@ fun MainContent(state: MainState) {
                 MainTopAppBar(
                     title = { Text(page.server.name) },
                     onMenuClick = state::openDrawer,
-                    items = listOf(
+                    overflowItems = listOf(
                         MenuItem("Sort by…", IconSort) {
                             isSortingVisible = true
                         },

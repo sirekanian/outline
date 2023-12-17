@@ -29,12 +29,13 @@ fun MainTopAppBar(
     title: @Composable () -> Unit,
     onMenuClick: () -> Unit,
     menuIcon: ImageVector = Icons.Default.Menu,
-    items: List<MenuItem> = listOf(),
+    visibleItems: List<MenuItem> = listOf(),
+    overflowItems: List<MenuItem> = listOf(),
 ) {
     TopAppBar(
         title = title,
         navigationIcon = { IconButton(onMenuClick) { Icon(menuIcon, null) } },
-        actions = { MainMenu(items) },
+        actions = { MainMenu(visibleItems, overflowItems) },
         colors = TopAppBarDefaults.topAppBarColors(
             MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.98f),
         ),
@@ -42,14 +43,19 @@ fun MainTopAppBar(
 }
 
 @Composable
-private fun MainMenu(items: List<MenuItem>) {
-    if (items.isNotEmpty()) {
+private fun MainMenu(visibleItems: List<MenuItem>, overflowItems: List<MenuItem>) {
+    visibleItems.forEach { item ->
+        IconButton(onClick = item.onClick) {
+            Icon(item.icon, null)
+        }
+    }
+    if (overflowItems.isNotEmpty()) {
         var isMenuVisible by remember { mutableStateOf(false) }
         IconButton({ isMenuVisible = !isMenuVisible }) {
             Icon(Icons.Default.MoreVert, null)
         }
         DropdownMenu(isMenuVisible, { isMenuVisible = false }) {
-            items.forEach { (text, icon, onClick) ->
+            overflowItems.forEach { (text, icon, onClick) ->
                 DropdownMenuItem(
                     text = { Text(text) },
                     leadingIcon = { Icon(icon, null) },
