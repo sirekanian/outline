@@ -73,9 +73,9 @@ fun MainContent(state: MainState) {
                     state.keys.observeAllKeys(search.query)
                 }
                 allKeys?.let { keys ->
-                    if (keys.isNotEmpty() || search.isOpened) {
+                    if (keys.isNotEmpty()) {
                         KeysContent(insets, state, keys, sorting)
-                    } else {
+                    } else if (!search.isOpened) {
                         Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
                             TextButton(onClick = { state.dialog = AddServerDialog }) {
                                 Icon(Icons.Default.Add, null)
