@@ -56,17 +56,16 @@ import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
 import org.sirekanyan.outline.ui.SearchField
 import org.sirekanyan.outline.ui.icons.IconSort
-import org.sirekanyan.outline.ui.rememberSearchState
 
 @Composable
 fun MainContent(state: MainState) {
     val sorting by state.sorting.collectAsState(Sorting.DEFAULT)
     var isSortingVisible by remember { mutableStateOf(false) }
-    ModalNavigationDrawer({ DrawerContent(state) }, drawerState = state.drawer) {
+    ModalNavigationDrawer({ DrawerContent(state) }, Modifier, state.drawer, !state.drawerDisabled) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
-                val search = rememberSearchState()
+                val search = state.search
                 BackHandler(search.isOpened) {
                     search.closeSearch()
                 }

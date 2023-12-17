@@ -36,6 +36,7 @@ import org.sirekanyan.outline.feature.keys.KeysState
 import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.repository.KeyRepository
 import org.sirekanyan.outline.repository.ServerRepository
+import org.sirekanyan.outline.ui.SearchState
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -77,7 +78,9 @@ class MainState(
 
     val servers = ServerRepository(api, dao)
     val keys = KeyRepository(api, cache)
+    val search = SearchState()
     val drawer = DrawerState(DrawerValue.Closed)
+    val drawerDisabled by derivedStateOf { search.isOpened && drawer.isClosed }
     var page by mutableStateOf<Page>(HelloPage)
     var dialog by mutableStateOf<Dialog?>(null)
     val selectedPage by derivedStateOf { page as? SelectedPage }
