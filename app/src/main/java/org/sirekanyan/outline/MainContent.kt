@@ -1,5 +1,6 @@
 package org.sirekanyan.outline
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -53,6 +54,7 @@ import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
 import org.sirekanyan.outline.ui.icons.IconSort
+import org.sirekanyan.outline.ui.rememberSearchState
 
 @Composable
 fun MainContent(state: MainState) {
@@ -62,9 +64,12 @@ fun MainContent(state: MainState) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
-                val query by remember { mutableStateOf("") }
-                val allKeys by rememberFlowAsState(initial = null, query) {
-                    state.keys.observeAllKeys(query)
+                val search = rememberSearchState()
+                BackHandler(search.isOpened) {
+                    search.closeSearch()
+                }
+                val allKeys by rememberFlowAsState(initial = null, search.query) {
+                    state.keys.observeAllKeys(search.query)
                 }
                 allKeys?.let { keys ->
                     if (keys.isNotEmpty()) {
