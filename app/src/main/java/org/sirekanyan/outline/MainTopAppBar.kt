@@ -32,7 +32,7 @@ fun MainTopAppBar(
 ) {
     TopAppBar(
         title = { Text(title) },
-        navigationIcon = { IconButton({ onMenuClick() }) { Icon(Icons.Default.Menu, null) } },
+        navigationIcon = { IconButton(onMenuClick) { Icon(Icons.Default.Menu, null) } },
         actions = { MainMenu(items) },
         colors = TopAppBarDefaults.topAppBarColors(
             MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.98f),

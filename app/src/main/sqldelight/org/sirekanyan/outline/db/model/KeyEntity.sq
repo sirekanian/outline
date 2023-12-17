@@ -7,13 +7,16 @@ CREATE TABLE IF NOT EXISTS KeyEntity (
   PRIMARY KEY (serverId, id)
 );
 
+CREATE VIEW IF NOT EXISTS KeyWithServerEntity AS
+  SELECT k.*, s.insecure, s.name serverName, s.traffic serverTraffic
+    FROM KeyEntity k, ServerEntity s
+    WHERE k.serverId = s.id;
+
 selectKeys:
 SELECT * FROM KeyEntity WHERE serverId = ?;
 
 selectAllKeys:
-SELECT k.*, s.insecure, s.name serverName, s.traffic serverTraffic
-  FROM KeyEntity k, ServerEntity s
-  WHERE k.serverId = s.id;
+SELECT * FROM KeyWithServerEntity;
 
 insertKey:
 INSERT OR REPLACE INTO KeyEntity VALUES ?;
