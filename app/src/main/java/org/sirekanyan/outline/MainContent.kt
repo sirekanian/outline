@@ -62,7 +62,10 @@ fun MainContent(state: MainState) {
         val insets = WindowInsets.systemBars.asPaddingValues() + PaddingValues(top = 64.dp)
         when (val page = state.page) {
             is HelloPage -> {
-                val allKeys by rememberFlowAsState(initial = null) { state.keys.observeAllKeys() }
+                val query by remember { mutableStateOf("") }
+                val allKeys by rememberFlowAsState(initial = null, query) {
+                    state.keys.observeAllKeys(query)
+                }
                 allKeys?.let { keys ->
                     if (keys.isNotEmpty()) {
                         KeysContent(insets, state, keys, sorting)

@@ -24,8 +24,8 @@ class KeyDao(database: OutlineDatabase) {
     fun observe(server: ServerEntity): Flow<Query<KeyEntity>> =
         queries.selectKeys(server.id).asFlow()
 
-    fun observeAll(): Flow<Query<KeyWithServerEntity>> =
-        queries.selectAllKeys().asFlow()
+    fun observeAll(query: String): Flow<Query<KeyWithServerEntity>> =
+        queries.selectAllKeys("%$query%").asFlow()
 
     fun update(server: ServerEntity, keys: List<KeyEntity>) {
         queries.transaction {

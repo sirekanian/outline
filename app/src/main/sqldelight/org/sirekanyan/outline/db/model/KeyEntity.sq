@@ -16,7 +16,7 @@ selectKeys:
 SELECT * FROM KeyEntity WHERE serverId = ?;
 
 selectAllKeys:
-SELECT * FROM KeyWithServerEntity;
+SELECT * FROM KeyWithServerEntity WHERE name LIKE ?;
 
 insertKey:
 INSERT OR REPLACE INTO KeyEntity VALUES ?;
