@@ -26,12 +26,12 @@ data class MenuItem(val text: String, val icon: ImageVector, val onClick: () -> 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun MainTopAppBar(
-    title: String,
+    title: @Composable () -> Unit,
     onMenuClick: () -> Unit,
     items: List<MenuItem> = listOf(),
 ) {
     TopAppBar(
-        title = { Text(title) },
+        title = title,
         navigationIcon = { IconButton(onMenuClick) { Icon(Icons.Default.Menu, null) } },
         actions = { MainMenu(items) },
         colors = TopAppBarDefaults.topAppBarColors(

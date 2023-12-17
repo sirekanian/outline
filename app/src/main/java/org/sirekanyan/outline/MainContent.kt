@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -53,6 +54,7 @@ import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.ui.AddKeyButton
 import org.sirekanyan.outline.ui.DrawerContent
 import org.sirekanyan.outline.ui.KeyBottomSheet
+import org.sirekanyan.outline.ui.SearchField
 import org.sirekanyan.outline.ui.icons.IconSort
 import org.sirekanyan.outline.ui.rememberSearchState
 
@@ -72,7 +74,7 @@ fun MainContent(state: MainState) {
                     state.keys.observeAllKeys(search.query)
                 }
                 allKeys?.let { keys ->
-                    if (keys.isNotEmpty()) {
+                    if (keys.isNotEmpty() || search.isOpened) {
                         KeysContent(insets, state, keys, sorting)
                     } else {
                         Box(Modifier.fillMaxSize().padding(insets), Alignment.Center) {
@@ -84,15 +86,21 @@ fun MainContent(state: MainState) {
                         }
                     }
                 }
-                MainTopAppBar(
-                    title = stringResource(R.string.outln_app_name),
-                    onMenuClick = state::openDrawer,
-                    items = listOf(
-                        MenuItem("Sort by…", IconSort) {
-                            isSortingVisible = true
-                        },
+                if (search.isOpened) {
+                    MainTopAppBar(
+                        title = { SearchField(search.query) { search.query = it } },
+                        onMenuClick = search::closeSearch,
                     )
-                )
+                } else {
+                    MainTopAppBar(
+                        title = { Text(stringResource(R.string.outln_app_name)) },
+                        onMenuClick = state::openDrawer,
+                        items = listOf(
+                            MenuItem("Search", Icons.Default.Search) { search.openSearch() },
+                            MenuItem("Sort by…", IconSort) { isSortingVisible = true },
+                        )
+                    )
+                }
             }
             is SelectedPage -> {
                 val keys by rememberFlowAsState(listOf(), page.server.id) {
@@ -147,7 +155,7 @@ fun MainContent(state: MainState) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
                 MainTopAppBar(
-                    title = page.server.name,
+                    title = { Text(page.server.name) },
                     onMenuClick = state::openDrawer,
                     items = listOf(
                         MenuItem("Sort by…", IconSort) {
