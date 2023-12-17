@@ -2,11 +2,11 @@ package org.sirekanyan.outline.feature.keys
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,12 +27,12 @@ fun KeysContent(insets: PaddingValues, state: MainState, keys: List<Key>, sortin
         sortedKeys.forEach { key ->
             item {
                 val isDeleting = key.accessKey.accessUrl == state.deletingKey?.accessKey?.accessUrl
-                val alpha = if (isDeleting) 0.5f else 1f
-                CompositionLocalProvider(
-                    LocalContentColor provides LocalContentColor.current.copy(alpha = alpha)
-                ) {
-                    KeyContent(key, state.page is HelloPage, onClick = { state.selectedKey = key })
-                }
+                KeyContent(
+                    key = key,
+                    withServer = state.page is HelloPage,
+                    modifier = Modifier.alpha(if (isDeleting) 0.5f else 1f),
+                    onClick = { state.selectedKey = key },
+                )
             }
         }
     }

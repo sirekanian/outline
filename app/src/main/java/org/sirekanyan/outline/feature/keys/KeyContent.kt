@@ -19,9 +19,9 @@ import org.sirekanyan.outline.api.model.getHost
 import org.sirekanyan.outline.text.formatTraffic
 
 @Composable
-fun KeyContent(key: Key, withServer: Boolean, onClick: () -> Unit) {
+fun KeyContent(key: Key, withServer: Boolean, modifier: Modifier, onClick: () -> Unit) {
     Row(
-        Modifier
+        modifier
             .clickable(onClick = onClick)
             .fillMaxWidth()
             .heightIn(min = if (withServer) 72.dp else 56.dp)

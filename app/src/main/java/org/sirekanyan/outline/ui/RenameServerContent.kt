@@ -9,5 +9,6 @@ import org.sirekanyan.outline.api.model.getHost
 fun RenameServerContent(state: MainState, dialog: RenameServerDialog) {
     RenameContent(state, "Edit server", dialog.server.name, dialog.server.getHost()) { newName ->
         state.servers.renameServer(dialog.server, newName)
+        state.refreshCurrentKeys(showLoading = false)
     }
 }

@@ -125,6 +125,17 @@ class MainState(
         }
     }
 
+    suspend fun refreshHelloPage(server: ServerEntity) {
+        if (page !is HelloPage) return
+        withContext(Dispatchers.IO) {
+            try {
+                keys.updateKeys(server)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+        }
+    }
+
 }
 
 sealed class Page

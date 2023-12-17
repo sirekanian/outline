@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
                                             state.deletingKey = key
                                             state.api.deleteAccessKey(server, key.accessKey.id)
                                             state.refreshCurrentKeys(showLoading = false)
+                                            state.refreshHelloPage(key.server)
                                         }.invokeOnCompletion {
                                             state.deletingKey = null
                                         }

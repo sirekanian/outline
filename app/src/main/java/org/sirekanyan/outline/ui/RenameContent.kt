@@ -39,21 +39,16 @@ fun RenameContent(
             onCloseClick = { state.dialog = null },
             action = "Save" to {
                 state.scope.launch {
-                    val isSuccess = try {
+                    try {
                         isLoading = true
                         val newName = draft.text.ifBlank { defaultName }
                         onSaveClicked(newName)
                         state.dialog = null
-                        true
                     } catch (exception: Exception) {
                         exception.printStackTrace()
                         error = "Check name or try again"
-                        false
                     } finally {
                         isLoading = false
-                    }
-                    if (isSuccess) {
-                        state.refreshCurrentKeys(showLoading = false)
                     }
                 }
             },
