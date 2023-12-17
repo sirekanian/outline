@@ -28,11 +28,12 @@ data class MenuItem(val text: String, val icon: ImageVector, val onClick: () -> 
 fun MainTopAppBar(
     title: @Composable () -> Unit,
     onMenuClick: () -> Unit,
+    menuIcon: ImageVector = Icons.Default.Menu,
     items: List<MenuItem> = listOf(),
 ) {
     TopAppBar(
         title = title,
-        navigationIcon = { IconButton(onMenuClick) { Icon(Icons.Default.Menu, null) } },
+        navigationIcon = { IconButton(onMenuClick) { Icon(menuIcon, null) } },
         actions = { MainMenu(items) },
         colors = TopAppBarDefaults.topAppBarColors(
             MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.98f),

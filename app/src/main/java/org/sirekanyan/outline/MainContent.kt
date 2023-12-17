@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
@@ -89,6 +90,7 @@ fun MainContent(state: MainState) {
                     MainTopAppBar(
                         title = { SearchField(search.query) { search.query = it } },
                         onMenuClick = search::closeSearch,
+                        menuIcon = Icons.Default.ArrowBack,
                     )
                 } else {
                     MainTopAppBar(
@@ -97,7 +99,7 @@ fun MainContent(state: MainState) {
                         items = listOf(
                             MenuItem("Search", Icons.Default.Search) { search.openSearch() },
                             MenuItem("Sort by…", IconSort) { isSortingVisible = true },
-                        )
+                        ),
                     )
                 }
             }
