@@ -93,13 +93,19 @@ fun MainContent(state: MainState) {
                         menuIcon = Icons.Default.ArrowBack,
                     )
                 } else {
+                    val menuItems: List<MenuItem> =
+                        if (allKeys.isNullOrEmpty()) {
+                            listOf()
+                        } else {
+                            listOf(
+                                MenuItem("Sort by…", IconSort) { isSortingVisible = true },
+                                MenuItem("Search", Icons.Default.Search) { search.openSearch() },
+                            )
+                        }
                     MainTopAppBar(
                         title = { Text(stringResource(R.string.outln_app_name)) },
                         onMenuClick = state::openDrawer,
-                        visibleItems = listOf(
-                            MenuItem("Sort by…", IconSort) { isSortingVisible = true },
-                            MenuItem("Search", Icons.Default.Search) { search.openSearch() },
-                        ),
+                        visibleItems = menuItems,
                     )
                 }
             }
