@@ -29,6 +29,7 @@ android {
                 it.load(File("debug.properties").also(File::createNewFile).inputStream())
             }
             isDebuggable = props.getProperty("DEBUGGABLE").toBoolean()
+            applicationIdSuffix = ".debug"
             buildConfigField("boolean", "DEBUG", "true")
             listOf("DEBUG_SERVER1", "DEBUG_SERVER2").forEach { key ->
                 buildConfigField("String", key, props.getProperty(key)?.let { "\"$it\"" } ?: "null")
