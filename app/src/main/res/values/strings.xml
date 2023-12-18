@@ -1,5 +1,5 @@
 <resources>
-    <string name="outln_app_name">Outline Manager</string>
+    <string name="outln_app_name">Outline Keeper</string>
     <string name="outln_sorting_by_id">Id</string>
     <string name="outln_sorting_by_name">Name</string>
     <string name="outln_sorting_by_traffic">Traffic</string>

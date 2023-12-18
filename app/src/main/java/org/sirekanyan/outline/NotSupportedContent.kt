@@ -9,6 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import org.sirekanyan.outline.ext.isOutlineInstalled
 import org.sirekanyan.outline.ext.openGooglePlay
 import org.sirekanyan.outline.ext.openOutline
@@ -22,8 +23,8 @@ fun NotSupportedContent(onDismissRequest: () -> Unit) {
         title = { Text("Not supported") },
         text = {
             Text(
-                text = "Outline Manager does not support ss:// links. Would you like to " +
-                        (if (isInstalled) "open Outline?" else "install Outline?"),
+                text = stringResource(R.string.outln_app_name) + " does not support ss:// links. " +
+                        "Would you like to ${if (isInstalled) "open" else "install"} Outline?",
             )
         },
         onDismissRequest = onDismissRequest,

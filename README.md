@@ -1,4 +1,4 @@
-# Outline Manager for Android
+# Outline Keeper for Android
 
 An application for managing Outline VPN servers.
 
