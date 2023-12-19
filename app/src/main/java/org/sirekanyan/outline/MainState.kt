@@ -37,6 +37,7 @@ import org.sirekanyan.outline.feature.sort.Sorting
 import org.sirekanyan.outline.repository.KeyRepository
 import org.sirekanyan.outline.repository.ServerRepository
 import org.sirekanyan.outline.ui.SearchState
+import org.sirekanyan.outline.ui.rememberSearchState
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -61,15 +62,17 @@ fun rememberMainState(): MainState {
         }
     }
     val supervisor = remember { SupervisorJob() }
+    val search = rememberSearchState()
     val api = remember { OutlineApi() }
     val dao = rememberServerDao()
     val prefs = rememberKeyValueDao()
     val cache = rememberKeyDao()
-    return remember { MainState(scope + supervisor, api, dao, prefs, cache) }
+    return remember { MainState(scope + supervisor, search, api, dao, prefs, cache) }
 }
 
 class MainState(
     val scope: CoroutineScope,
+    val search: SearchState,
     val api: OutlineApi,
     val dao: ServerDao,
     private val prefs: KeyValueDao,
@@ -78,7 +81,6 @@ class MainState(
 
     val servers = ServerRepository(api, dao)
     val keys = KeyRepository(api, cache)
-    val search = SearchState()
     val drawer = DrawerState(DrawerValue.Closed)
     val drawerDisabled by derivedStateOf { search.isOpened && drawer.isClosed }
     var page by mutableStateOf<Page>(HelloPage)

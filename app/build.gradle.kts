@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("plugin.serialization")
+    id("kotlin-parcelize")
     id("app.cash.sqldelight")
     id("org.sirekanyan.version-checker")
 }
