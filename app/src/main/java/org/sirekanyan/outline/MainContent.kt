@@ -41,7 +41,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import org.sirekanyan.outline.ext.plus
 import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.ext.showToast
@@ -149,11 +148,7 @@ fun MainContent(state: MainState) {
                         } else {
                             KeysErrorContent(
                                 insets = insets,
-                                onRetry = {
-                                    state.scope.launch {
-                                        state.refreshCurrentKeys(showLoading = true)
-                                    }
-                                },
+                                onRetry = { state.onRetryButtonClicked() },
                             )
                         }
                     }
@@ -181,17 +176,7 @@ fun MainContent(state: MainState) {
         AddKeyButton(
             isVisible = state.isFabVisible,
             isLoading = state.isFabLoading,
-            onClick = {
-                state.selectedPage?.let { page ->
-                    state.scope.launch {
-                        state.isFabLoading = true
-                        state.api.createAccessKey(page.server)
-                        state.refreshCurrentKeys(showLoading = false)
-                    }.invokeOnCompletion {
-                        state.isFabLoading = false
-                    }
-                }
-            },
+            onClick = { state.onAddKeyClicked() },
         )
         state.selectedKey?.let { key ->
             KeyBottomSheet(

@@ -83,7 +83,7 @@ class MainState(
     pageState: MutableState<Page>,
     dialogState: MutableState<Dialog?>,
     val api: OutlineApi,
-    val dao: ServerDao,
+    private val dao: ServerDao,
     private val prefs: KeyValueDao,
     cache: KeyDao,
 ) {
@@ -148,6 +148,43 @@ class MainState(
                 exception.printStackTrace()
             }
         }
+    }
+
+    fun onRetryButtonClicked() {
+        scope.launch {
+            refreshCurrentKeys(showLoading = true)
+        }
+    }
+
+    fun onAddKeyClicked() {
+        selectedPage?.let { page ->
+            scope.launch {
+                isFabLoading = true
+                api.createAccessKey(page.server)
+                refreshCurrentKeys(showLoading = false)
+            }.invokeOnCompletion {
+                isFabLoading = false
+            }
+        }
+    }
+
+    fun onDeleteKeyConfirmed(key: Key) {
+        scope.launch {
+            deletingKey = key
+            api.deleteAccessKey(key.server, key.id)
+            refreshCurrentKeys(showLoading = false)
+            refreshHelloPage(key.server)
+        }.invokeOnCompletion {
+            deletingKey = null
+        }
+    }
+
+    fun onDeleteServerConfirmed(server: Server) {
+        scope.launch(Dispatchers.IO) {
+            dao.deleteUrl(server.id)
+        }
+        page = HelloPage
+        openDrawer()
     }
 
 }

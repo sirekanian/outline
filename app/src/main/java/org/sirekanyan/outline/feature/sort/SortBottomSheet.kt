@@ -28,7 +28,7 @@ fun SortBottomSheet(
         title = "Sort by…",
         onDismissRequest = onDismissRequest,
         items = { sheetState ->
-            Sorting.values().forEach { option ->
+            Sorting.entries.forEach { option ->
                 ListItem(
                     headlineContent = {
                         Text(

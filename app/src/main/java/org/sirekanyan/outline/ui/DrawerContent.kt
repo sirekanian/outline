@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -119,11 +120,12 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             val context = LocalContext.current
             if (isDebugBuild()) {
                 val debugDao = rememberDebugDao()
+                val scope = rememberCoroutineScope()
                 DrawerItem(
                     icon = Icons.Default.Warning,
                     label = "Reset database",
                     onClick = {
-                        state.scope.launch(IO) {
+                        scope.launch(IO) {
                             debugDao.reset()
                         }
                     },

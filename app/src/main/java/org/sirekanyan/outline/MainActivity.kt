@@ -9,8 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import org.sirekanyan.outline.ui.AddServerContent
 import org.sirekanyan.outline.ui.DeleteKeyContent
 import org.sirekanyan.outline.ui.DeleteServerContent
@@ -43,16 +41,7 @@ class MainActivity : ComponentActivity() {
                                 DeleteKeyContent(
                                     key = key,
                                     onDismiss = { state.dialog = null },
-                                    onConfirm = {
-                                        state.scope.launch {
-                                            state.deletingKey = key
-                                            state.api.deleteAccessKey(key.server, key.id)
-                                            state.refreshCurrentKeys(showLoading = false)
-                                            state.refreshHelloPage(key.server)
-                                        }.invokeOnCompletion {
-                                            state.deletingKey = null
-                                        }
-                                    }
+                                    onConfirm = { state.onDeleteKeyConfirmed(key) }
                                 )
                             }
                             is DeleteServerDialog -> {
@@ -60,13 +49,7 @@ class MainActivity : ComponentActivity() {
                                 DeleteServerContent(
                                     serverName = server.name,
                                     onDismiss = { state.dialog = null },
-                                    onConfirm = {
-                                        state.scope.launch(IO) {
-                                            state.dao.deleteUrl(server.id)
-                                        }
-                                        state.page = HelloPage
-                                        state.openDrawer()
-                                    }
+                                    onConfirm = { state.onDeleteServerConfirmed(server) }
                                 )
                             }
                         }
