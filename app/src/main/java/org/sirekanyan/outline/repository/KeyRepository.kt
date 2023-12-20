@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
-import org.sirekanyan.outline.api.model.AccessKey
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.api.model.Key.AccessKey
 import org.sirekanyan.outline.api.model.fromEntities
 import org.sirekanyan.outline.api.model.toEntities
 import org.sirekanyan.outline.db.KeyDao

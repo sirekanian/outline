@@ -1,5 +1,8 @@
 package org.sirekanyan.outline.api.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import org.sirekanyan.outline.api.model.Key.AccessKey
 import org.sirekanyan.outline.db.model.KeyEntity
 import org.sirekanyan.outline.db.model.KeyWithServerEntity
 import org.sirekanyan.outline.api.model.Server as ServerEntity
@@ -24,4 +27,21 @@ fun List<KeyWithServerEntity>.fromEntities(): List<Key> =
         )
     }
 
-class Key(val server: ServerEntity, val accessKey: AccessKey, val traffic: Long?)
+@Parcelize
+class Key(val server: ServerEntity, val accessKey: AccessKey, val traffic: Long?) : Parcelable {
+
+    @Parcelize
+    class AccessKey(
+        val id: String,
+        val accessUrl: String,
+        val name: String,
+    ) : Parcelable {
+
+        val defaultName: String
+            get() = "Key $id"
+        val nameOrDefault: String
+            get() = name.ifEmpty { defaultName }
+
+    }
+
+}
