@@ -13,7 +13,7 @@ import org.sirekanyan.outline.api.model.Key
 @Composable
 fun DeleteKeyContent(key: Key, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     ConfirmationAlertDialog(
-        text = "Are you sure you want to delete the key named \"${key.accessKey.nameOrDefault}\"?",
+        text = "Are you sure you want to delete the key named \"${key.nameOrDefault}\"?",
         onDismiss = onDismiss,
         onConfirm = onConfirm,
     )

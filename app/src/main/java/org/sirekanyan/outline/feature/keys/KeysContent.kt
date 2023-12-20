@@ -33,7 +33,7 @@ fun KeysContent(insets: PaddingValues, state: MainState, keys: List<Key>, sortin
     ) {
         sortedKeys.forEach { key ->
             item {
-                val isDeleting = key.accessKey.accessUrl == state.deletingKey?.accessKey?.accessUrl
+                val isDeleting = key.accessUrl == state.deletingKey?.accessUrl
                 KeyContent(
                     key = key,
                     withServer = state.page is HelloPage,

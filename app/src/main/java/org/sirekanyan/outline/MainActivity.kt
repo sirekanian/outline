@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                                     onConfirm = {
                                         state.scope.launch {
                                             state.deletingKey = key
-                                            state.api.deleteAccessKey(server, key.accessKey.id)
+                                            state.api.deleteAccessKey(server, key.id)
                                             state.refreshCurrentKeys(showLoading = false)
                                             state.refreshHelloPage(key.server)
                                         }.invokeOnCompletion {

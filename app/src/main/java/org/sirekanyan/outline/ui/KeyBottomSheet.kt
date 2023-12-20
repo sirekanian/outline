@@ -33,14 +33,14 @@ fun KeyBottomSheet(
     val localContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     SimpleBottomSheet(
-        title = key.accessKey.nameOrDefault,
+        title = key.nameOrDefault,
         onDismissRequest = onDismissRequest,
         items = { sheetState ->
             ListItem(
                 headlineContent = { Text("Copy") },
                 leadingContent = { Icon(IconCopy, null) },
                 modifier = Modifier.clickable {
-                    localClipboard.setText(AnnotatedString(key.accessKey.accessUrl))
+                    localClipboard.setText(AnnotatedString(key.accessUrl))
                     localContext.showToast("Copied")
                     coroutineScope.launch {
                         sheetState.hide()
@@ -60,7 +60,7 @@ fun KeyBottomSheet(
                     }
                     localContext.startActivity(
                         Intent(Intent.ACTION_SEND)
-                            .putExtra(Intent.EXTRA_TEXT, key.accessKey.accessUrl)
+                            .putExtra(Intent.EXTRA_TEXT, key.accessUrl)
                             .setType("text/plain")
                     )
                 },

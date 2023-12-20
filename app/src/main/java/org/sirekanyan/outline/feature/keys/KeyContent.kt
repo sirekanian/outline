@@ -30,7 +30,7 @@ fun KeyContent(key: Key, withServer: Boolean, modifier: Modifier, onClick: () ->
     ) {
         Column(Modifier.weight(1f), Arrangement.Center) {
             Text(
-                text = key.accessKey.nameOrDefault,
+                text = key.nameOrDefault,
                 overflow = Ellipsis,
                 maxLines = 1,
             )

@@ -17,7 +17,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.sirekanyan.outline.api.model.AccessKeysResponse
 import org.sirekanyan.outline.api.model.Key
-import org.sirekanyan.outline.api.model.Key.AccessKey
 import org.sirekanyan.outline.api.model.RenameRequest
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
@@ -79,8 +78,7 @@ class OutlineApi {
         val accessKeys = getAccessKeys(server).accessKeys
         val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
         return accessKeys.map {
-            val accessKey = AccessKey(it.id, it.accessUrl, it.name)
-            Key(server, accessKey, transferMetrics?.get(it.id))
+            Key(server, it.id, it.accessUrl, it.name, transferMetrics?.get(it.id))
         }
     }
 

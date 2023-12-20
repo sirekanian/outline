@@ -9,28 +9,28 @@ enum class Sorting(val key: String, @StringRes val title: Int, val comparator: C
     ID(
         key = "id",
         title = R.string.outln_sorting_by_id,
-        comparator = compareBy { it.accessKey.id.toLongOrNull() },
+        comparator = compareBy { it.id.toLongOrNull() },
     ),
 
     NAME(
         key = "name",
         title = R.string.outln_sorting_by_name,
-        comparator = compareBy<Key> { it.accessKey.name.isEmpty() }
-            .thenBy { it.accessKey.name.lowercase() }
-            .thenBy { it.accessKey.id.toLongOrNull() },
+        comparator = compareBy<Key> { it.name.isEmpty() }
+            .thenBy { it.name.lowercase() }
+            .thenBy { it.id.toLongOrNull() },
     ),
 
     TRAFFIC(
         key = "traffic",
         title = R.string.outln_sorting_by_traffic,
         comparator = compareByDescending<Key> { it.traffic }
-            .thenBy { it.accessKey.id.toLongOrNull() },
+            .thenBy { it.id.toLongOrNull() },
     );
 
     companion object {
 
         init {
-            check(values().distinctBy(Sorting::key).size == values().size) { "Keys must be unique" }
+            check(entries.distinctBy(Sorting::key).size == entries.size) { "Keys must be unique" }
         }
 
         const val KEY = "Sorting"
@@ -40,7 +40,7 @@ enum class Sorting(val key: String, @StringRes val title: Int, val comparator: C
             key?.let(::findByKey) ?: DEFAULT
 
         private fun findByKey(key: String): Sorting? =
-            values().find { it.key == key }
+            entries.find { it.key == key }
 
     }
 

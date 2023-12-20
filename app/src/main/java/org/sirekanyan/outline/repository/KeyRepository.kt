@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
-import org.sirekanyan.outline.api.model.Key.AccessKey
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.fromEntities
 import org.sirekanyan.outline.api.model.toEntities
@@ -29,9 +28,9 @@ class KeyRepository(private val api: OutlineApi, private val keyDao: KeyDao) {
         }
     }
 
-    suspend fun renameKey(server: Server, accessKey: AccessKey, newName: String) {
+    suspend fun renameKey(server: Server, key: Key, newName: String) {
         withContext(IO) {
-            api.renameAccessKey(server, accessKey.id, newName)
+            api.renameAccessKey(server, key.id, newName)
         }
     }
 
