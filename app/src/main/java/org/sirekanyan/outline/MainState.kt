@@ -25,6 +25,7 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
+import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.db.KeyDao
 import org.sirekanyan.outline.db.KeyValueDao
 import org.sirekanyan.outline.db.ServerDao
@@ -44,7 +45,6 @@ import org.sirekanyan.outline.ui.SearchState
 import org.sirekanyan.outline.ui.rememberSearchState
 import java.net.ConnectException
 import java.net.UnknownHostException
-import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 @Composable
 fun rememberMainState(): MainState {
@@ -139,7 +139,7 @@ class MainState(
         }
     }
 
-    suspend fun refreshHelloPage(server: ServerEntity) {
+    suspend fun refreshHelloPage(server: Server) {
         if (page !is HelloPage) return
         withContext(Dispatchers.IO) {
             try {
@@ -157,7 +157,7 @@ sealed class Page : Parcelable
 
 data object HelloPage : Page()
 
-data class SelectedPage(val server: ServerEntity) : Page() {
+data class SelectedPage(val server: Server) : Page() {
     @IgnoredOnParcel
     var keys by mutableStateOf<KeysState>(KeysIdleState)
 }
@@ -167,10 +167,10 @@ sealed class Dialog : Parcelable
 
 data object AddServerDialog : Dialog()
 
-data class RenameServerDialog(val server: ServerEntity) : Dialog()
+data class RenameServerDialog(val server: Server) : Dialog()
 
-data class RenameKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
+data class RenameKeyDialog(val server: Server, val key: Key) : Dialog()
 
-data class DeleteKeyDialog(val server: ServerEntity, val key: Key) : Dialog()
+data class DeleteKeyDialog(val server: Server, val key: Key) : Dialog()
 
-data class DeleteServerDialog(val server: ServerEntity) : Dialog()
+data class DeleteServerDialog(val server: Server) : Dialog()

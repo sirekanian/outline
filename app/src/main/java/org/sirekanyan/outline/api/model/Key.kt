@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.api.model.Key.AccessKey
 import org.sirekanyan.outline.db.model.KeyEntity
 import org.sirekanyan.outline.db.model.KeyWithServerEntity
-import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 fun List<Key>.toEntities(): List<KeyEntity> =
     map { key ->
@@ -13,7 +12,7 @@ fun List<Key>.toEntities(): List<KeyEntity> =
         KeyEntity(key.server.id, accessKey.id, accessKey.accessUrl, accessKey.name, key.traffic)
     }
 
-fun List<KeyEntity>.fromEntities(server: ServerEntity): List<Key> =
+fun List<KeyEntity>.fromEntities(server: Server): List<Key> =
     map { entity ->
         Key(server, AccessKey(entity.id, entity.url, entity.name), entity.traffic)
     }
@@ -21,14 +20,14 @@ fun List<KeyEntity>.fromEntities(server: ServerEntity): List<Key> =
 fun List<KeyWithServerEntity>.fromEntities(): List<Key> =
     map { entity ->
         Key(
-            ServerEntity(entity.serverId, entity.insecure, entity.serverName, entity.serverTraffic),
+            Server(entity.serverId, entity.insecure, entity.serverName, entity.serverTraffic),
             AccessKey(entity.id, entity.url, entity.name),
             entity.traffic,
         )
     }
 
 @Parcelize
-class Key(val server: ServerEntity, val accessKey: AccessKey, val traffic: Long?) : Parcelable {
+class Key(val server: Server, val accessKey: AccessKey, val traffic: Long?) : Parcelable {
 
     @Parcelize
     class AccessKey(

@@ -19,12 +19,12 @@ import org.sirekanyan.outline.api.model.AccessKeysResponse
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Key.AccessKey
 import org.sirekanyan.outline.api.model.RenameRequest
+import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
 import org.sirekanyan.outline.ext.logDebug
 import java.security.SecureRandom
 import javax.net.ssl.SSLContext
-import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 private fun createOkHttpClient(block: OkHttpConfig.() -> Unit = {}): HttpClient =
     HttpClient(OkHttp) {
@@ -54,7 +54,7 @@ class OutlineApi {
 
     private suspend fun request(
         httpMethod: HttpMethod,
-        server: ServerEntity,
+        server: Server,
         path: String,
         block: HttpRequestBuilder.() -> Unit = {},
     ): HttpResponse {
@@ -62,20 +62,20 @@ class OutlineApi {
         return client.request(server.id + '/' + path) { method = httpMethod; block() }
     }
 
-    suspend fun getServer(server: ServerEntity): ServerEntity {
+    suspend fun getServer(server: Server): Server {
         val name = request(HttpMethod.Get, server, "server").body<ServerNameResponse>().name
         val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
-        return ServerEntity(server.id, server.insecure, name, transferMetrics?.values?.sum())
+        return Server(server.id, server.insecure, name, transferMetrics?.values?.sum())
     }
 
-    suspend fun renameServer(server: ServerEntity, name: String) {
+    suspend fun renameServer(server: Server, name: String) {
         request(HttpMethod.Put, server, "name") {
             contentType(ContentType.Application.Json)
             setBody(RenameRequest(name))
         }
     }
 
-    suspend fun getKeys(server: ServerEntity): List<Key> {
+    suspend fun getKeys(server: Server): List<Key> {
         val accessKeys = getAccessKeys(server).accessKeys
         val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
         return accessKeys.map {
@@ -84,10 +84,10 @@ class OutlineApi {
         }
     }
 
-    private suspend fun getAccessKeys(server: ServerEntity): AccessKeysResponse =
+    private suspend fun getAccessKeys(server: Server): AccessKeysResponse =
         request(HttpMethod.Get, server, "access-keys").body()
 
-    private suspend fun getTransferMetrics(server: ServerEntity): TransferMetricsResponse? =
+    private suspend fun getTransferMetrics(server: Server): TransferMetricsResponse? =
         try {
             request(HttpMethod.Get, server, "metrics/transfer").body()
         } catch (exception: Exception) {
@@ -95,18 +95,18 @@ class OutlineApi {
             null
         }
 
-    suspend fun createAccessKey(server: ServerEntity) {
+    suspend fun createAccessKey(server: Server) {
         request(HttpMethod.Post, server, "access-keys")
     }
 
-    suspend fun renameAccessKey(server: ServerEntity, id: String, name: String) {
+    suspend fun renameAccessKey(server: Server, id: String, name: String) {
         request(HttpMethod.Put, server, "access-keys/$id/name") {
             contentType(ContentType.Application.Json)
             setBody(RenameRequest(name))
         }
     }
 
-    suspend fun deleteAccessKey(server: ServerEntity, id: String) {
+    suspend fun deleteAccessKey(server: Server, id: String) {
         request(HttpMethod.Delete, server, "access-keys/$id")
     }
 
