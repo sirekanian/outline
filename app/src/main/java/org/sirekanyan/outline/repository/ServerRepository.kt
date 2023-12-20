@@ -41,12 +41,11 @@ class ServerRepository(private val api: OutlineApi, private val serverDao: Serve
             refreshServer(server)
         }
 
-    suspend fun renameServer(server: ServerEntity, newName: String) {
+    suspend fun renameServer(server: ServerEntity, newName: String): ServerEntity =
         withContext(IO) {
             api.renameServer(server, newName)
             refreshServer(server)
         }
-    }
 
     private suspend fun refreshServer(server: ServerEntity): ServerEntity =
         api.getServer(server).also { newServer ->
