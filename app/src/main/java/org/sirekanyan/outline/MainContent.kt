@@ -159,10 +159,12 @@ fun MainContent(state: MainState) {
                 MainTopAppBar(
                     title = { Text(page.server.name) },
                     onMenuClick = state::openDrawer,
-                    overflowItems = listOf(
+                    visibleItems = listOf(
                         MenuItem("Sort by…", IconSort) {
                             isSortingVisible = true
                         },
+                    ),
+                    overflowItems = listOf(
                         MenuItem("Edit", Icons.Default.Edit) {
                             state.dialog = RenameServerDialog(page.server)
                         },
