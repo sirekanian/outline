@@ -197,8 +197,8 @@ fun MainContent(state: MainState) {
             KeyBottomSheet(
                 key = key,
                 onDismissRequest = { state.selectedKey = null },
-                onEditClick = { state.dialog = RenameKeyDialog(key.server, key) },
-                onDeleteClick = { state.dialog = DeleteKeyDialog(key.server, key) },
+                onEditClick = { state.dialog = RenameKeyDialog(key) },
+                onDeleteClick = { state.dialog = DeleteKeyDialog(key) },
             )
         }
         if (isSortingVisible) {

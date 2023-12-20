@@ -39,14 +39,14 @@ class MainActivity : ComponentActivity() {
                             is RenameServerDialog -> Surface { RenameServerContent(state, dialog) }
                             is RenameKeyDialog -> Surface { RenameKeyContent(state, dialog) }
                             is DeleteKeyDialog -> {
-                                val (server, key) = dialog
+                                val (key) = dialog
                                 DeleteKeyContent(
                                     key = key,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = {
                                         state.scope.launch {
                                             state.deletingKey = key
-                                            state.api.deleteAccessKey(server, key.id)
+                                            state.api.deleteAccessKey(key.server, key.id)
                                             state.refreshCurrentKeys(showLoading = false)
                                             state.refreshHelloPage(key.server)
                                         }.invokeOnCompletion {
