@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.db.model.KeyEntity
 import org.sirekanyan.outline.db.model.KeyWithServerEntity
-import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 @Composable
 fun rememberKeyDao(): KeyDao {

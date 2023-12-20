@@ -12,7 +12,7 @@ import org.sirekanyan.outline.api.model.fromEntities
 import org.sirekanyan.outline.api.model.toEntities
 import org.sirekanyan.outline.db.KeyDao
 import org.sirekanyan.outline.db.model.KeyWithServerEntity
-import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 class KeyRepository(private val api: OutlineApi, private val keyDao: KeyDao) {
 

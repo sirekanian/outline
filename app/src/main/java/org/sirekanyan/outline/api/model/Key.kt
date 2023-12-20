@@ -2,7 +2,7 @@ package org.sirekanyan.outline.api.model
 
 import org.sirekanyan.outline.db.model.KeyEntity
 import org.sirekanyan.outline.db.model.KeyWithServerEntity
-import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 fun List<Key>.toEntities(): List<KeyEntity> =
     map { key ->

@@ -20,10 +20,10 @@ import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.RenameRequest
 import org.sirekanyan.outline.api.model.ServerNameResponse
 import org.sirekanyan.outline.api.model.TransferMetricsResponse
-import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.ext.logDebug
 import java.security.SecureRandom
 import javax.net.ssl.SSLContext
+import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 private fun createOkHttpClient(block: OkHttpConfig.() -> Unit = {}): HttpClient =
     HttpClient(OkHttp) {

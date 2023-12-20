@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import org.sirekanyan.outline.api.model.Key
-import org.sirekanyan.outline.api.model.getHost
 import org.sirekanyan.outline.text.formatTraffic
 
 @Composable

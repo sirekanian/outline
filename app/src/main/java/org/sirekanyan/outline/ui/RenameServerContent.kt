@@ -3,7 +3,6 @@ package org.sirekanyan.outline.ui
 import androidx.compose.runtime.Composable
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.RenameServerDialog
-import org.sirekanyan.outline.api.model.getHost
 
 @Composable
 fun RenameServerContent(state: MainState, dialog: RenameServerDialog) {

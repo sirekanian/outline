@@ -5,16 +5,20 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
+import org.sirekanyan.outline.api.model.fromEntities
+import org.sirekanyan.outline.api.model.toEntities
+import org.sirekanyan.outline.api.model.toEntity
 import org.sirekanyan.outline.db.ServerDao
-import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.ext.logDebug
+import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 class ServerRepository(private val api: OutlineApi, private val serverDao: ServerDao) {
 
     fun observeServers(): Flow<List<ServerEntity>> =
-        serverDao.observeAll().mapToList(IO)
+        serverDao.observeAll().mapToList(IO).map { it.fromEntities() }
 
     suspend fun updateServers(servers: List<ServerEntity>) {
         withContext(IO) {
@@ -28,7 +32,7 @@ class ServerRepository(private val api: OutlineApi, private val serverDao: Serve
                     }
                 }
             }
-            serverDao.insertAll(deferredServers.awaitAll().filterNotNull())
+            serverDao.insertAll(deferredServers.awaitAll().filterNotNull().toEntities())
         }
     }
 
@@ -46,7 +50,7 @@ class ServerRepository(private val api: OutlineApi, private val serverDao: Serve
 
     private suspend fun refreshServer(server: ServerEntity): ServerEntity =
         api.getServer(server).also { newServer ->
-            serverDao.insert(newServer)
+            serverDao.insert(newServer.toEntity())
         }
 
 }

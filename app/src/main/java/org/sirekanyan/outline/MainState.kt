@@ -23,7 +23,6 @@ import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.db.KeyDao
 import org.sirekanyan.outline.db.KeyValueDao
 import org.sirekanyan.outline.db.ServerDao
-import org.sirekanyan.outline.db.model.ServerEntity
 import org.sirekanyan.outline.db.rememberKeyDao
 import org.sirekanyan.outline.db.rememberKeyValueDao
 import org.sirekanyan.outline.db.rememberServerDao
@@ -40,6 +39,7 @@ import org.sirekanyan.outline.ui.SearchState
 import org.sirekanyan.outline.ui.rememberSearchState
 import java.net.ConnectException
 import java.net.UnknownHostException
+import org.sirekanyan.outline.api.model.Server as ServerEntity
 
 @Composable
 fun rememberMainState(): MainState {
