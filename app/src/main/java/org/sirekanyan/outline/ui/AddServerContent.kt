@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,8 +33,8 @@ import javax.net.ssl.SSLException
 
 @Composable
 fun AddServerContent(state: MainState) {
-    var draft by remember { mutableStateOf("") }
-    var insecure by remember { mutableStateOf(false) }
+    var draft by rememberSaveable { mutableStateOf("") }
+    var insecure by rememberSaveable { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
