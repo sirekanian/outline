@@ -23,13 +23,9 @@ import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.db.KeyValueDao
-import org.sirekanyan.outline.db.rememberKeyDao
-import org.sirekanyan.outline.db.rememberKeyValueDao
-import org.sirekanyan.outline.db.rememberServerDao
 import org.sirekanyan.outline.ext.logError
 import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.feature.keys.KeysErrorState
@@ -68,12 +64,9 @@ fun rememberMainState(): MainState {
     val search = rememberSearchState()
     val page = rememberSaveable { mutableStateOf<Page>(HelloPage) }
     val dialog = rememberSaveable { mutableStateOf<Dialog?>(null) }
-    val api = remember { OutlineApi() }
-    val dao = rememberServerDao()
-    val prefs = rememberKeyValueDao()
-    val cache = rememberKeyDao()
-    val servers = remember { ServerRepository(api, dao) }
-    val keys = remember { KeyRepository(api, cache) }
+    val prefs = remember { context.app().prefsDao }
+    val servers = remember { context.app().serverRepository }
+    val keys = remember { context.app().keyRepository }
     return remember { MainState(scope + supervisor, servers, keys, search, page, dialog, prefs) }
 }
 

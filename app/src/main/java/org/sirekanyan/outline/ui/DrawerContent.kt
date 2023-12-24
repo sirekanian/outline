@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,7 +41,7 @@ import org.sirekanyan.outline.HelloPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
-import org.sirekanyan.outline.db.rememberDebugDao
+import org.sirekanyan.outline.app
 import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
 import org.sirekanyan.outline.isPlayFlavor
@@ -119,7 +120,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             Divider(Modifier.padding(vertical = 8.dp))
             val context = LocalContext.current
             if (isDebugBuild()) {
-                val debugDao = rememberDebugDao()
+                val debugDao = remember { context.app().debugDao }
                 val scope = rememberCoroutineScope()
                 DrawerItem(
                     icon = Icons.Default.Warning,
