@@ -26,7 +26,6 @@ import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Server
-import org.sirekanyan.outline.db.KeyDao
 import org.sirekanyan.outline.db.KeyValueDao
 import org.sirekanyan.outline.db.rememberKeyDao
 import org.sirekanyan.outline.db.rememberKeyValueDao
@@ -74,21 +73,20 @@ fun rememberMainState(): MainState {
     val prefs = rememberKeyValueDao()
     val cache = rememberKeyDao()
     val servers = remember { ServerRepository(api, dao) }
-    return remember { MainState(scope + supervisor, servers, search, page, dialog, api, prefs, cache) }
+    val keys = remember { KeyRepository(api, cache) }
+    return remember { MainState(scope + supervisor, servers, keys, search, page, dialog, prefs) }
 }
 
 class MainState(
     val scope: CoroutineScope,
     val servers: ServerRepository,
+    val keys: KeyRepository,
     val search: SearchState,
     pageState: MutableState<Page>,
     dialogState: MutableState<Dialog?>,
-    val api: OutlineApi,
     private val prefs: KeyValueDao,
-    cache: KeyDao,
 ) {
 
-    val keys = KeyRepository(api, cache)
     val drawer = DrawerState(DrawerValue.Closed)
     val drawerDisabled by derivedStateOf { search.isOpened && drawer.isClosed }
     var page by pageState
@@ -159,7 +157,7 @@ class MainState(
         selectedPage?.let { page ->
             scope.launch {
                 isFabLoading = true
-                api.createAccessKey(page.server)
+                keys.createKey(page.server)
                 refreshCurrentKeys(showLoading = false)
             }.invokeOnCompletion {
                 isFabLoading = false
@@ -170,7 +168,7 @@ class MainState(
     fun onDeleteKeyConfirmed(key: Key) {
         scope.launch {
             deletingKey = key
-            api.deleteAccessKey(key.server, key.id)
+            keys.deleteKey(key)
             refreshCurrentKeys(showLoading = false)
             refreshHelloPage(key.server)
         }.invokeOnCompletion {

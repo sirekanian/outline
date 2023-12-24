@@ -28,9 +28,21 @@ class KeyRepository(private val api: OutlineApi, private val keyDao: KeyDao) {
         }
     }
 
+    suspend fun createKey(server: Server) {
+        withContext(IO) {
+            api.createAccessKey(server)
+        }
+    }
+
     suspend fun renameKey(server: Server, key: Key, newName: String) {
         withContext(IO) {
             api.renameAccessKey(server, key.id, newName)
+        }
+    }
+
+    suspend fun deleteKey(key: Key) {
+        withContext(IO) {
+            api.deleteAccessKey(key.server, key.id)
         }
     }
 
