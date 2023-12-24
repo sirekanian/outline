@@ -28,7 +28,6 @@ import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.db.KeyDao
 import org.sirekanyan.outline.db.KeyValueDao
-import org.sirekanyan.outline.db.ServerDao
 import org.sirekanyan.outline.db.rememberKeyDao
 import org.sirekanyan.outline.db.rememberKeyValueDao
 import org.sirekanyan.outline.db.rememberServerDao
@@ -74,21 +73,21 @@ fun rememberMainState(): MainState {
     val dao = rememberServerDao()
     val prefs = rememberKeyValueDao()
     val cache = rememberKeyDao()
-    return remember { MainState(scope + supervisor, search, page, dialog, api, dao, prefs, cache) }
+    val servers = remember { ServerRepository(api, dao) }
+    return remember { MainState(scope + supervisor, servers, search, page, dialog, api, prefs, cache) }
 }
 
 class MainState(
     val scope: CoroutineScope,
+    val servers: ServerRepository,
     val search: SearchState,
     pageState: MutableState<Page>,
     dialogState: MutableState<Dialog?>,
     val api: OutlineApi,
-    private val dao: ServerDao,
     private val prefs: KeyValueDao,
     cache: KeyDao,
 ) {
 
-    val servers = ServerRepository(api, dao)
     val keys = KeyRepository(api, cache)
     val drawer = DrawerState(DrawerValue.Closed)
     val drawerDisabled by derivedStateOf { search.isOpened && drawer.isClosed }
@@ -181,7 +180,7 @@ class MainState(
 
     fun onDeleteServerConfirmed(server: Server) {
         scope.launch(Dispatchers.IO) {
-            dao.deleteUrl(server.id)
+            servers.deleteServer(server)
         }
         page = HelloPage
         openDrawer()

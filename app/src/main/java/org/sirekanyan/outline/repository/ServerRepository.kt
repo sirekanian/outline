@@ -52,4 +52,10 @@ class ServerRepository(private val api: OutlineApi, private val serverDao: Serve
             serverDao.insert(newServer.toEntity())
         }
 
+    suspend fun deleteServer(server: Server) {
+        withContext(IO) {
+            serverDao.deleteUrl(server.id)
+        }
+    }
+
 }
