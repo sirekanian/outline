@@ -30,10 +30,12 @@ import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.model.createServerEntity
+import org.sirekanyan.outline.ext.rememberStateScope
 import javax.net.ssl.SSLException
 
 @Composable
 fun AddServerContent(state: MainState, router: Router) {
+    val scope = rememberStateScope()
     var draft by rememberSaveable { mutableStateOf("") }
     var insecure by rememberSaveable { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf("") }
@@ -64,7 +66,7 @@ fun AddServerContent(state: MainState, router: Router) {
         DialogToolbar(
             title = "Add server",
             onCloseClick = { router.dialog = null },
-            action = "Add" to { state.scope.launch { onAddClick() } },
+            action = "Add" to { scope.launch { onAddClick() } },
             isLoading = isLoading,
         )
         val focusRequester = remember { FocusRequester() }
@@ -81,7 +83,7 @@ fun AddServerContent(state: MainState, router: Router) {
             supportingText = { Text(error) },
             maxLines = 4,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { state.scope.launch { onAddClick() } })
+            keyboardActions = KeyboardActions(onDone = { scope.launch { onAddClick() } })
         )
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()

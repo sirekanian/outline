@@ -41,7 +41,7 @@ fun rememberMainState(router: Router): MainState {
 }
 
 class MainState(
-    val scope: CoroutineScope,
+    scope: CoroutineScope,
     val servers: ServerRepository,
     val keys: KeyRepository,
     val search: SearchState,

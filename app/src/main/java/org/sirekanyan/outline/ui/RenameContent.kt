@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
+import org.sirekanyan.outline.ext.rememberStateScope
 
 @Composable
 fun RenameContent(
@@ -29,6 +30,7 @@ fun RenameContent(
     defaultName: String,
     onSaveClicked: suspend (String) -> Unit,
 ) {
+    val scope = rememberStateScope()
     var draft by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(initialName, TextRange(Int.MAX_VALUE)))
     }
@@ -39,7 +41,7 @@ fun RenameContent(
             title = dialogTitle,
             onCloseClick = { state.dialog = null },
             action = "Save" to {
-                state.scope.launch {
+                scope.launch {
                     try {
                         isLoading = true
                         val newName = draft.text.ifBlank { defaultName }
