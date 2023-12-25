@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
@@ -60,7 +61,7 @@ fun rememberMainState(): MainState {
             }
         }
     }
-    val supervisor = remember { SupervisorJob() }
+    val supervisor = remember { SupervisorJob(scope.coroutineContext.job) }
     val search = rememberSearchState()
     val page = rememberSaveable { mutableStateOf<Page>(HelloPage) }
     val dialog = rememberSaveable { mutableStateOf<Dialog?>(null) }
