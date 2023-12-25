@@ -27,12 +27,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.NotSupportedContent
+import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.model.createServerEntity
 import javax.net.ssl.SSLException
 
 @Composable
-fun AddServerContent(state: MainState) {
+fun AddServerContent(state: MainState, router: Router) {
     var draft by rememberSaveable { mutableStateOf("") }
     var insecure by rememberSaveable { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf("") }
@@ -46,9 +47,9 @@ fun AddServerContent(state: MainState) {
         try {
             isLoading = true
             val server = state.servers.updateServer(createServerEntity(draft, insecure))
-            state.dialog = null
-            state.page = SelectedPage(server)
-            state.closeDrawer(animated = false)
+            router.dialog = null
+            router.page = SelectedPage(server)
+            router.closeDrawer(animated = false)
         } catch (exception: SSLException) {
             exception.printStackTrace()
             error = "Cannot establish a secure connection"
@@ -62,7 +63,7 @@ fun AddServerContent(state: MainState) {
     Column {
         DialogToolbar(
             title = "Add server",
-            onCloseClick = { state.dialog = null },
+            onCloseClick = { router.dialog = null },
             action = "Add" to { state.scope.launch { onAddClick() } },
             isLoading = isLoading,
         )

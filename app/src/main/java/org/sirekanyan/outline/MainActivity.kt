@@ -21,7 +21,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            val state = rememberMainState()
+            val router = rememberRouter()
+            val state = rememberMainState(router)
             OutlineTheme {
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     BackHandler(state.drawer.isOpen) {
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                             state.dialog = null
                         }
                         when (dialog) {
-                            is AddServerDialog -> Surface { AddServerContent(state) }
+                            is AddServerDialog -> Surface { AddServerContent(state, router) }
                             is RenameServerDialog -> Surface { RenameServerContent(state, dialog) }
                             is RenameKeyDialog -> Surface { RenameKeyContent(state, dialog) }
                             is DeleteKeyDialog -> {
