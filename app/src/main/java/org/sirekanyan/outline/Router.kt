@@ -22,23 +22,23 @@ fun rememberRouter(): Router {
 }
 
 class Router(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     val pageState: MutableState<Page>,
     val dialogState: MutableState<Dialog?>,
-) {
+) : CoroutineScope by scope {
 
     val drawer = DrawerState(DrawerValue.Closed)
     var page by pageState
     var dialog by dialogState
 
     fun openDrawer() {
-        scope.launch {
+        launch {
             drawer.open()
         }
     }
 
     fun closeDrawer(animated: Boolean = true) {
-        scope.launch {
+        launch {
             if (animated) {
                 drawer.close()
             } else {

@@ -47,7 +47,7 @@ class MainState(
     val search: SearchState,
     private val router: Router,
     private val prefs: KeyValueDao,
-) {
+) : CoroutineScope by scope {
 
     val drawer = router.drawer
     val drawerDisabled by derivedStateOf { search.isOpened && drawer.isClosed }
@@ -61,7 +61,7 @@ class MainState(
     val sorting = prefs.observe(Sorting.KEY).map(Sorting::getByKey)
 
     fun putSorting(sorting: Sorting) {
-        scope.launch {
+        launch {
             prefs.put(Sorting.KEY, sorting.key)
         }
     }
@@ -102,14 +102,14 @@ class MainState(
     }
 
     fun onRetryButtonClicked() {
-        scope.launch {
+        launch {
             refreshCurrentKeys(showLoading = true)
         }
     }
 
     fun onAddKeyClicked() {
         selectedPage?.let { page ->
-            scope.launch {
+            launch {
                 isFabLoading = true
                 keys.createKey(page.server)
                 refreshCurrentKeys(showLoading = false)
@@ -120,7 +120,7 @@ class MainState(
     }
 
     fun onDeleteKeyConfirmed(key: Key) {
-        scope.launch {
+        launch {
             deletingKey = key
             keys.deleteKey(key)
             refreshCurrentKeys(showLoading = false)
@@ -131,7 +131,7 @@ class MainState(
     }
 
     fun onDeleteServerConfirmed(server: Server) {
-        scope.launch(Dispatchers.IO) {
+        launch {
             servers.deleteServer(server)
         }
         page = HelloPage
