@@ -9,26 +9,20 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.db.KeyValueDao
-import org.sirekanyan.outline.ext.logError
-import org.sirekanyan.outline.ext.showToast
+import org.sirekanyan.outline.ext.rememberStateScope
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysIdleState
 import org.sirekanyan.outline.feature.keys.KeysLoadingState
@@ -38,37 +32,18 @@ import org.sirekanyan.outline.repository.KeyRepository
 import org.sirekanyan.outline.repository.ServerRepository
 import org.sirekanyan.outline.ui.SearchState
 import org.sirekanyan.outline.ui.rememberSearchState
-import java.net.ConnectException
-import java.net.UnknownHostException
 
 @Composable
 fun rememberMainState(): MainState {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope {
-        CoroutineExceptionHandler { _, throwable ->
-            if (throwable is UnknownHostException) {
-                logError("Uncaught exception: ${throwable.message}", throwable = null)
-            } else {
-                logError("Uncaught exception", throwable)
-            }
-            when (throwable) {
-                is UnknownHostException, is ConnectException -> {
-                    context.showToast("Check network connection")
-                }
-                else -> {
-                    context.showToast("Something went wrong")
-                }
-            }
-        }
-    }
-    val supervisor = remember { SupervisorJob(scope.coroutineContext.job) }
+    val scope = rememberStateScope()
     val search = rememberSearchState()
     val page = rememberSaveable { mutableStateOf<Page>(HelloPage) }
     val dialog = rememberSaveable { mutableStateOf<Dialog?>(null) }
     val prefs = remember { context.app().prefsDao }
     val servers = remember { context.app().serverRepository }
     val keys = remember { context.app().keyRepository }
-    return remember { MainState(scope + supervisor, servers, keys, search, page, dialog, prefs) }
+    return remember { MainState(scope, servers, keys, search, page, dialog, prefs) }
 }
 
 class MainState(
