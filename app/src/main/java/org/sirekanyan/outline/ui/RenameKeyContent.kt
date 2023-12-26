@@ -8,7 +8,6 @@ import org.sirekanyan.outline.RenameKeyDialog
 fun RenameKeyContent(state: MainState, dialog: RenameKeyDialog) {
     RenameContent(state, "Edit key", dialog.key.name, dialog.key.defaultName) { newName ->
         state.keys.renameKey(dialog.key.server, dialog.key, newName)
-        state.refreshCurrentKeys(showLoading = false)
-        state.refreshHelloPage(dialog.key.server)
+        state.updateServerKeys(dialog.key.server)
     }
 }

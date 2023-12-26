@@ -90,8 +90,7 @@ class MainState(
         }
     }
 
-    suspend fun refreshHelloPage(server: Server) {
-        if (page !is HelloPage) return
+    suspend fun updateServerKeys(server: Server) {
         withContext(Dispatchers.IO) {
             try {
                 keys.updateKeys(server)
@@ -123,8 +122,7 @@ class MainState(
         launch {
             deletingKey = key
             keys.deleteKey(key)
-            refreshCurrentKeys(showLoading = false)
-            refreshHelloPage(key.server)
+            updateServerKeys(key.server)
         }.invokeOnCompletion {
             deletingKey = null
         }
