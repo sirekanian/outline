@@ -35,8 +35,8 @@ class MainActivity : ComponentActivity() {
                         }
                         when (dialog) {
                             is AddServerDialog -> Surface { AddServerContent(router) }
-                            is RenameServerDialog -> Surface { RenameServerContent(state, router, dialog.server) }
-                            is RenameKeyDialog -> Surface { RenameKeyContent(state, dialog.key) }
+                            is RenameServerDialog -> Surface { RenameServerContent(router, dialog.server) }
+                            is RenameKeyDialog -> Surface { RenameKeyContent(router, dialog.key) }
                             is DeleteKeyDialog -> {
                                 val (key) = dialog
                                 DeleteKeyContent(

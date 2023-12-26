@@ -18,8 +18,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.MainState
+import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.ext.rememberStateScope
 
 interface RenameDelegate {
@@ -27,52 +28,73 @@ interface RenameDelegate {
 }
 
 @Composable
+fun rememberRenameState(router: Router, delegate: RenameDelegate): RenameState {
+    val scope = rememberStateScope()
+    return remember { RenameState(scope, router, delegate) }
+}
+
+class RenameState(
+    scope: CoroutineScope,
+    private val router: Router,
+    private val renameDelegate: RenameDelegate,
+) : CoroutineScope by scope {
+
+    var error by mutableStateOf("")
+    var isLoading by mutableStateOf(false)
+
+    fun onSaveClicked(newName: String) {
+        launch {
+            try {
+                isLoading = true
+                renameDelegate.onRename(newName)
+                router.dialog = null
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                error = "Check name or try again"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+}
+
+@Composable
 fun RenameContent(
-    state: MainState,
+    state: RenameState,
+    router: Router,
     dialogTitle: String,
     initialName: String,
     defaultName: String,
-    renameDelegate: RenameDelegate,
 ) {
-    val scope = rememberStateScope()
     var draft by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(initialName, TextRange(Int.MAX_VALUE)))
     }
-    var error by remember(draft) { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
     Column {
         DialogToolbar(
             title = dialogTitle,
-            onCloseClick = { state.dialog = null },
+            onCloseClick = { router.dialog = null },
             action = "Save" to {
-                scope.launch {
-                    try {
-                        isLoading = true
-                        val newName = draft.text.ifBlank { defaultName }
-                        renameDelegate.onRename(newName)
-                        state.dialog = null
-                    } catch (exception: Exception) {
-                        exception.printStackTrace()
-                        error = "Check name or try again"
-                    } finally {
-                        isLoading = false
-                    }
-                }
+                val newName = draft.text.ifBlank { defaultName }
+                state.onSaveClicked(newName)
             },
-            isLoading = isLoading,
+            isLoading = state.isLoading,
         )
         val focusRequester = remember { FocusRequester() }
         OutlinedTextField(
             value = draft,
-            onValueChange = { draft = it.copy(text = it.text.trim('\n')) },
+            onValueChange = {
+                draft = it.copy(text = it.text.trim('\n'))
+                state.error = ""
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 24.dp)
                 .focusRequester(focusRequester),
             label = { Text("Name") },
             placeholder = { Text(defaultName) },
-            isError = error.isNotEmpty(),
-            supportingText = { Text(error) },
+            isError = state.error.isNotEmpty(),
+            supportingText = { Text(state.error) },
             maxLines = 4,
         )
         LaunchedEffect(Unit) {

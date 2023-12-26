@@ -3,7 +3,6 @@ package org.sirekanyan.outline.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.model.Server
@@ -14,7 +13,7 @@ import org.sirekanyan.outline.repository.ServerRepository
 private fun rememberRenameServerDelegate(router: Router, server: Server): RenameDelegate {
     val context = LocalContext.current
     val servers = remember { context.app().serverRepository }
-    return remember { RenameServerDelegate(router, servers, server) }
+    return remember(server) { RenameServerDelegate(router, servers, server) }
 }
 
 private class RenameServerDelegate(
@@ -29,7 +28,8 @@ private class RenameServerDelegate(
 }
 
 @Composable
-fun RenameServerContent(state: MainState, router: Router, server: Server) {
+fun RenameServerContent(router: Router, server: Server) {
     val delegate = rememberRenameServerDelegate(router, server)
-    RenameContent(state, "Edit server", server.name, server.getHost(), delegate)
+    val state = rememberRenameState(router, delegate)
+    RenameContent(state, router, "Edit server", server.name, server.getHost())
 }
