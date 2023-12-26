@@ -90,16 +90,6 @@ class MainState(
         }
     }
 
-    suspend fun updateServerKeys(server: Server) {
-        withContext(Dispatchers.IO) {
-            try {
-                keys.updateKeys(server)
-            } catch (exception: Exception) {
-                exception.printStackTrace()
-            }
-        }
-    }
-
     fun onRetryButtonClicked() {
         launch {
             refreshCurrentKeys(showLoading = true)
@@ -122,7 +112,11 @@ class MainState(
         launch {
             deletingKey = key
             keys.deleteKey(key)
-            updateServerKeys(key.server)
+            try {
+                keys.updateKeys(key.server)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
         }.invokeOnCompletion {
             deletingKey = null
         }

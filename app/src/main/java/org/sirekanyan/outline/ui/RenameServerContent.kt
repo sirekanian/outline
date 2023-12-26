@@ -1,14 +1,35 @@
 package org.sirekanyan.outline.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import org.sirekanyan.outline.MainState
-import org.sirekanyan.outline.RenameServerDialog
+import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
+import org.sirekanyan.outline.api.model.Server
+import org.sirekanyan.outline.app
+import org.sirekanyan.outline.repository.ServerRepository
 
 @Composable
-fun RenameServerContent(state: MainState, dialog: RenameServerDialog) {
-    RenameContent(state, "Edit server", dialog.server.name, dialog.server.getHost()) { newName ->
-        val newServer = state.servers.renameServer(dialog.server, newName)
-        state.page = SelectedPage(newServer)
+private fun rememberRenameServerDelegate(router: Router, server: Server): RenameDelegate {
+    val context = LocalContext.current
+    val servers = remember { context.app().serverRepository }
+    return remember { RenameServerDelegate(router, servers, server) }
+}
+
+private class RenameServerDelegate(
+    private val router: Router,
+    private val servers: ServerRepository,
+    private val server: Server,
+) : RenameDelegate {
+    override suspend fun onRename(newName: String) {
+        val newServer = servers.renameServer(server, newName)
+        router.page = SelectedPage(newServer)
     }
+}
+
+@Composable
+fun RenameServerContent(state: MainState, router: Router, server: Server) {
+    val delegate = rememberRenameServerDelegate(router, server)
+    RenameContent(state, "Edit server", server.name, server.getHost(), delegate)
 }

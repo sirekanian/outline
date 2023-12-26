@@ -22,13 +22,17 @@ import kotlinx.coroutines.launch
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.ext.rememberStateScope
 
+interface RenameDelegate {
+    suspend fun onRename(newName: String)
+}
+
 @Composable
 fun RenameContent(
     state: MainState,
     dialogTitle: String,
     initialName: String,
     defaultName: String,
-    onSaveClicked: suspend (String) -> Unit,
+    renameDelegate: RenameDelegate,
 ) {
     val scope = rememberStateScope()
     var draft by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -45,7 +49,7 @@ fun RenameContent(
                     try {
                         isLoading = true
                         val newName = draft.text.ifBlank { defaultName }
-                        onSaveClicked(newName)
+                        renameDelegate.onRename(newName)
                         state.dialog = null
                     } catch (exception: Exception) {
                         exception.printStackTrace()
