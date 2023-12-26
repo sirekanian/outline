@@ -44,8 +44,7 @@ private fun rememberAddServerState(router: Router): AddServerState {
     val servers = remember { context.app().serverRepository }
     val draft = rememberSaveable { mutableStateOf("") }
     val insecure = rememberSaveable { mutableStateOf(false) }
-    val error = remember(draft) { mutableStateOf("") }
-    return remember { AddServerState(scope, router, servers, draft, insecure, error) }
+    return remember { AddServerState(scope, router, servers, draft, insecure) }
 }
 
 private class AddServerState(
@@ -54,13 +53,11 @@ private class AddServerState(
     private val servers: ServerRepository,
     draftState: MutableState<String>,
     insecureState: MutableState<Boolean>,
-    errorState: MutableState<String>,
 ) {
 
     var draft by draftState
     var insecure by insecureState
-    var error by errorState
-        private set
+    var error by mutableStateOf("")
     var isLoading by mutableStateOf(false)
         private set
     var isDialogVisible by mutableStateOf(false)
@@ -108,7 +105,10 @@ fun AddServerContent(router: Router) {
         val focusRequester = remember { FocusRequester() }
         OutlinedTextField(
             value = state.draft,
-            onValueChange = { state.draft = it.trim() },
+            onValueChange = {
+                state.draft = it.trim()
+                state.error = ""
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp, 24.dp, 16.dp, 8.dp)
