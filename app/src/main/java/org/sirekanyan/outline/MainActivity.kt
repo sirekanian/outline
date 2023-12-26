@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                             state.dialog = null
                         }
                         when (dialog) {
-                            is AddServerDialog -> Surface { AddServerContent(state, router) }
+                            is AddServerDialog -> Surface { AddServerContent(router) }
                             is RenameServerDialog -> Surface { RenameServerContent(state, dialog) }
                             is RenameKeyDialog -> Surface { RenameKeyContent(state, dialog) }
                             is DeleteKeyDialog -> {

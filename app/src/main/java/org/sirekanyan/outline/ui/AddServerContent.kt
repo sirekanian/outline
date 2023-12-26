@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,33 +23,62 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.NotSupportedContent
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.model.createServerEntity
+import org.sirekanyan.outline.app
 import org.sirekanyan.outline.ext.rememberStateScope
+import org.sirekanyan.outline.repository.ServerRepository
 import javax.net.ssl.SSLException
 
 @Composable
-fun AddServerContent(state: MainState, router: Router) {
+private fun rememberAddServerState(router: Router): AddServerState {
+    val context = LocalContext.current
     val scope = rememberStateScope()
-    var draft by rememberSaveable { mutableStateOf("") }
-    var insecure by rememberSaveable { mutableStateOf(false) }
-    var error by remember(draft) { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
-    var isDialogVisible by remember { mutableStateOf(false) }
-    suspend fun onAddClick() {
+    val servers = remember { context.app().serverRepository }
+    val draft = rememberSaveable { mutableStateOf("") }
+    val insecure = rememberSaveable { mutableStateOf(false) }
+    val error = remember(draft) { mutableStateOf("") }
+    return remember { AddServerState(scope, router, servers, draft, insecure, error) }
+}
+
+private class AddServerState(
+    private val scope: CoroutineScope,
+    private val router: Router,
+    private val servers: ServerRepository,
+    draftState: MutableState<String>,
+    insecureState: MutableState<Boolean>,
+    errorState: MutableState<String>,
+) {
+
+    var draft by draftState
+    var insecure by insecureState
+    var error by errorState
+        private set
+    var isLoading by mutableStateOf(false)
+        private set
+    var isDialogVisible by mutableStateOf(false)
+
+    fun onAddClicked() {
         if (draft.startsWith("ss://")) {
             isDialogVisible = true
             return
         }
+        scope.launch {
+            updateServer()
+        }
+    }
+
+    private suspend fun updateServer() {
         try {
             isLoading = true
-            val server = state.servers.updateServer(createServerEntity(draft, insecure))
+            val server = servers.updateServer(createServerEntity(draft, insecure))
             router.dialog = null
             router.page = SelectedPage(server)
             router.closeDrawer(animated = false)
@@ -62,36 +92,42 @@ fun AddServerContent(state: MainState, router: Router) {
             isLoading = false
         }
     }
+
+}
+
+@Composable
+fun AddServerContent(router: Router) {
+    val state = rememberAddServerState(router)
     Column {
         DialogToolbar(
             title = "Add server",
             onCloseClick = { router.dialog = null },
-            action = "Add" to { scope.launch { onAddClick() } },
-            isLoading = isLoading,
+            action = "Add" to { state.onAddClicked() },
+            isLoading = state.isLoading,
         )
         val focusRequester = remember { FocusRequester() }
         OutlinedTextField(
-            value = draft,
-            onValueChange = { draft = it.trim() },
+            value = state.draft,
+            onValueChange = { state.draft = it.trim() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp, 24.dp, 16.dp, 8.dp)
                 .focusRequester(focusRequester),
             label = { Text("Management API URL") },
             placeholder = { Text("https://xx.xx.xx.xx:xxx/xxxxx") },
-            isError = error.isNotEmpty(),
-            supportingText = { Text(error) },
+            isError = state.error.isNotEmpty(),
+            supportingText = { Text(state.error) },
             maxLines = 4,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { scope.launch { onAddClick() } })
+            keyboardActions = KeyboardActions(onDone = { state.onAddClicked() }),
         )
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
-                checked = insecure,
-                onCheckedChange = { insecure = it },
+                checked = state.insecure,
+                onCheckedChange = { state.insecure = it },
             )
             Text(
                 text = "Allow insecure connection",
@@ -101,7 +137,7 @@ fun AddServerContent(state: MainState, router: Router) {
             )
         }
     }
-    if (isDialogVisible) {
-        NotSupportedContent(onDismissRequest = { isDialogVisible = false })
+    if (state.isDialogVisible) {
+        NotSupportedContent(onDismissRequest = { state.isDialogVisible = false })
     }
 }
