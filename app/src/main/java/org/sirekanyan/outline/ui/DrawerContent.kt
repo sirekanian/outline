@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -153,7 +154,14 @@ fun DrawerItem(
 ) {
     NavigationDrawerItem(
         icon = { Icon(icon, null) },
-        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        label = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         badge = badge,
         modifier = Modifier.padding(horizontal = 12.dp),
         selected = selected,

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.sirekanyan.outline.ext.plus
 import org.sirekanyan.outline.ext.rememberFlowAsState
@@ -102,7 +103,13 @@ fun MainContent(state: MainState) {
                             )
                         }
                     MainTopAppBar(
-                        title = { Text(stringResource(R.string.outln_app_name)) },
+                        title = {
+                            Text(
+                                text = stringResource(R.string.outln_app_name),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        },
                         onMenuClick = state::openDrawer,
                         visibleItems = menuItems,
                     )
@@ -157,7 +164,13 @@ fun MainContent(state: MainState) {
                     state.refreshCurrentKeys(showLoading = true)
                 }
                 MainTopAppBar(
-                    title = { Text(page.server.name) },
+                    title = {
+                        Text(
+                            text = page.server.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
                     onMenuClick = state::openDrawer,
                     visibleItems = listOf(
                         MenuItem("Sort by…", IconSort) {
