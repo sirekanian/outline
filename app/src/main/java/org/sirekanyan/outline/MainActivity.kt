@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import org.sirekanyan.outline.ui.AboutDialogContent
 import org.sirekanyan.outline.ui.AddServerContent
 import org.sirekanyan.outline.ui.DeleteKeyContent
 import org.sirekanyan.outline.ui.DeleteServerContent
@@ -51,6 +52,11 @@ class MainActivity : ComponentActivity() {
                                     serverName = server.name,
                                     onDismiss = { state.dialog = null },
                                     onConfirm = { state.onDeleteServerConfirmed(server) }
+                                )
+                            }
+                            is AboutDialog -> {
+                                AboutDialogContent(
+                                    onDismiss = { state.dialog = null },
                                 )
                             }
                         }

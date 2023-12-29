@@ -154,3 +154,5 @@ data class RenameKeyDialog(val key: Key) : Dialog()
 data class DeleteKeyDialog(val key: Key) : Dialog()
 
 data class DeleteServerDialog(val server: Server) : Dialog()
+
+data object AboutDialog : Dialog()

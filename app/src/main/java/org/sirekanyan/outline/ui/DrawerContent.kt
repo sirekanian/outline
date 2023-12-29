@@ -1,8 +1,5 @@
 package org.sirekanyan.outline.ui
 
-import android.content.Intent
-import android.content.Intent.ACTION_VIEW
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Divider
@@ -37,6 +35,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import org.sirekanyan.outline.AboutDialog
 import org.sirekanyan.outline.AddServerDialog
 import org.sirekanyan.outline.HelloPage
 import org.sirekanyan.outline.MainState
@@ -47,8 +46,6 @@ import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
 import org.sirekanyan.outline.isPlayFlavor
 import org.sirekanyan.outline.text.formatTraffic
-import org.sirekanyan.outline.ui.icons.IconOpenInNew
-import org.sirekanyan.outline.ui.icons.IconPlayStore
 
 @Composable
 fun DrawerContent(state: MainState) {
@@ -133,12 +130,10 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                     },
                 )
             }
-            val playUri = "https://play.google.com/store/apps/details?id=${context.packageName}"
             DrawerItem(
-                icon = IconPlayStore,
-                label = "Rate on Play Store",
-                badge = { Icon(IconOpenInNew, null) },
-                onClick = { context.startActivity(Intent(ACTION_VIEW, Uri.parse(playUri))) },
+                icon = Icons.Default.Info,
+                label = "About",
+                onClick = { state.dialog = AboutDialog },
             )
         }
     }
