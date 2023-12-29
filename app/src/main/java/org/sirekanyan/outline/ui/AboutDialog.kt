@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -17,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import org.sirekanyan.outline.BuildConfig
 import org.sirekanyan.outline.R
@@ -30,10 +34,25 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
         icon = { Icon(Icons.Default.Info, null) },
         title = { Text(stringResource(R.string.outln_app_name) + " " + BuildConfig.VERSION_NAME) },
         text = {
-            Text(
-                "An application for managing Outline VPN servers. You can find more information " +
-                        "on https://getoutline.org.",
-            )
+            val context = LocalContext.current
+            val annotatedString = buildAnnotatedString {
+                append("An application for managing Outline VPN servers. ")
+                append("You can find more information on ")
+                withStyle(SpanStyle(MaterialTheme.colorScheme.primary)) {
+                    pushStringAnnotation("link", "https://getoutline.org")
+                    append("getoutline.org")
+                    pop()
+                }
+            }
+            val textColor = MaterialTheme.colorScheme.onSurfaceVariant
+            val textStyle = MaterialTheme.typography.bodyMedium.copy(textColor)
+            ClickableText(annotatedString, style = textStyle) { offset ->
+                val links = annotatedString.getStringAnnotations("link", offset, offset)
+                links.firstOrNull()?.item?.let { link ->
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+                    onDismiss()
+                }
+            }
         },
         onDismissRequest = onDismiss,
         confirmButton = {
