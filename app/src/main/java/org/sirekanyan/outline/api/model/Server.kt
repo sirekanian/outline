@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.text.formatTraffic
 
 fun createServerEntity(url: String, insecure: Boolean): Server =
     Server(url, insecure, name = "", traffic = null, count = null)
@@ -31,5 +32,12 @@ class Server(
 
     fun getHost(): String =
         Uri.parse(id).host.orEmpty()
+
+    fun getBadgeText(isCount: Boolean): String? =
+        if (isCount) {
+            count?.let { "$it ${if (it == 1L) "key" else "keys"}" }
+        } else {
+            traffic?.let(::formatTraffic)
+        }
 
 }

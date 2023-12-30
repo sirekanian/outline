@@ -2,6 +2,7 @@ package org.sirekanyan.outline.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -22,11 +23,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -45,7 +50,6 @@ import org.sirekanyan.outline.app
 import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
 import org.sirekanyan.outline.isPlayFlavor
-import org.sirekanyan.outline.text.formatTraffic
 
 @Composable
 fun DrawerContent(state: MainState) {
@@ -64,12 +68,22 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             .padding(insets)
             .padding(bottom = 8.dp),
     ) {
-        Text(
-            text = stringResource(R.string.outln_app_name),
-            modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
-            style = MaterialTheme.typography.titleSmall,
-        )
         val servers by rememberFlowAsState(listOf()) { state.servers.observeServers() }
+        var isCountShown by remember { mutableStateOf(false) }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.outln_app_name),
+                modifier = Modifier.weight(1f).padding(horizontal = 28.dp, vertical = 16.dp),
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (servers.isNotEmpty()) {
+                TextButton({ isCountShown = !isCountShown }, Modifier.padding(end = 24.dp)) {
+                    Text(if (isCountShown) "count" else "traffic")
+                }
+            }
+        }
         if (servers.isNotEmpty()) {
             LaunchedEffect(Unit) {
                 state.servers.updateServers(servers)
@@ -81,9 +95,9 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 icon = Icons.Default.Done,
                 label = server.name,
                 badge = {
-                    server.traffic?.let { traffic ->
+                    server.getBadgeText(isCountShown)?.let { badgeText ->
                         Text(
-                            text = formatTraffic(traffic),
+                            text = badgeText,
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.labelLarge,
                         )
