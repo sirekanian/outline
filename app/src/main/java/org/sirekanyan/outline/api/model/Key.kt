@@ -17,7 +17,7 @@ fun List<KeyEntity>.fromEntities(server: Server): List<Key> =
 
 fun List<KeyWithServerEntity>.fromEntities(): List<Key> =
     map { entity ->
-        val server = Server(entity.serverId, entity.insecure, entity.serverName, entity.serverTraffic)
+        val server = Server(entity.serverId, entity.insecure, entity.serverName, entity.serverTraffic, entity.serverCount)
         Key(server, entity.id, entity.url, entity.name, entity.traffic)
     }
 

@@ -23,7 +23,7 @@ class DebugDaoImpl(private val database: OutlineDatabase) : DebugDao {
                 BuildConfig.DEBUG_SERVER1,
                 BuildConfig.DEBUG_SERVER2,
             ).forEachIndexed { index, url ->
-                serverQueries.insert(ServerEntity(url, true, "Server ${index + 1}", null))
+                serverQueries.insert(ServerEntity(url, true, "Server ${index + 1}", null, null))
             }
         }
     }

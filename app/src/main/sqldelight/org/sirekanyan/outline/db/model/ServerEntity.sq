@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS ServerEntity (
   id TEXT NOT NULL PRIMARY KEY,
   insecure INTEGER AS kotlin.Boolean NOT NULL DEFAULT 0,
   name TEXT NOT NULL DEFAULT '',
-  traffic INTEGER
+  traffic INTEGER,
+  count INTEGER
 );
 
 selectAll:
@@ -11,8 +12,11 @@ SELECT * FROM ServerEntity ORDER BY id;
 insert:
 INSERT OR REPLACE INTO ServerEntity VALUES ?;
 
-update:
+updateTraffic:
 UPDATE ServerEntity SET traffic = ?2 WHERE id = ?1;
+
+updateCount:
+UPDATE ServerEntity SET count = ?2 WHERE id = ?1;
 
 delete:
 DELETE FROM ServerEntity WHERE id = ?;

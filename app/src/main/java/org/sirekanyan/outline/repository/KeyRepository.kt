@@ -30,7 +30,11 @@ class KeyRepository(
         withContext(IO) {
             val keys = api.getKeys(server)
             keyDao.update(server, keys.toEntities())
-            serverDao.update(server.id, keys.sumOf { it.traffic ?: 0 })
+            serverDao.update(
+                id = server.id,
+                traffic = keys.sumOf { it.traffic ?: 0 },
+                count = keys.size.toLong(),
+            )
         }
     }
 

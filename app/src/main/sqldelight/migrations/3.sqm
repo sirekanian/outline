@@ -1,0 +1,7 @@
+ALTER TABLE ServerEntity ADD COLUMN count INTEGER;
+
+DROP VIEW IF EXISTS KeyWithServerEntity;
+CREATE VIEW KeyWithServerEntity AS
+  SELECT k.*, s.insecure, s.name serverName, s.traffic serverTraffic, s.count serverCount
+    FROM KeyEntity k, ServerEntity s
+    WHERE k.serverId = s.id;
