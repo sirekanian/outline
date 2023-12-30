@@ -37,9 +37,11 @@ import org.sirekanyan.outline.ui.icons.IconPlayStore
 
 @Composable
 fun AboutDialogContent(onDismiss: () -> Unit) {
+    val appName = stringResource(R.string.outln_app_name)
+    val appVersion = BuildConfig.VERSION_NAME
     AlertDialog(
         icon = { Icon(Icons.Default.Info, null) },
-        title = { Text(stringResource(R.string.outln_app_name) + " " + BuildConfig.VERSION_NAME) },
+        title = { Text("$appName $appVersion") },
         text = {
             val context = LocalContext.current
             val annotatedString = buildAnnotatedString {
@@ -67,7 +69,8 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
             val clipboard = LocalClipboardManager.current
             AboutItem(Icons.Default.Email, "Send feedback") {
                 val email = "outline@sirekanyan.org"
-                val intent = Intent(ACTION_SENDTO, Uri.parse("mailto:$email"))
+                val subject = Uri.encode("Feedback: $appName $appVersion")
+                val intent = Intent(ACTION_SENDTO, Uri.parse("mailto:$email?subject=$subject"))
                 try {
                     context.startActivity(intent)
                 } catch (exception: Exception) {
