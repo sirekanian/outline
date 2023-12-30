@@ -49,7 +49,6 @@ import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
-import org.sirekanyan.outline.isPlayFlavor
 
 @Composable
 fun DrawerContent(state: MainState) {
@@ -128,28 +127,26 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 },
             )
         }
-        if (isPlayFlavor() || isDebugBuild()) {
-            Divider(Modifier.padding(vertical = 8.dp))
-            val context = LocalContext.current
-            if (isDebugBuild()) {
-                val debugDao = remember { context.app().debugDao }
-                val scope = rememberCoroutineScope()
-                DrawerItem(
-                    icon = Icons.Default.Warning,
-                    label = "Reset database",
-                    onClick = {
-                        scope.launch(IO) {
-                            debugDao.reset()
-                        }
-                    },
-                )
-            }
+        Divider(Modifier.padding(vertical = 8.dp))
+        val context = LocalContext.current
+        if (isDebugBuild()) {
+            val debugDao = remember { context.app().debugDao }
+            val scope = rememberCoroutineScope()
             DrawerItem(
-                icon = Icons.Default.Info,
-                label = "About",
-                onClick = { state.dialog = AboutDialog },
+                icon = Icons.Default.Warning,
+                label = "Reset database",
+                onClick = {
+                    scope.launch(IO) {
+                        debugDao.reset()
+                    }
+                },
             )
         }
+        DrawerItem(
+            icon = Icons.Default.Info,
+            label = "About",
+            onClick = { state.dialog = AboutDialog },
+        )
     }
 }
 

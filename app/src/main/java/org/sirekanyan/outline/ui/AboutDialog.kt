@@ -32,6 +32,8 @@ import org.sirekanyan.outline.BuildConfig
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.ext.logDebug
 import org.sirekanyan.outline.ext.showToast
+import org.sirekanyan.outline.isDebugBuild
+import org.sirekanyan.outline.isPlayFlavor
 import org.sirekanyan.outline.ui.icons.IconOpenInNew
 import org.sirekanyan.outline.ui.icons.IconPlayStore
 
@@ -79,10 +81,12 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
                     context.showToast("Email is copied")
                 }
             }
-            val playUri = "https://play.google.com/store/apps/details?id=${context.packageName}"
-            AboutItem(IconPlayStore, "Rate on Play Store") {
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(playUri)))
-                onDismiss()
+            if (isPlayFlavor() || isDebugBuild()) {
+                val playUri = "https://play.google.com/store/apps/details?id=${context.packageName}"
+                AboutItem(IconPlayStore, "Rate on Play Store") {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(playUri)))
+                    onDismiss()
+                }
             }
         },
     )
