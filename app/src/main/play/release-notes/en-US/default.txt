@@ -1,32 +1,30 @@
-v0.1.15
-- Added ability to sort keys
-- Fixed secure connection to the server
+v0.1.21
+- Minor fixes
 
-v0.1.14
-- Fixed app crash on Android 6.0
+v0.1.20
+- Added about dialog
+- Added keys count
+- Minor fixes
 
-v0.1.13
-- Added vertical scroll for drawer
-- Added delete server button
+v0.1.18
+- Renamed app to Outline Keeper
+- Added app state recovery
+- Minor fixes
 
-v0.1.12
-- Added crash reporting for Google Play builds
+v0.1.17
+- Added offline mode
+- Added search feature
+- Added server renaming
+- Other fixes
 
-v0.1.11
-- Added error dialog for ss:// links
+v0.1.11—v0.1.15
+- Added sorting keys
+- Fixed secure connection
+- Added drawer scroll
+- Added server deletion
+- Added dialog for ss:// links
 
-v0.1.10
+v0.1.3—v0.1.10
 - Added server traffic
-- Changed app colors
-
-v0.1.7
-- Added delete confirmation dialog
-
-v0.1.6
-- Appearance improvements
-
-v0.1.4
-- Added edit key button
-
-v0.1.3
-- Added delete key button
+- Added delete dialog
+- Added edit/delete key buttons
