@@ -20,6 +20,10 @@ class ServerDao(private val database: OutlineDatabase) {
         queries.insert(server)
     }
 
+    fun update(id: String, traffic: Long) {
+        queries.update(id, traffic)
+    }
+
     fun insertAll(servers: List<ServerEntity>) {
         queries.transaction {
             servers.forEach {

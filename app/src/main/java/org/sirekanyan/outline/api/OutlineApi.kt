@@ -63,8 +63,7 @@ class OutlineApi {
 
     suspend fun getServer(server: Server): Server {
         val name = request(HttpMethod.Get, server, "server").body<ServerNameResponse>().name
-        val transferMetrics = getTransferMetrics(server)?.bytesTransferredByUserId
-        return Server(server.id, server.insecure, name, transferMetrics?.values?.sum())
+        return Server(server.id, server.insecure, name, server.traffic)
     }
 
     suspend fun renameServer(server: Server, name: String) {

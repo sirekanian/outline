@@ -29,8 +29,9 @@ class App : Application() {
     private val database by lazy {
         OutlineDatabase(AndroidSqliteDriver(OutlineDatabase.Schema, this, "outline.db"))
     }
-    val serverRepository by lazy { ServerRepository(api, ServerDao(database)) }
-    val keyRepository by lazy { KeyRepository(api, KeyDao(database)) }
+    private val serverDao = ServerDao(database)
+    val serverRepository by lazy { ServerRepository(api, serverDao) }
+    val keyRepository by lazy { KeyRepository(api, KeyDao(database), serverDao) }
     val prefsDao by lazy { KeyValueDao(database) }
     val debugDao: DebugDao by lazy { DebugDaoImpl(database) }
 

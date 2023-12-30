@@ -11,6 +11,9 @@ SELECT * FROM ServerEntity ORDER BY id;
 insert:
 INSERT OR REPLACE INTO ServerEntity VALUES ?;
 
+update:
+UPDATE ServerEntity SET traffic = ?2 WHERE id = ?1;
+
 delete:
 DELETE FROM ServerEntity WHERE id = ?;
 
