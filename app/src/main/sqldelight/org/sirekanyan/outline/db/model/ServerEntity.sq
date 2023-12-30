@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS ServerEntity (
 );
 
 selectAll:
-SELECT * FROM ServerEntity ORDER BY id;
+SELECT * FROM ServerEntity ORDER BY lower(name), id;
 
 insert:
 INSERT OR REPLACE INTO ServerEntity VALUES ?;
