@@ -82,7 +82,8 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
                 }
             }
             if (isPlayFlavor() || isDebugBuild()) {
-                val playUri = "https://play.google.com/store/apps/details?id=${context.packageName}"
+                val packageName = "org.sirekanyan.outline"
+                val playUri = "https://play.google.com/store/apps/details?id=$packageName"
                 AboutItem(IconPlayStore, "Rate on Play Store") {
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(playUri)))
                     onDismiss()
