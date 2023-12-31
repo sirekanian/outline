@@ -16,7 +16,7 @@ selectKeys:
 SELECT * FROM KeyEntity WHERE serverId = ?;
 
 selectAllKeys:
-SELECT * FROM KeyWithServerEntity WHERE name LIKE ?;
+SELECT * FROM KeyWithServerEntity WHERE name LIKE ? LIMIT 200;
 
 insertKey:
 INSERT OR REPLACE INTO KeyEntity VALUES ?;
