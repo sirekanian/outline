@@ -90,7 +90,7 @@ fun MainContent(state: MainState) {
                     MainTopAppBar(
                         title = { SearchField(search.query) { search.query = it } },
                         onMenuClick = search::closeSearch,
-                        menuIcon = Icons.Default.ArrowBack,
+                        menuIcon = { Icon(Icons.Default.ArrowBack, "back") },
                     )
                 } else {
                     val menuItems: List<MenuItem> =
