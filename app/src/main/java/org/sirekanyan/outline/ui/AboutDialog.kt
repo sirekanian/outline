@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
     val appVersion = BuildConfig.VERSION_NAME
     AlertDialog(
         icon = { Icon(Icons.Default.Info, null) },
-        title = { Text("$appName $appVersion") },
+        title = { Text("$appName $appVersion", textAlign = TextAlign.Center) },
         text = {
             val context = LocalContext.current
             val annotatedString = buildAnnotatedString {
