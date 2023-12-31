@@ -7,3 +7,6 @@ fun formatTraffic(bytes: Long): String =
         bytes > 1_000 -> "${bytes / 1000} kB"
         else -> "$bytes B"
     }
+
+fun formatCount(count: Long): String =
+    "$count ${if (count == 1L) "key" else "keys"}"

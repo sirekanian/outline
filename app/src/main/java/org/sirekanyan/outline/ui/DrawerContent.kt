@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import org.sirekanyan.outline.HelloPage
 import org.sirekanyan.outline.MainState
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.SelectedPage
+import org.sirekanyan.outline.api.model.getTotalBadgeText
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.ext.rememberFlowAsState
 import org.sirekanyan.outline.isDebugBuild
@@ -77,9 +79,14 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            if (servers.isNotEmpty()) {
+            val totalBadgeText by remember {
+                derivedStateOf {
+                    servers.getTotalBadgeText(isCountShown)
+                }
+            }
+            totalBadgeText?.let { badgeText ->
                 TextButton({ isCountShown = !isCountShown }, Modifier.padding(end = 24.dp)) {
-                    Text(if (isCountShown) "count" else "traffic")
+                    Text(badgeText)
                 }
             }
         }

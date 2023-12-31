@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.db.model.ServerEntity
+import org.sirekanyan.outline.text.formatCount
 import org.sirekanyan.outline.text.formatTraffic
 
 fun createServerEntity(url: String, insecure: Boolean): Server =
@@ -21,6 +22,16 @@ fun Server.toEntity(): ServerEntity =
 fun List<Server>.toEntities(): List<ServerEntity> =
     map(Server::toEntity)
 
+fun List<Server>.getTotalBadgeText(isCount: Boolean): String? {
+    val totalCount = sumOf { it.count ?: 0 }
+    val totalTraffic = sumOf { it.traffic ?: 0 }
+    return if (totalCount > 0 && totalTraffic > 0) {
+        if (isCount) formatCount(totalCount) else formatTraffic(totalTraffic)
+    } else {
+        null
+    }
+}
+
 @Parcelize
 class Server(
     val id: String,
@@ -35,7 +46,7 @@ class Server(
 
     fun getBadgeText(isCount: Boolean): String? =
         if (isCount) {
-            count?.let { "$it ${if (it == 1L) "key" else "keys"}" }
+            count?.let(::formatCount)
         } else {
             traffic?.let(::formatTraffic)
         }
