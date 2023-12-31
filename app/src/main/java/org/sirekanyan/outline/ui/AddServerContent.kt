@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -114,7 +115,7 @@ fun AddServerContent(router: Router) {
                 .padding(16.dp, 24.dp, 16.dp, 8.dp)
                 .focusRequester(focusRequester),
             label = { Text("Management API URL") },
-            placeholder = { Text("https://xx.xx.xx.xx:xxx/xxxxx") },
+            placeholder = { Text("https://xx.xx.xx.xx:xxx/xxxxx", Modifier.alpha(0.38f)) },
             isError = state.error.isNotEmpty(),
             supportingText = { Text(state.error) },
             maxLines = 4,
