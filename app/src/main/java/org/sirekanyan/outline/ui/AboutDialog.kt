@@ -55,6 +55,12 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
                     append("getoutline.org")
                     pop()
                 }
+                append("\n\nSource code of this app is open and available on ")
+                withStyle(SpanStyle(MaterialTheme.colorScheme.primary)) {
+                    pushStringAnnotation("link", stringResource(R.string.outln_source_code_link))
+                    append(stringResource(R.string.outln_source_code_title))
+                    pop()
+                }
             }
             val textColor = MaterialTheme.colorScheme.onSurfaceVariant
             val textStyle = MaterialTheme.typography.bodyMedium.copy(textColor)
