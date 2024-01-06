@@ -20,8 +20,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.sirekanyan.outline.R
+import org.sirekanyan.outline.Res
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.ext.rememberStateScope
+import org.sirekanyan.outline.rememberResources
 
 interface RenameDelegate {
     suspend fun onRename(newName: String)
@@ -30,13 +33,15 @@ interface RenameDelegate {
 @Composable
 fun rememberRenameState(router: Router, delegate: RenameDelegate): RenameState {
     val scope = rememberStateScope()
-    return remember { RenameState(scope, router, delegate) }
+    val resources = rememberResources()
+    return remember { RenameState(scope, router, delegate, resources) }
 }
 
 class RenameState(
     scope: CoroutineScope,
     private val router: Router,
     private val renameDelegate: RenameDelegate,
+    private val resources: Res,
 ) : CoroutineScope by scope {
 
     var error by mutableStateOf("")
@@ -50,7 +55,7 @@ class RenameState(
                 router.dialog = null
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                error = "Check name or try again"
+                error = resources.getString(R.string.outln_error_check_name)
             } finally {
                 isLoading = false
             }

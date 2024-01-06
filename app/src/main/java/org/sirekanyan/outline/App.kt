@@ -34,6 +34,7 @@ class App : Application() {
     val keyRepository by lazy { KeyRepository(api, KeyDao(database), serverDao) }
     val prefsDao by lazy { KeyValueDao(database) }
     val debugDao: DebugDao by lazy { DebugDaoImpl(database) }
+    val res: Res by lazy { ResImpl(this) }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)

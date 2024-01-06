@@ -30,11 +30,14 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.sirekanyan.outline.NotSupportedContent
+import org.sirekanyan.outline.R
+import org.sirekanyan.outline.Res
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.model.createServerEntity
 import org.sirekanyan.outline.app
 import org.sirekanyan.outline.ext.rememberStateScope
+import org.sirekanyan.outline.rememberResources
 import org.sirekanyan.outline.repository.ServerRepository
 import javax.net.ssl.SSLException
 
@@ -45,7 +48,8 @@ private fun rememberAddServerState(router: Router): AddServerState {
     val servers = remember { context.app().serverRepository }
     val draft = rememberSaveable { mutableStateOf("") }
     val insecure = rememberSaveable { mutableStateOf(false) }
-    return remember { AddServerState(scope, router, servers, draft, insecure) }
+    val resources = rememberResources()
+    return remember { AddServerState(scope, router, servers, draft, insecure, resources) }
 }
 
 private class AddServerState(
@@ -54,6 +58,7 @@ private class AddServerState(
     private val servers: ServerRepository,
     draftState: MutableState<String>,
     insecureState: MutableState<Boolean>,
+    private val resources: Res,
 ) {
 
     var draft by draftState
@@ -82,10 +87,10 @@ private class AddServerState(
             router.closeDrawer(animated = false)
         } catch (exception: SSLException) {
             exception.printStackTrace()
-            error = "Cannot establish a secure connection"
+            error = resources.getString(R.string.outln_error_secure_connection)
         } catch (exception: Exception) {
             exception.printStackTrace()
-            error = "Check URL or try again"
+            error = resources.getString(R.string.outln_error_check_url)
         } finally {
             isLoading = false
         }

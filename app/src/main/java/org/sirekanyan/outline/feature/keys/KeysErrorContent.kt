@@ -24,7 +24,7 @@ fun KeysErrorContent(insets: PaddingValues, onRetry: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = stringResource(R.string.outln_network_error),
+            text = stringResource(R.string.outln_error_check_network),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
         )

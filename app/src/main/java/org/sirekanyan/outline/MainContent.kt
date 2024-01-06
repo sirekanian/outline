@@ -150,7 +150,7 @@ fun MainContent(state: MainState) {
                         if (hasKeys) {
                             val context = LocalContext.current
                             LaunchedEffect(Unit) {
-                                context.showToast(R.string.outln_network_error)
+                                context.showToast(R.string.outln_error_check_network)
                             }
                         } else {
                             KeysErrorContent(
