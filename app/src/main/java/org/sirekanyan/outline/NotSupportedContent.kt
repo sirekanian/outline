@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import org.sirekanyan.outline.ext.installOutline
 import org.sirekanyan.outline.ext.isOutlineInstalled
-import org.sirekanyan.outline.ext.openGooglePlay
 import org.sirekanyan.outline.ext.openOutline
 
 @Composable
@@ -39,7 +39,7 @@ fun NotSupportedContent(onDismissRequest: () -> Unit) {
                     Text("Open Outline")
                 }
             } else {
-                TextButton(onClick = { onDismissRequest(); openGooglePlay(context) }) {
+                TextButton(onClick = { onDismissRequest(); installOutline(context) }) {
                     Text("Install Outline")
                 }
             }

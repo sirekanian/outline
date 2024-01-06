@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import org.sirekanyan.outline.BuildConfig
 import org.sirekanyan.outline.R
 import org.sirekanyan.outline.ext.logDebug
+import org.sirekanyan.outline.ext.openGooglePlay
 import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.isDebugBuild
 import org.sirekanyan.outline.isPlayFlavor
@@ -92,7 +93,7 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
                 val packageName = "org.sirekanyan.outline"
                 val playUri = "https://play.google.com/store/apps/details?id=$packageName"
                 AboutItem(IconPlayStore, "Rate on Play Store") {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(playUri)))
+                    context.openGooglePlay(playUri)
                     onDismiss()
                 }
             }
