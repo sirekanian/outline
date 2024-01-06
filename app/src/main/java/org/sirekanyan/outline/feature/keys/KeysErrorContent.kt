@@ -29,7 +29,7 @@ fun KeysErrorContent(insets: PaddingValues, onRetry: () -> Unit) {
             textAlign = TextAlign.Center,
         )
         Button(onClick = onRetry) {
-            Text(text = "Try again")
+            Text(text = stringResource(R.string.outln_btn_try_again))
         }
     }
 }

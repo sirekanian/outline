@@ -8,12 +8,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import org.sirekanyan.outline.R
 import org.sirekanyan.outline.api.model.Key
 
 @Composable
 fun DeleteKeyContent(key: Key, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     ConfirmationAlertDialog(
-        text = "Are you sure you want to delete the key named \"${key.nameOrDefault}\"?",
+        text = stringResource(R.string.outln_text_confirm_key, key.nameOrDefault),
         onDismiss = onDismiss,
         onConfirm = onConfirm,
     )
@@ -22,7 +24,7 @@ fun DeleteKeyContent(key: Key, onDismiss: () -> Unit, onConfirm: () -> Unit) {
 @Composable
 fun DeleteServerContent(serverName: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     ConfirmationAlertDialog(
-        text = "Are you sure you want to delete the server named \"$serverName\"?",
+        text = stringResource(R.string.outln_text_confirm_server, serverName),
         onDismiss = onDismiss,
         onConfirm = onConfirm,
     )
@@ -32,13 +34,22 @@ fun DeleteServerContent(serverName: String, onDismiss: () -> Unit, onConfirm: ()
 private fun ConfirmationAlertDialog(text: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(
         icon = { Icon(Icons.Default.Delete, null) },
-        title = { Text("Confirmation") },
+        title = { Text(stringResource(R.string.outln_title_confirm)) },
         text = { Text(text) },
         onDismissRequest = onDismiss,
-        dismissButton = { TextButton(onDismiss) { Text("Cancel") } },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = stringResource(R.string.outln_btn_cancel),
+                )
+            }
+        },
         confirmButton = {
             TextButton(onClick = { onConfirm(); onDismiss() }) {
-                Text("Delete", color = MaterialTheme.colorScheme.error)
+                Text(
+                    text = stringResource(R.string.outln_btn_confirm_delete),
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
         },
     )

@@ -3,6 +3,7 @@ package org.sirekanyan.outline.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import org.sirekanyan.outline.R
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.SelectedPage
 import org.sirekanyan.outline.api.model.Server
@@ -31,5 +32,5 @@ private class RenameServerDelegate(
 fun RenameServerContent(router: Router, server: Server) {
     val delegate = rememberRenameServerDelegate(router, server)
     val state = rememberRenameState(router, delegate)
-    RenameContent(state, router, "Edit server", server.name, server.getHost())
+    RenameContent(state, router, R.string.outln_title_edit_server, server.name, server.getHost())
 }

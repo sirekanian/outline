@@ -118,7 +118,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
         }
         DrawerItem(
             icon = Icons.Default.Add,
-            label = "Add server",
+            label = stringResource(R.string.outln_drawer_add),
             onClick = {
                 state.dialog = AddServerDialog
             },
@@ -127,7 +127,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
         if (servers.isNotEmpty()) {
             DrawerItem(
                 icon = Icons.Default.Search,
-                label = "All servers",
+                label = stringResource(R.string.outln_drawer_all),
                 onClick = {
                     state.page = HelloPage
                     state.closeDrawer()
@@ -141,7 +141,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
             val scope = rememberCoroutineScope()
             DrawerItem(
                 icon = Icons.Default.Warning,
-                label = "Reset database",
+                label = stringResource(R.string.outln_drawer_reset),
                 onClick = {
                     scope.launch(IO) {
                         debugDao.reset()
@@ -151,7 +151,7 @@ private fun DrawerSheetContent(state: MainState, insets: PaddingValues) {
         }
         DrawerItem(
             icon = Icons.Default.Info,
-            label = "About",
+            label = stringResource(R.string.outln_drawer_about),
             onClick = { state.dialog = AboutDialog },
         )
     }

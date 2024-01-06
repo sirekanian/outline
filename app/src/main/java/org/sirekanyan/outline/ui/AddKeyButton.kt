@@ -23,7 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.sirekanyan.outline.R
 
 @Composable
 fun AddKeyButton(isVisible: Boolean, isLoading: Boolean, onClick: () -> Unit) {
@@ -43,7 +45,7 @@ fun AddKeyButton(isVisible: Boolean, isLoading: Boolean, onClick: () -> Unit) {
                     } else {
                         Icon(Icons.Default.Add, null)
                         Spacer(Modifier.width(12.dp))
-                        Text("Add key")
+                        Text(stringResource(R.string.outln_btn_add_key))
                         Spacer(Modifier.width(4.dp))
                     }
                 }

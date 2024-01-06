@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.job
 import kotlinx.coroutines.plus
+import org.sirekanyan.outline.R
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -24,10 +25,10 @@ fun rememberStateScope(): CoroutineScope {
             }
             when (throwable) {
                 is UnknownHostException, is ConnectException -> {
-                    context.showToast("Check network connection")
+                    context.showToast(R.string.outln_toast_check_network)
                 }
                 else -> {
-                    context.showToast("Something went wrong")
+                    context.showToast(R.string.outln_toast_something_wrong)
                 }
             }
         }

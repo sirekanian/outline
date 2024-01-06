@@ -81,7 +81,7 @@ fun MainContent(state: MainState) {
                             TextButton(onClick = { state.dialog = AddServerDialog }) {
                                 Icon(Icons.Default.Add, null)
                                 Spacer(Modifier.size(8.dp))
-                                Text("Add server")
+                                Text(stringResource(R.string.outln_text_add_server))
                             }
                         }
                     }
@@ -98,8 +98,12 @@ fun MainContent(state: MainState) {
                             listOf()
                         } else {
                             listOf(
-                                MenuItem("Sort by…", IconSort) { isSortingVisible = true },
-                                MenuItem("Search", Icons.Default.Search) { search.openSearch() },
+                                MenuItem(R.string.outln_menu_sort, IconSort) {
+                                    isSortingVisible = true
+                                },
+                                MenuItem(R.string.outln_menu_search, Icons.Default.Search) {
+                                    search.openSearch()
+                                },
                             )
                         }
                     MainTopAppBar(
@@ -173,15 +177,15 @@ fun MainContent(state: MainState) {
                     },
                     onMenuClick = state::openDrawer,
                     visibleItems = listOf(
-                        MenuItem("Sort by…", IconSort) {
+                        MenuItem(R.string.outln_menu_sort, IconSort) {
                             isSortingVisible = true
                         },
                     ),
                     overflowItems = listOf(
-                        MenuItem("Edit", Icons.Default.Edit) {
+                        MenuItem(R.string.outln_menu_edit, Icons.Default.Edit) {
                             state.dialog = RenameServerDialog(page.server)
                         },
-                        MenuItem("Delete", Icons.Default.Delete) {
+                        MenuItem(R.string.outln_menu_delete, Icons.Default.Delete) {
                             state.dialog = DeleteServerDialog(page.server)
                         },
                     ),

@@ -1,10 +1,77 @@
 <resources>
+
+    <!-- Common -->
     <string name="outln_app_name">Outline Keeper</string>
+    <string name="outln_btn_cancel">Cancel</string>
+    <string name="outln_toast_copied">Copied</string>
+    <string name="outln_toast_check_network">Check network connection</string>
+    <string name="outln_toast_something_wrong">Something went wrong</string>
+    <string name="outln_toast_cannot_open_play">Cannot open Google Play</string>
+
+    <!-- Drawer -->
+    <string name="outln_drawer_add">Add server</string>
+    <string name="outln_drawer_all">All servers</string>
+    <string name="outln_drawer_reset">Reset database</string>
+    <string name="outln_drawer_about">About</string>
+
+    <!-- Menu -->
+    <string name="outln_menu_sort">Sort by…</string>
+    <string name="outln_menu_edit">Edit</string>
+    <string name="outln_menu_delete">Delete</string>
+    <string name="outln_menu_search">Search</string>
+
+    <!-- Sorting -->
+    <string name="outln_sorting_by">Sort by…</string>
     <string name="outln_sorting_by_id">Id</string>
     <string name="outln_sorting_by_name">Name</string>
     <string name="outln_sorting_by_traffic">Traffic</string>
+
+    <!-- Hello Page -->
+    <string name="outln_hint_search">Search…</string>
+    <string name="outln_text_add_server">Add server</string>
+
+    <!-- Selected Page -->
+    <string name="outln_btn_add_key">Add key</string>
     <string name="outln_error_check_network">Check your network connection</string>
+    <string name="outln_btn_try_again">Try again</string>
+
+    <!-- Selected Key -->
+    <string name="outln_sheet_copy">Copy</string>
+    <string name="outln_sheet_share">Share</string>
+    <string name="outln_sheet_edit">Edit</string>
+    <string name="outln_sheet_delete">Delete</string>
+
+    <!-- Add Server Dialog -->
+    <string name="outln_title_add_server">Add server</string>
+    <string name="outln_label_server_url">Management API URL</string>
+    <string name="outln_label_allow_insecure">Allow insecure connection</string>
+    <string name="outln_action_add">Add</string>
     <string name="outln_error_check_url">Check URL or try again</string>
     <string name="outln_error_secure_connection">Cannot establish a secure connection</string>
+
+    <!-- Not Supported Dialog -->
+    <string name="outln_title_not_supported">Not supported</string>
+    <string name="outln_text_not_supported_open">Outline Keeper does not support ss:// links. Would you like to open Outline?</string>
+    <string name="outln_text_not_supported_install">Outline Keeper does not support ss:// links. Would you like to install Outline?</string>
+    <string name="outln_btn_not_supported_open">Open Outline</string>
+    <string name="outln_btn_not_supported_install">Install Outline</string>
+
+    <!-- Rename Dialog -->
+    <string name="outln_title_edit_server">Edit server</string>
+    <string name="outln_title_edit_key">Edit key</string>
+    <string name="outln_label_name">Name</string>
+    <string name="outln_action_save">Save</string>
     <string name="outln_error_check_name">Check name or try again</string>
+
+    <!-- Delete Dialog -->
+    <string name="outln_title_confirm">Confirmation</string>
+    <string name="outln_btn_confirm_delete">Delete</string>
+    <string name="outln_text_confirm_server">Are you sure you want to delete the server named \"%s\"?</string>
+    <string name="outln_text_confirm_key">Are you sure you want to delete the key named \"%s\"?</string>
+
+    <!-- About Dialog -->
+    <string name="outln_btn_send_feedback">Send feedback</string>
+    <string name="outln_btn_rate_on_play_store">Rate on Play Store</string>
+    <string name="outln_toast_email_copied">Email is copied</string>
+
 </resources>

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
+import org.sirekanyan.outline.R
 import org.sirekanyan.outline.ui.SimpleBottomSheet
 
 @Composable
@@ -25,7 +26,7 @@ fun SortBottomSheet(
 ) {
     val coroutineScope = rememberCoroutineScope()
     SimpleBottomSheet(
-        title = "Sort by…",
+        title = stringResource(R.string.outln_sorting_by),
         onDismissRequest = onDismissRequest,
         items = { sheetState ->
             Sorting.entries.forEach { option ->

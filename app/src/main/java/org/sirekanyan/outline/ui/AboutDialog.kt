@@ -3,6 +3,7 @@ package org.sirekanyan.outline.ui
 import android.content.Intent
 import android.content.Intent.ACTION_SENDTO
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -77,7 +78,7 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
         confirmButton = {
             val context = LocalContext.current
             val clipboard = LocalClipboardManager.current
-            AboutItem(Icons.Default.Email, "Send feedback") {
+            AboutItem(Icons.Default.Email, R.string.outln_btn_send_feedback) {
                 val email = "outline@sirekanyan.org"
                 val subject = Uri.encode("Feedback: $appName $appVersion")
                 val intent = Intent(ACTION_SENDTO, Uri.parse("mailto:$email?subject=$subject"))
@@ -86,13 +87,13 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
                 } catch (exception: Exception) {
                     logDebug("Cannot find email app", exception)
                     clipboard.setText(AnnotatedString(email))
-                    context.showToast("Email is copied")
+                    context.showToast(R.string.outln_toast_email_copied)
                 }
             }
             if (isPlayFlavor() || isDebugBuild()) {
                 val packageName = "org.sirekanyan.outline"
                 val playUri = "https://play.google.com/store/apps/details?id=$packageName"
-                AboutItem(IconPlayStore, "Rate on Play Store") {
+                AboutItem(IconPlayStore, R.string.outln_btn_rate_on_play_store) {
                     context.openGooglePlay(playUri)
                     onDismiss()
                 }
@@ -102,7 +103,7 @@ fun AboutDialogContent(onDismiss: () -> Unit) {
 }
 
 @Composable
-private fun AboutItem(icon: ImageVector, text: String, onClick: () -> Unit) {
+private fun AboutItem(icon: ImageVector, @StringRes text: Int, onClick: () -> Unit) {
     TextButton(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
@@ -110,7 +111,7 @@ private fun AboutItem(icon: ImageVector, text: String, onClick: () -> Unit) {
     ) {
         Icon(icon, null, Modifier.padding(horizontal = 4.dp))
         Text(
-            text = text,
+            text = stringResource(text),
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

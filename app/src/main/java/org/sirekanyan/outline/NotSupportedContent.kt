@@ -20,27 +20,32 @@ fun NotSupportedContent(onDismissRequest: () -> Unit) {
     val isInstalled = remember { isOutlineInstalled(context) }
     AlertDialog(
         icon = { Icon(Icons.Default.Info, null) },
-        title = { Text("Not supported") },
+        title = { Text(stringResource(R.string.outln_title_not_supported)) },
         text = {
             Text(
-                text = stringResource(R.string.outln_app_name) + " does not support ss:// links. " +
-                        "Would you like to ${if (isInstalled) "open" else "install"} Outline?",
+                text = stringResource(
+                    if (isInstalled) {
+                        R.string.outln_text_not_supported_open
+                    } else {
+                        R.string.outln_text_not_supported_install
+                    }
+                ),
             )
         },
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text("Cancel")
+                Text(stringResource(R.string.outln_btn_cancel))
             }
         },
         confirmButton = {
             if (isInstalled) {
                 TextButton(onClick = { onDismissRequest(); openOutline(context) }) {
-                    Text("Open Outline")
+                    Text(stringResource(R.string.outln_btn_not_supported_open))
                 }
             } else {
                 TextButton(onClick = { onDismissRequest(); installOutline(context) }) {
-                    Text("Install Outline")
+                    Text(stringResource(R.string.outln_btn_not_supported_install))
                 }
             }
         },

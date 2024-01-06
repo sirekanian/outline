@@ -15,8 +15,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.launch
+import org.sirekanyan.outline.R
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.ui.icons.IconCopy
@@ -37,11 +39,11 @@ fun KeyBottomSheet(
         onDismissRequest = onDismissRequest,
         items = { sheetState ->
             ListItem(
-                headlineContent = { Text("Copy") },
+                headlineContent = { Text(stringResource(R.string.outln_sheet_copy)) },
                 leadingContent = { Icon(IconCopy, null) },
                 modifier = Modifier.clickable {
                     localClipboard.setText(AnnotatedString(key.accessUrl))
-                    localContext.showToast("Copied")
+                    localContext.showToast(R.string.outln_toast_copied)
                     coroutineScope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {
@@ -50,7 +52,7 @@ fun KeyBottomSheet(
                 },
             )
             ListItem(
-                headlineContent = { Text("Share") },
+                headlineContent = { Text(stringResource(R.string.outln_sheet_share)) },
                 leadingContent = { Icon(Icons.Default.Share, null) },
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
@@ -66,7 +68,7 @@ fun KeyBottomSheet(
                 },
             )
             ListItem(
-                headlineContent = { Text("Edit") },
+                headlineContent = { Text(stringResource(R.string.outln_sheet_edit)) },
                 leadingContent = { Icon(Icons.Default.Edit, null) },
                 modifier = Modifier.clickable {
                     onEditClick()
@@ -74,7 +76,7 @@ fun KeyBottomSheet(
                 },
             )
             ListItem(
-                headlineContent = { Text("Delete") },
+                headlineContent = { Text(stringResource(R.string.outln_sheet_delete)) },
                 leadingContent = { Icon(Icons.Default.Delete, null) },
                 modifier = Modifier.clickable {
                     onDeleteClick()

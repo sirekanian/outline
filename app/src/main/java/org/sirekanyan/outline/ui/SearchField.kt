@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
+import org.sirekanyan.outline.R
 
 @Composable
 fun SearchField(query: String, onQueryChange: (String) -> Unit) {
@@ -26,7 +28,7 @@ fun SearchField(query: String, onQueryChange: (String) -> Unit) {
         singleLine = true,
     )
     if (query.isEmpty()) {
-        Text("Search…", color = contentColor.copy(alpha = 0.38f))
+        Text(stringResource(R.string.outln_hint_search), color = contentColor.copy(alpha = 0.38f))
     }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()

@@ -1,5 +1,6 @@
 package org.sirekanyan.outline
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -19,9 +20,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
-data class MenuItem(val text: String, val icon: ImageVector, val onClick: () -> Unit)
+data class MenuItem(@StringRes val text: Int, val icon: ImageVector, val onClick: () -> Unit)
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +59,7 @@ private fun MainMenu(visibleItems: List<MenuItem>, overflowItems: List<MenuItem>
         DropdownMenu(isMenuVisible, { isMenuVisible = false }) {
             overflowItems.forEach { (text, icon, onClick) ->
                 DropdownMenuItem(
-                    text = { Text(text) },
+                    text = { Text(stringResource(text)) },
                     leadingIcon = { Icon(icon, null) },
                     onClick = {
                         isMenuVisible = false

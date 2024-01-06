@@ -1,5 +1,6 @@
 package org.sirekanyan.outline.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -68,7 +70,7 @@ class RenameState(
 fun RenameContent(
     state: RenameState,
     router: Router,
-    dialogTitle: String,
+    @StringRes dialogTitle: Int,
     initialName: String,
     defaultName: String,
 ) {
@@ -79,7 +81,7 @@ fun RenameContent(
         DialogToolbar(
             title = dialogTitle,
             onCloseClick = { router.dialog = null },
-            action = "Save" to {
+            action = R.string.outln_action_save to {
                 val newName = draft.text.ifBlank { defaultName }
                 state.onSaveClicked(newName)
             },
@@ -96,7 +98,7 @@ fun RenameContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 24.dp)
                 .focusRequester(focusRequester),
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.outln_label_name)) },
             placeholder = { Text(defaultName) },
             isError = state.error.isNotEmpty(),
             supportingText = { Text(state.error) },

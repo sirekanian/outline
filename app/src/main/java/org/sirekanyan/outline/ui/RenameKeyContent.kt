@@ -3,6 +3,7 @@ package org.sirekanyan.outline.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import org.sirekanyan.outline.R
 import org.sirekanyan.outline.Router
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.app
@@ -33,5 +34,5 @@ private class RenameKeyDelegate(
 fun RenameKeyContent(router: Router, key: Key) {
     val delegate = rememberRenameKeyDelegate(key)
     val state = rememberRenameState(router, delegate)
-    RenameContent(state, router, "Edit key", key.name, key.defaultName)
+    RenameContent(state, router, R.string.outln_title_edit_key, key.name, key.defaultName)
 }

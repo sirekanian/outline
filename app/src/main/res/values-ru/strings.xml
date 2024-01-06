@@ -1,0 +1,77 @@
+<resources>
+
+    <!-- Common -->
+    <string name="outln_app_name">Outline Keeper</string>
+    <string name="outln_btn_cancel">Отмена</string>
+    <string name="outln_toast_copied">Скопировано</string>
+    <string name="outln_toast_check_network">Проверьте подключение к сети</string>
+    <string name="outln_toast_something_wrong">Что-то пошло не так</string>
+    <string name="outln_toast_cannot_open_play">Не удалось открыть Google Play</string>
+
+    <!-- Drawer -->
+    <string name="outln_drawer_add">Добавить сервер</string>
+    <string name="outln_drawer_all">Все сервера</string>
+    <string name="outln_drawer_reset">Очистить данные</string>
+    <string name="outln_drawer_about">О приложении</string>
+
+    <!-- Menu -->
+    <string name="outln_menu_sort">Сортировать по…</string>
+    <string name="outln_menu_edit">Изменить</string>
+    <string name="outln_menu_delete">Удалить</string>
+    <string name="outln_menu_search">Поиск</string>
+
+    <!-- Sorting -->
+    <string name="outln_sorting_by">Сортировать по…</string>
+    <string name="outln_sorting_by_id">Id</string>
+    <string name="outln_sorting_by_name">Имя</string>
+    <string name="outln_sorting_by_traffic">Трафик</string>
+
+    <!-- Hello Page -->
+    <string name="outln_hint_search">Поиск…</string>
+    <string name="outln_text_add_server">Добавить сервер</string>
+
+    <!-- Selected Page -->
+    <string name="outln_btn_add_key">Добавить ключ</string>
+    <string name="outln_error_check_network">Проверьте подключение к сети</string>
+    <string name="outln_btn_try_again">Повторить</string>
+
+    <!-- Selected Key -->
+    <string name="outln_sheet_copy">Скопировать</string>
+    <string name="outln_sheet_share">Поделиться</string>
+    <string name="outln_sheet_edit">Изменить</string>
+    <string name="outln_sheet_delete">Удалить</string>
+
+    <!-- Add Server Dialog -->
+    <string name="outln_title_add_server">Добавить сервер</string>
+    <string name="outln_label_server_url">Management API URL</string>
+    <string name="outln_label_allow_insecure">Разрешить небезопасное соединение</string>
+    <string name="outln_action_add">Добавить</string>
+    <string name="outln_error_check_url">Проверьте URL и повторите снова</string>
+    <string name="outln_error_secure_connection">Не удалось установить безопасное соединение</string>
+
+    <!-- Not Supported Dialog -->
+    <string name="outln_title_not_supported">Не поддерживается</string>
+    <string name="outln_text_not_supported_open">Outline Keeper не поддерживает ссылки вида ss://. Хотите открыть приложение Outline?</string>
+    <string name="outln_text_not_supported_install">Outline Keeper не поддерживает ссылки вида ss://. Хотите установить приложение Outline?</string>
+    <string name="outln_btn_not_supported_open">Открыть Outline</string>
+    <string name="outln_btn_not_supported_install">Установить Outline</string>
+
+    <!-- Rename Dialog -->
+    <string name="outln_title_edit_server">Изменить сервер</string>
+    <string name="outln_title_edit_key">Изменить ключ</string>
+    <string name="outln_label_name">Имя</string>
+    <string name="outln_action_save">Сохранить</string>
+    <string name="outln_error_check_name">Проверьте имя и повторите снова</string>
+
+    <!-- Delete Dialog -->
+    <string name="outln_title_confirm">Подтверждение</string>
+    <string name="outln_btn_confirm_delete">Удалить</string>
+    <string name="outln_text_confirm_server">Вы точно хотите удалить сервер с именем «%s»?</string>
+    <string name="outln_text_confirm_key">Вы точно хотите удалить ключ с именем «%s»?</string>
+
+    <!-- About Dialog -->
+    <string name="outln_btn_send_feedback">Обратная связь</string>
+    <string name="outln_btn_rate_on_play_store">Оценить на Play Store</string>
+    <string name="outln_toast_email_copied">E-mail скопирован</string>
+
+</resources>

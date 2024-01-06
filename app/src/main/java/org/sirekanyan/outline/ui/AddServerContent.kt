@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
@@ -103,9 +104,9 @@ fun AddServerContent(router: Router) {
     val state = rememberAddServerState(router)
     Column {
         DialogToolbar(
-            title = "Add server",
+            title = R.string.outln_title_add_server,
             onCloseClick = { router.dialog = null },
-            action = "Add" to { state.onAddClicked() },
+            action = R.string.outln_action_add to { state.onAddClicked() },
             isLoading = state.isLoading,
         )
         val focusRequester = remember { FocusRequester() }
@@ -119,7 +120,7 @@ fun AddServerContent(router: Router) {
                 .fillMaxWidth()
                 .padding(16.dp, 24.dp, 16.dp, 8.dp)
                 .focusRequester(focusRequester),
-            label = { Text("Management API URL") },
+            label = { Text(stringResource(R.string.outln_label_server_url)) },
             placeholder = { Text("https://xx.xx.xx.xx:xxx/xxxxx", Modifier.alpha(0.38f)) },
             isError = state.error.isNotEmpty(),
             supportingText = { Text(state.error) },
@@ -136,7 +137,7 @@ fun AddServerContent(router: Router) {
                 onCheckedChange = { state.insecure = it },
             )
             Text(
-                text = "Allow insecure connection",
+                text = stringResource(R.string.outln_label_allow_insecure),
                 modifier = Modifier.padding(end = 16.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = LocalContentColor.current.copy(alpha = 0.66f),

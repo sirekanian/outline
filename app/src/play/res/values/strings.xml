@@ -1,4 +1,4 @@
 <resources>
-    <string name="outln_source_code_title">GitHub</string>
-    <string name="outln_source_code_link">"https://github.com/sirekanian/outline"</string>
+    <string name="outln_source_code_title" translatable="false">GitHub</string>
+    <string name="outln_source_code_link" translatable="false">"https://github.com/sirekanian/outline"</string>
 </resources>

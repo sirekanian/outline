@@ -1,5 +1,6 @@
 package org.sirekanyan.outline.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -16,19 +17,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun DialogToolbar(
-    title: String,
+    @StringRes title: Int,
     onCloseClick: () -> Unit,
-    action: Pair<String, () -> Unit>,
+    action: Pair<Int, () -> Unit>,
     isLoading: Boolean,
 ) {
     TopAppBar(
-        title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        title = { Text(stringResource(title), maxLines = 1, overflow = TextOverflow.Ellipsis) },
         navigationIcon = {
             IconButton({ onCloseClick() }) { Icon(Icons.Default.Close, null) }
         },
@@ -37,7 +39,7 @@ fun DialogToolbar(
                 CircularProgressIndicator(Modifier.size(56.dp).padding(16.dp), strokeWidth = 2.dp)
             } else {
                 val (actionName, onActionClick) = action
-                TextButton({ onActionClick() }) { Text(actionName) }
+                TextButton({ onActionClick() }) { Text(stringResource(actionName)) }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
