@@ -76,7 +76,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {
@@ -92,10 +92,10 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.2")
 
     // ktor
-    implementation("io.ktor:ktor-client-okhttp:2.3.7")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
-    implementation("org.slf4j:slf4j-simple:2.0.10")
+    implementation("io.ktor:ktor-client-okhttp:2.3.8")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
+    implementation("org.slf4j:slf4j-simple:2.0.11")
 
     // sqldelight
     implementation("app.cash.sqldelight:android-driver:2.0.1")
