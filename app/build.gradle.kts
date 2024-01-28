@@ -55,9 +55,10 @@ android {
         }
         create("play") {
             dimension = "store"
-            listOf("ACRA_URI", "ACRA_LOGIN", "ACRA_PASSWORD").forEach { key ->
-                buildConfigField("String", key, System.getenv(key)?.let { "\"$it\"" } ?: "null")
-            }
+            resValue("string", "project_id", System.getenv("GOOGLE_PROJECT_ID") ?: "")
+            resValue("string", "google_app_id", System.getenv("GOOGLE_APP_ID") ?: "")
+            resValue("string", "google_api_key", System.getenv("GOOGLE_API_KEY") ?: "")
+            resValue("string", "com.crashlytics.android.build_id", "1")
         }
     }
     compileOptions {
@@ -102,7 +103,7 @@ dependencies {
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
 
     // crash reporting
-    add("playImplementation", "ch.acra:acra-http:5.11.3")
+    add("playImplementation", "com.google.firebase:firebase-crashlytics:18.6.1")
 
 }
 
@@ -128,9 +129,9 @@ androidComponents {
                         add("SIGNING_KEY_PASSWORD")
                     }
                     if (variant.flavorName == "play") {
-                        add("ACRA_URI")
-                        add("ACRA_LOGIN")
-                        add("ACRA_PASSWORD")
+                        add("GOOGLE_PROJECT_ID")
+                        add("GOOGLE_APP_ID")
+                        add("GOOGLE_API_KEY")
                     }
                 }.forEach { key ->
                     if (System.getenv(key).isNullOrEmpty()) {

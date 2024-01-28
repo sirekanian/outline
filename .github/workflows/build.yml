@@ -45,9 +45,9 @@ jobs:
           SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          ACRA_URI: ${{ secrets.ACRA_URI }}
-          ACRA_LOGIN: ${{ secrets.ACRA_LOGIN }}
-          ACRA_PASSWORD: ${{ secrets.ACRA_PASSWORD }}
+          GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+          GOOGLE_APP_ID: ${{ secrets.GOOGLE_APP_ID }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           base64 --decode <<< "$SIGNING_KEYSTORE_BASE64" > app/release.keystore
           ./gradlew assembleRelease bundleRelease

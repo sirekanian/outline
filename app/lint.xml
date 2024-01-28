@@ -1,0 +1,6 @@
+<lint>
+    <issue id="UnusedResources">
+        <ignore regexp="`R\.string\.project_id` appears to be unused" />
+        <ignore regexp="`R\.string\.com_crashlytics_android_build_id` appears to be unused" />
+    </issue>
+</lint>

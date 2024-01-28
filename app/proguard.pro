@@ -1,2 +1,1 @@
 -dontwarn javax.annotation.processing.*
--keep class org.acra.** { *; }
