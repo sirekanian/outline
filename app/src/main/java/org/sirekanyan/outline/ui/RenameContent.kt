@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
@@ -102,6 +104,7 @@ fun RenameContent(
             placeholder = { Text(defaultName) },
             isError = state.error.isNotEmpty(),
             supportingText = { Text(state.error) },
+            keyboardOptions = KeyboardOptions(KeyboardCapitalization.Words),
             maxLines = 4,
         )
         LaunchedEffect(Unit) {

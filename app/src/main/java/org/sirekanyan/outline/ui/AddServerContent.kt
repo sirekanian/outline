@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -125,7 +126,10 @@ fun AddServerContent(router: Router) {
             isError = state.error.isNotEmpty(),
             supportingText = { Text(state.error) },
             maxLines = 4,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Uri,
+                imeAction = ImeAction.Done,
+            ),
             keyboardActions = KeyboardActions(onDone = { state.onAddClicked() }),
         )
         LaunchedEffect(Unit) {
