@@ -32,9 +32,8 @@ android {
             isDebuggable = props.getProperty("DEBUGGABLE").toBoolean()
             applicationIdSuffix = ".debug"
             buildConfigField("boolean", "DEBUG", "true")
-            listOf("DEBUG_SERVER1", "DEBUG_SERVER2").forEach { key ->
-                buildConfigField("String", key, props.getProperty(key)?.let { "\"$it\"" } ?: "null")
-            }
+            val debugServers = props.getProperty("DEBUG_SERVERS").split('|').map { "\"$it\"" }
+            buildConfigField("String[]", "DEBUG_SERVERS", debugServers.joinToString(",", "{", "}"))
         }
         release {
             isMinifyEnabled = true

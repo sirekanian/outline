@@ -19,10 +19,7 @@ class DebugDaoImpl(private val database: OutlineDatabase) : DebugDao {
         database.transaction {
             keyQueries.truncate()
             serverQueries.truncate()
-            listOfNotNull(
-                BuildConfig.DEBUG_SERVER1,
-                BuildConfig.DEBUG_SERVER2,
-            ).forEachIndexed { index, url ->
+            BuildConfig.DEBUG_SERVERS.forEachIndexed { index, url ->
                 serverQueries.insert(ServerEntity(url, true, "Server ${index + 1}", null, null))
             }
         }
