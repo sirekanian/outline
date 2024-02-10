@@ -10,12 +10,16 @@ import kotlinx.coroutines.withContext
 import org.sirekanyan.outline.api.OutlineApi
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.api.model.fromEntities
+import org.sirekanyan.outline.api.model.fromEntity
 import org.sirekanyan.outline.api.model.toEntities
 import org.sirekanyan.outline.api.model.toEntity
 import org.sirekanyan.outline.db.ServerDao
 import org.sirekanyan.outline.ext.logDebug
 
 class ServerRepository(private val api: OutlineApi, private val serverDao: ServerDao) {
+
+    fun getServers(): List<Server> =
+        serverDao.selectAll().map { it.fromEntity() }
 
     fun observeServers(): Flow<List<Server>> =
         serverDao.observeAll().mapToList(IO).map { it.fromEntities() }

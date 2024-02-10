@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -86,6 +87,15 @@ fun MainContent(state: MainState) {
                         }
                     }
                 }
+                Box(Modifier.fillMaxSize().padding(insets).alpha(0.95f)) {
+                    AnimatedVisibility(
+                        visible = page.keys is KeysLoadingState,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
+                    ) {
+                        LinearProgressIndicator(Modifier.fillMaxWidth())
+                    }
+                }
                 if (search.isOpened) {
                     MainTopAppBar(
                         title = { SearchField(search.query) { search.query = it } },
@@ -116,6 +126,11 @@ fun MainContent(state: MainState) {
                         },
                         onMenuClick = state::openDrawer,
                         visibleItems = menuItems,
+                        overflowItems = listOf(
+                            MenuItem(R.string.outln_menu_update, Icons.Default.Refresh) {
+                                state.onUpdateButtonClicked()
+                            }
+                        ),
                     )
                 }
             }

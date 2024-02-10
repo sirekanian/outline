@@ -19,6 +19,7 @@
     <string name="outln_menu_edit">Edit</string>
     <string name="outln_menu_delete">Delete</string>
     <string name="outln_menu_search">Search</string>
+    <string name="outln_menu_update">Update</string>
 
     <!-- Sorting -->
     <string name="outln_sorting_by">Sort by…</string>
@@ -29,6 +30,12 @@
     <!-- Hello Page -->
     <string name="outln_hint_search">Search…</string>
     <string name="outln_text_add_server">Add server</string>
+
+    <!-- Update -->
+    <plurals name="outln_update_error">
+        <item quantity="one">Cannot update %d server</item>
+        <item quantity="other">Cannot update %d servers</item>
+    </plurals>
 
     <!-- Selected Page -->
     <string name="outln_btn_add_key">Add key</string>

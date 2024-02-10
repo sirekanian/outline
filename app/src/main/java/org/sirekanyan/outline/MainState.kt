@@ -13,11 +13,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.db.KeyValueDao
+import org.sirekanyan.outline.ext.asyncAll
 import org.sirekanyan.outline.ext.rememberStateScope
 import org.sirekanyan.outline.feature.keys.KeysErrorState
 import org.sirekanyan.outline.feature.keys.KeysIdleState
@@ -28,6 +30,7 @@ import org.sirekanyan.outline.repository.KeyRepository
 import org.sirekanyan.outline.repository.ServerRepository
 import org.sirekanyan.outline.ui.SearchState
 import org.sirekanyan.outline.ui.rememberSearchState
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun rememberMainState(router: Router): MainState {
@@ -90,9 +93,37 @@ class MainState(
         }
     }
 
+    private suspend fun refreshAllKeys() {
+        val page = page as? HelloPage ?: return
+        if (page.keys is KeysLoadingState) return
+        withContext(Dispatchers.IO) {
+            page.keys = KeysLoadingState
+            page.keys = try {
+                servers.getServers()
+                    .asyncAll { server ->
+                        runCatching {
+                            withTimeout(5.seconds) {
+                                keys.updateKeys(server)
+                            }
+                        }
+                    }
+                KeysIdleState
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                KeysErrorState
+            }
+        }
+    }
+
     fun onRetryButtonClicked() {
         launch {
             refreshCurrentKeys(showLoading = true)
+        }
+    }
+
+    fun onUpdateButtonClicked() {
+        launch {
+            refreshAllKeys()
         }
     }
 
@@ -135,7 +166,10 @@ class MainState(
 @Parcelize
 sealed class Page : Parcelable
 
-data object HelloPage : Page()
+data object HelloPage : Page() {
+    @IgnoredOnParcel
+    var keys by mutableStateOf<KeysState>(KeysIdleState)
+}
 
 data class SelectedPage(val server: Server) : Page() {
     @IgnoredOnParcel
