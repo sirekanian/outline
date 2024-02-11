@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -100,7 +101,7 @@ fun MainContent(state: MainState) {
                     MainTopAppBar(
                         title = { SearchField(search.query) { search.query = it } },
                         onMenuClick = search::closeSearch,
-                        menuIcon = { Icon(Icons.Default.ArrowBack, "back") },
+                        menuIcon = { Icon(Icons.AutoMirrored.Default.ArrowBack, "back") },
                     )
                 } else {
                     val menuItems: List<MenuItem> =

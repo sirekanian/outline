@@ -3,4 +3,7 @@
         <ignore regexp="`R\.string\.project_id` appears to be unused" />
         <ignore regexp="`R\.string\.com_crashlytics_android_build_id` appears to be unused" />
     </issue>
+    <issue id="ObsoleteLintCustomCheck">
+        <ignore regexp="androidx\.compose\.runtime\.lint\.RuntimeIssueRegistry" />
+    </issue>
 </lint>

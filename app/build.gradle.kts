@@ -32,7 +32,7 @@ android {
             isDebuggable = props.getProperty("DEBUGGABLE").toBoolean()
             applicationIdSuffix = ".debug"
             buildConfigField("boolean", "DEBUG", "true")
-            val debugServers = props.getProperty("DEBUG_SERVERS").split('|').map { "\"$it\"" }
+            val debugServers = props.getProperty("DEBUG_SERVERS", "").split('|').map { "\"$it\"" }
             buildConfigField("String[]", "DEBUG_SERVERS", debugServers.joinToString(",", "{", "}"))
         }
         release {
@@ -76,7 +76,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+        kotlinCompilerExtensionVersion = "1.5.9"
     }
     packaging {
         resources {
@@ -89,20 +89,20 @@ dependencies {
 
     // compose
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3:1.2.0")
 
     // ktor
     implementation("io.ktor:ktor-client-okhttp:2.3.8")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
-    implementation("org.slf4j:slf4j-simple:2.0.11")
+    implementation("org.slf4j:slf4j-simple:2.0.12")
 
     // sqldelight
     implementation("app.cash.sqldelight:android-driver:2.0.1")
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
 
     // crash reporting
-    add("playImplementation", "com.google.firebase:firebase-crashlytics:18.6.1")
+    add("playImplementation", "com.google.firebase:firebase-crashlytics:18.6.2")
 
 }
 
