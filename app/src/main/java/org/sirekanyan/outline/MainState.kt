@@ -10,6 +10,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,6 +21,8 @@ import kotlinx.parcelize.Parcelize
 import org.sirekanyan.outline.api.model.Key
 import org.sirekanyan.outline.api.model.Server
 import org.sirekanyan.outline.db.KeyValueDao
+import org.sirekanyan.outline.ext.LocalizedString
+import org.sirekanyan.outline.ext.PluralsResource
 import org.sirekanyan.outline.ext.asyncAll
 import org.sirekanyan.outline.ext.rememberStateScope
 import org.sirekanyan.outline.feature.keys.KeysErrorState
@@ -52,6 +56,8 @@ class MainState(
     private val prefs: KeyValueDao,
 ) : CoroutineScope by scope {
 
+    private val toasts = MutableSharedFlow<LocalizedString>()
+    fun observeToasts(): Flow<LocalizedString> = toasts
     val drawer = router.drawer
     val drawerDisabled by derivedStateOf { search.isOpened && drawer.isClosed }
     var page by router.pageState
@@ -99,7 +105,7 @@ class MainState(
         withContext(Dispatchers.IO) {
             page.keys = KeysLoadingState
             page.keys = try {
-                servers.getServers()
+                val errors = servers.getServers()
                     .asyncAll { server ->
                         runCatching {
                             withTimeout(5.seconds) {
@@ -107,6 +113,12 @@ class MainState(
                             }
                         }
                     }
+                    .mapNotNull { result ->
+                        result.exceptionOrNull()
+                    }
+                if (errors.isNotEmpty()) {
+                    toasts.emit(PluralsResource(R.plurals.outln_update_error, errors.size))
+                }
                 KeysIdleState
             } catch (exception: Exception) {
                 exception.printStackTrace()

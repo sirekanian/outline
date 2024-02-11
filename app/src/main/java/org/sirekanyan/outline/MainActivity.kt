@@ -7,8 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
+import kotlinx.coroutines.launch
+import org.sirekanyan.outline.ext.showToast
 import org.sirekanyan.outline.ui.AboutDialogContent
 import org.sirekanyan.outline.ui.AddServerContent
 import org.sirekanyan.outline.ui.DeleteKeyContent
@@ -25,6 +29,12 @@ class MainActivity : ComponentActivity() {
             val router = rememberRouter()
             val state = rememberMainState(router)
             OutlineTheme {
+                val context = LocalContext.current
+                LaunchedEffect(Unit) {
+                    launch {
+                        state.observeToasts().collect(context::showToast)
+                    }
+                }
                 Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     BackHandler(state.drawer.isOpen) {
                         state.closeDrawer()
